@@ -61,7 +61,7 @@ class App extends Component {
            introduction: quizData.introduction,
            tags: quizData.keywords,
            questionCount: quizData.numOfQuestions,
-           image: quizData.thumbnail,
+           image: quizData.image,
            timer: quizData.seconds,
            questions: questionData
          })
@@ -94,7 +94,7 @@ class App extends Component {
     this.setState({started : true});
   }
   render() {
-    let path = this.state.image.filePath,
+    let path = this.state.image.fullUrl,
         height = this.state.image.height,
         width = this.state.image.width,
         alt = this.state.image.altText,
