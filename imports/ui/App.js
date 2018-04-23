@@ -21,7 +21,8 @@ class App extends Component {
       incorrect: 0,
       started: false,
       finished: false,
-      questions: []
+      questions: [],
+      quizId: 0
     };
 
     this.startQuiz = this.startQuiz.bind(this);
@@ -32,38 +33,21 @@ class App extends Component {
     //Set up initial state of component based off of the json files
     //provided.
 
-/* Get data from backend instead
-    axios.get('quiz.json')
-      .then(res => {
-        let quizData = res.data;
-        axios.get('questions.json')
-          .then(res=> {
-            let questionData = res.data;
-            this.setState({
-              title: quizData.title,
-              introduction: quizData.introduction,
-              tags: quizData.keywords,
-              questionCount: quizData.numOfQuestions,
-              image: quizData.thumbnail,
-              timer: quizData.seconds,
-              questions: questionData
-            })
-        })
-      })
-*/
-     Meteor.call('getQuiz', 5011, (err, ret) => {
+     /* Get quiz from backend. */
+     Meteor.call('getQuiz', this.props.quizId, (err, ret) => {
        let quizData = ret;
-       Meteor.call('getQuestion', 5011, (err, ret2) => {
+       Meteor.call('getQuestion', this.props.quizId, (err, ret2) => {
          let questionData = ret2;
          console.log("title: " + quizData.title + ", image: " + JSON.stringify(quizData.thumbnail));
          this.setState({
            title: quizData.title,
-           introduction: quizData.introduction,
+           introduction: quizData.description,
            tags: quizData.keywords,
            questionCount: quizData.numOfQuestions,
            image: quizData.image,
            timer: quizData.seconds,
-           questions: questionData
+           questions: questionData,
+           quizId: this.props.quizId
          })
        })
      }); 
@@ -89,10 +73,14 @@ class App extends Component {
       finished: true,
       correct: (result) ? (this.state.correct + 1) : this.state.correct
     })
+    /* Meteor.call('updateScore', this.state, (err, result) => { 
+       }); */
   }
+
   startQuiz() {
     this.setState({started : true});
   }
+
   render() {
     let path = this.state.image.fullUrl,
         height = this.state.image.height,
@@ -130,8 +118,9 @@ class App extends Component {
                   <p>Remember to stick around until the end to see how you did!</p>
                   <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
                 </div>
+              </div>
             </div>
-          </div>:
+            :
             <div className="quiz">
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} index={this.state.currentQuestion} done={this.finishQuiz} next={this.nextQuestion} />

@@ -6,5 +6,5 @@ import App from "../imports/ui/App.js";
 
 Meteor.startup(() => {
   /* Render react App into react-app element */
-  ReactDOM.render(<App />, document.getElementById("react-app"));
+  ReactDOM.render(<App quizId="5011" />, document.getElementById("react-app"));
 });

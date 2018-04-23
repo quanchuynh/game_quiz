@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import Button from '../components/Button';
+import '../index.css';
+
+const nextQuestionTime = 2;
+
 class Question extends Component {
   constructor(props) {
     super(props);
     this.state = {
       answered : false,
-      currentCount: 3,
+      currentCount: nextQuestionTime,
       questionTime: this.props.timer,
-      questionTimeLeft: this.props.timer
+      questionTimeLeft: this.props.timer,
+      disableButton: false
     };
     this.intervalId = setInterval(this.timer.bind(this), 1000);
     this.handleAnswer = this.handleAnswer.bind(this);
@@ -35,7 +40,7 @@ class Question extends Component {
     clearInterval(to);
     this.setState({
       answered: false,
-      currnetCount: 3
+      currentCount: nextQuestionTime
     }, () => {
       if ((this.props.index + 1) >= this.props.quest.length) {
         this.props.done(isCorrect);
@@ -65,15 +70,17 @@ class Question extends Component {
     })
     //set the question to answered which wil hide the buttonVisibility
     //set the time to elapse until the next question comes up
-    this.setState({answered: true, currentCount: 3}, ()=> {
+    this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       //counts down from a number
       var self = this;
+      this.setState({ disableButton: true })
       let to = setInterval(() => {
         this.setState({
           currentCount: this.state.currentCount - 1
         }, () => {
-          if (self.state.currentCount === 0) {
+          if (self.state.currentCount <= 0) {
             self._resetQuestion(isCorrect, to);
+            this.setState({ disableButton: false })
           }
         })
       }, 1000);
@@ -82,7 +89,7 @@ class Question extends Component {
   handleExpiration() {
     //set the question to answered which wil hide the buttonVisibility
     //set the time to elapse until the next question comes up
-    this.setState({answered: true, currentCount: 3}, ()=> {
+    this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       var self = this;
       let to = setInterval(() => {
         this.setState({
@@ -111,10 +118,10 @@ class Question extends Component {
             </div>
           </div>
           <div className={buttonVisibility}>
-            <Button copy={this.props.quest[this.props.index].answers[0]} action={this.handleAnswer} clName='success'/>
+            <Button disable={this.state.disableButton} copy={this.props.quest[this.props.index].answers[0]} action={this.handleAnswer} clName='success'/>
           </div>
           <div className={buttonVisibility}>
-            <Button copy={this.props.quest[this.props.index].answers[1]} action={this.handleAnswer} clName='alert'/>
+            <Button disable={this.state.disableButton} copy={this.props.quest[this.props.index].answers[1]} action={this.handleAnswer} clName='alert'/>
           </div>
         </div>
       </div>
