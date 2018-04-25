@@ -106,6 +106,8 @@ class Question extends Component {
   render() {
     let visibility = (this.state.answered) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 'columns small-6 is-visible';
+    let questionMap = this.props.quest[this.props.index].answers;
+    console.log("Possible answers: " + questionMap.length);
     return (
       <div className="question__question">
         {this.state.questionTimeLeft}
@@ -118,10 +120,9 @@ class Question extends Component {
             </div>
           </div>
           <div className={buttonVisibility}>
-            <Button disable={this.state.disableButton} copy={this.props.quest[this.props.index].answers[0]} action={this.handleAnswer} clName='success'/>
-          </div>
-          <div className={buttonVisibility}>
-            <Button disable={this.state.disableButton} copy={this.props.quest[this.props.index].answers[1]} action={this.handleAnswer} clName='alert'/>
+          {
+            questionMap.map((answer, i) => (<Button key={i} copy={answer} action={this.handleAnswer} clName='success'/>))
+          }
           </div>
         </div>
       </div>

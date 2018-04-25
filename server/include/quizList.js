@@ -2,6 +2,7 @@ import axios from 'axios';
 Future = Npm.require('fibers/future');
 var quizUrl = "https://www.britannica.com/quiz/ajax/";
 var categories = [];
+var quizTypes = [];
 
 QuizList = function(quizListFileName) {
   this.list = JSON.parse(Assets.getText(quizListFileName));
@@ -50,10 +51,9 @@ QuizList.prototype.initializeQuizCollection = function() {
                            "title": quizFromHttp.id, 
                            "mainCategory": quizFromHttp.mainCategory,
                            "quizType": quizFromHttp.quizType});
-    var found = categories.find( function(cat){ 
-                  return cat.category === quizFromHttp.mainCategory; 
-                });
-    if (found) {
+
+    var found = categories.find( (cat) => cat.category === quizFromHttp.mainCategory);
+    if (found) { 
       found.quizId.push(quizFromHttp.id);
     }
     else {
@@ -61,7 +61,18 @@ QuizList.prototype.initializeQuizCollection = function() {
       cat.quizId.push(quizFromHttp.id);
       categories.push(cat);
     }
+
+    found = quizTypes.find( (cat) => cat.quizType === quizFromHttp.quizType);
+    if (found) { 
+      found.quizId.push(quizFromHttp.id);
+    }
+    else {
+      var cat = {"quizType": quizFromHttp.quizType, "quizId": []};
+      cat.quizId.push(quizFromHttp.id);
+      quizTypes.push(cat);
+    }
   });
   CategoryQuizCollection.insert({"cateogry": categories});
+  CategoryQuizCollection.insert({"quizType": quizTypes});
 }
 
