@@ -14,6 +14,10 @@ Meteor.methods({
   getCategories: function() {
     return getAllCategories();
   },
+
+  getCategoryQuizId: function(category, gameId) {
+    return 0;
+  }
 });
 
 getAllCategories = function() {

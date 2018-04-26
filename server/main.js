@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import axios from 'axios';
+import moment from 'moment';
 
 Meteor.startup(() => {
   // We need to get quiz and questions on server side due to CORS limitation on client side.
@@ -16,5 +17,20 @@ Meteor.startup(() => {
   console.log("All uniq categories: " + categories);
   var quizType = getDistinct('quizType', QuizCollection);
   console.log("All Quiz Types: " + quizType);
+
+  var categoryQuiz = quizList.getQuizFromCategory("HEALTH_AND_MEDICINE");
+  if (categoryQuiz) {
+    var testArr = [6322,6286,4549,4560,5531,4573,5355,4506,4515, 100000];
+    console.log("HEALTH_AND_MEDICINE, quizIDs: " + JSON.stringify(categoryQuiz));
+    console.log("Diff array: " + JSON.stringify(categoryQuiz.diff((testArr))) );
+  }
+
+  var gameId = getNewGameId();
+  console.log("Game ID: " + getNewGameId());
+  var quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
+  console.log("HEALTH_AND_MEDICINE, quizId: " + quizId);
+
+  quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
+  console.log("HEALTH_AND_MEDICINE, next quizId: " + quizId);
 });
 
