@@ -84,6 +84,7 @@ var getQuizIdForCategory
 var getNewCategoryQuizId = function(categoryName) {
   /* Return this category and array of single new quiz ID. */
   var categoryQuizId = {"category": categoryName, "quizId": []};
+console.log("getNewCategoryQuizId, categoryName: " + categoryName);
   let quiz = getQuizFromCategory(categoryName);
   let index = getRandomIndex(quiz.length);
   console.log("getNewCategoryQuizId - " + categoryName + ": " + JSON.stringify(quiz));

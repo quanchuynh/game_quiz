@@ -16,7 +16,7 @@ Meteor.methods({
   },
 
   getCategoryQuizId: function(category, gameId) {
-    return 0;
+    return quizList.getNewQuizIdForGame(gameId, category);
   }
 });
 

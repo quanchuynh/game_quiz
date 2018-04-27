@@ -59,9 +59,9 @@ class Question extends Component {
       so we don't have to convert the answer to a numerical value
       later.
   --*/
-  handleAnswer(answer) {
-    let correctAnswer = this.props.quest[this.props.index].correct,     //the correct answer for this question
-        userAnswer = (answer === 'Fact') ? 1 : 2,     //what the user answered
+  handleAnswer(userAnswer) {
+    let correctAnswerIndex = this.props.quest[this.props.index].correct - 1,     //the correct answer for this question
+        correctAnswer = this.props.quest[this.props.index].answers[correctAnswerIndex]
         isCorrect = (userAnswer === correctAnswer) ? true : false; //translate into a bool
 
     clearTimeout(this.intervalId);

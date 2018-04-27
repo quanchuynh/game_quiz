@@ -13,7 +13,7 @@ Meteor.startup(() => {
 */
 
   quizList.initializeQuizCollection();
-  var categories = getDistinct("mainCategory", QuizCollection);
+  var categories = getAllCategories();
   console.log("All uniq categories: " + categories);
   var quizType = getDistinct('quizType', QuizCollection);
   console.log("All Quiz Types: " + quizType);
