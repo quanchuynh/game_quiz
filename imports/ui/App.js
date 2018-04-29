@@ -34,7 +34,7 @@ class App extends Component {
 
   handleFinishQuiz(newScore, questionCount) {
     let currentQuizCount = this.state.quizCount,
-        currentTotalScore = this.state.totalScore;
+        currentTotalScore = this.state.totalScore,
         currentTotalQuestion = this.state.totalQuestion;
     
     this.setState({gotQuiz: false, 
@@ -52,6 +52,7 @@ class App extends Component {
         this.state.gotQuiz == false ? <Categories action={this.updateQuizId} gameId={gameId} /> :
           <Quiz quizId={quizId} action={this.handleFinishQuiz} />
       }
+      <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
       </div>
     );
   }

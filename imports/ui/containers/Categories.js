@@ -30,10 +30,12 @@ class Categories extends Component {
 
   render() {
     let allCategories = this.state.allCategories;
+    let colors = ["orange", "maroon", "green", "blue" ];
     return (
-      <div className="categories">
+      <div className="categories"><p>Select a Category</p>
         {
-          allCategories.map((cat, i) => (<Button key={i} copy={cat} action={this.handelSelect} clName='success'/>))
+          allCategories.map((cat, i) => (<Button key={i} copy={cat} action={this.handelSelect} 
+            clName={colors[i%4] + ' button-4'}/>))
         }
       </div>
     );

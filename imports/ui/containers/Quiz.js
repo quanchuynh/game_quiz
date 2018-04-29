@@ -115,6 +115,7 @@ class Quiz extends Component {
             this.state.started === true ?
               <div className="top-bar-right">
                   <span className="label">{this.state.currentQuestion + 1} / {this.state.questions.length}</span>
+                  <span className="label">{this.state.correct} Correct</span>
               </div> :
               <div></div>
           }
@@ -128,8 +129,8 @@ class Quiz extends Component {
                   <Image filePath={path} height={height} width={width} alt={alt} credit={credit} />
                 </div>
                 <div className="small-6 small-push-3">
-                  <p className="float-center" dangerouslySetInnerHTML={this._getIntroduction()} />
-                  <p>Remember to stick around until the end to see how you did!</p>
+                  <p className="float-center" 
+                     dangerouslySetInnerHTML={this._getIntroduction()} />
                   <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from '../components/Button';
+import Answer from '../components/Answer';
 import '../index.css';
 
 const nextQuestionTime = 2;
@@ -105,11 +106,14 @@ class Question extends Component {
   }
   render() {
     let visibility = (this.state.answered) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
-    let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 'columns small-6 is-visible';
+    let buttonVisibility = (this.state.answered) ? 'columns small-4 is-hidden' : 
+                                                   'columns small-4 is-visible';
     let questionMap = this.props.quest[this.props.index].answers;
+    let colors = ["orange", "maroon", "green", "blue" ];
     console.log("Possible answers: " + questionMap.length);
+    /* question__question */
     return (
-      <div className="question__question">
+      <div className="question">
         {this.state.questionTimeLeft}
         <div className="grid">
           <div className="columns small-12">
@@ -121,7 +125,8 @@ class Question extends Component {
           </div>
           <div className={buttonVisibility}>
           {
-            questionMap.map((answer, i) => (<Button key={i} copy={answer} action={this.handleAnswer} clName='success'/>))
+            questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} action={this.handleAnswer} 
+              clName={colors[i%4] + " button-whole"} /></p>))
           }
           </div>
         </div>
