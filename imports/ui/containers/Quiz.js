@@ -107,8 +107,8 @@ class Quiz extends Component {
         questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden';
     return (
       <div className="Quiz">
-        <div className="title-bar">
-          <div className="top-bar-title">
+        <div className="title-bar small-6 float-center">
+          <div className=".top-bar-title float-center">
             <strong dangerouslySetInnerHTML={this._getTitle()}/>
           </div>
           {
@@ -119,7 +119,7 @@ class Quiz extends Component {
               </div> :
               <div></div>
           }
-        </div>
+       </div>
         <div className="container">
         {
           this.state.started === false ?

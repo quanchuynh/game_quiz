@@ -107,7 +107,7 @@ class Question extends Component {
   render() {
     let visibility = (this.state.answered) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     let buttonVisibility = (this.state.answered) ? 'columns small-4 is-hidden' : 
-                                                   'columns small-4 is-visible';
+                                                   'columns small-4 is-visible float-center';
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     console.log("Possible answers: " + questionMap.length);
@@ -116,11 +116,11 @@ class Question extends Component {
       <div className="question">
         {this.state.questionTimeLeft}
         <div className="grid">
-          <div className="columns small-12">
-            <h1 dangerouslySetInnerHTML={this._getQuestion()} />
+          <div className="columns small-4 float-center">
+            <h4 className="float-center" dangerouslySetInnerHTML={this._getQuestion()} />
             <div className={visibility}>
-            <h4 dangerouslySetInnerHTML={this._getExplanation()}/>
-            <small>Next question in {this.state.currentCount} seconds.</small>
+              <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
+              <small>Next question in {this.state.currentCount} seconds.</small>
             </div>
           </div>
           <div className={buttonVisibility}>

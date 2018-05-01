@@ -1914,7 +1914,8 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Bangers", cursive;
+  /* font-family: "Bangers", cursive; */
+  font-family: Times, serif;
   font-style: normal;
   font-weight: normal;
   color: inherit;
@@ -4186,7 +4187,9 @@ a.thumbnail {
 .title-bar {
   padding: 0.5rem;
   background: #c0404f;
-  color: #fefefe; }
+  color: #fefefe; 
+}
+
   .title-bar::before, .title-bar::after {
     display: table;
     content: ' '; }
@@ -4314,9 +4317,12 @@ a.thumbnail {
 .top-bar-title {
   display: inline-block;
   float: left;
-  padding: 0.5rem 1rem 0.5rem 0; }
-  .top-bar-title .menu-icon {
-    bottom: 2px; }
+  padding: 0.5rem 1rem 0.5rem 0; 
+}
+
+.top-bar-title .menu-icon {
+    bottom: 2px; 
+}
 
 .top-bar-left {
   float: left; }

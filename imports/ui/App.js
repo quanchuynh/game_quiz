@@ -16,6 +16,7 @@ class App extends Component {
       gotQuiz: false,
       quizCount: 0,
       totalScore: 0,
+      gameMode: true,
       totalQuestion: 0
     };
     this.updateQuizId = this.updateQuizId.bind(this);
@@ -49,7 +50,8 @@ class App extends Component {
     return (
       <div className="App">
       {
-        this.state.gotQuiz == false ? <Categories action={this.updateQuizId} gameId={gameId} /> :
+        this.state.gotQuiz == false ? 
+          <Categories action={this.updateQuizId} gameId={gameId} mode={this.state.gameMode}/> :
           <Quiz quizId={quizId} action={this.handleFinishQuiz} />
       }
       <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
