@@ -106,18 +106,21 @@ class Question extends Component {
   }
   render() {
     let visibility = (this.state.answered) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
-    let buttonVisibility = (this.state.answered) ? 'columns small-4 is-hidden' : 
-                                                   'columns small-4 is-visible float-center';
+    let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 
+                                                   'columns small-6 is-visible float-center';
+    let backgroundImage = {opacity: 0.2, width: "100%"};
+    let questionText = {color: "#005780", backgroundColor: "tranparent", 
+                        position: "absolute", top: "90px", float: "left"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     console.log("Possible answers: " + questionMap.length);
-    /* question__question */
     return (
       <div className="question">
         {this.state.questionTimeLeft}
         <div className="grid">
-          <div className="columns small-4 float-center">
-            <h4 className="float-center" dangerouslySetInnerHTML={this._getQuestion()} />
+          <div className="columns small-6 float-center">
+            <img src={this.props.filePath} alt="Norway" style={backgroundImage}/>
+            <h4 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}/>
             <div className={visibility}>
               <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
               <small>Next question in {this.state.currentCount} seconds.</small>

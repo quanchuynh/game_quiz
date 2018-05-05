@@ -96,7 +96,8 @@ class Quiz extends Component {
   }
 
   render() {
-    let path = this.state.image.fullUrl,
+    let paddingTop = {paddingTop: "12px"},
+        path = this.state.image.fullUrl,
         height = this.state.image.height,
         width = this.state.image.width,
         alt = this.state.image.altText,
@@ -105,28 +106,31 @@ class Quiz extends Component {
         question = questionObject,
         resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
         questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden';
+    let scoreLabel = {paddingRight: "10px", backgroundColor: "#e6f7ff", 
+                      color: "#005780", borderWidth: "2px", borderStyle: "groove"};
     return (
       <div className="Quiz">
         <div className="title-bar small-6 float-center">
           <div className=".top-bar-title float-center">
             <strong dangerouslySetInnerHTML={this._getTitle()}/>
-          </div>
           {
             this.state.started === true ?
-              <div className="top-bar-right">
-                  <span className="label">{this.state.currentQuestion + 1} / {this.state.questions.length}</span>
-                  <span className="label">{this.state.correct} Correct</span>
+              <div className="float-center" style={paddingTop}>
+                <span style={scoreLabel}>Question {this.state.currentQuestion + 1} out of {this.state.questions.length}
+                      </span>
+                <span style={scoreLabel}>{this.state.correct} Correct</span>
               </div> :
-              <div></div>
+              <p></p>
           }
+          </div>
        </div>
         <div className="container">
         {
           this.state.started === false ?
             <div className="introduction">
               <div className="grid">
-                <div className="small-12">
-                  <Image filePath={path} height={height} width={width} alt={alt} credit={credit} />
+                <div className="small-6 float-center">
+                   <Image filePath={path} height={height} width={width} alt={alt} credit={credit} />
                 </div>
                 <div className="small-6 small-push-3">
                   <p className="float-center" 
@@ -138,7 +142,9 @@ class Quiz extends Component {
             :
             <div className="quiz">
               <div className={questionClass}>
-                <Question timer={this.state.timer} quest={this.state.questions} index={this.state.currentQuestion} done={this.finishQuiz} next={this.nextQuestion} />
+                <Question timer={this.state.timer} quest={this.state.questions} 
+                    index={this.state.currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    filePath={path}/>
               </div>
               <div className={resultsClass}>
                 <h4>{this._getEndMessage()}</h4>
