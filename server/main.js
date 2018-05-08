@@ -32,5 +32,11 @@ Meteor.startup(() => {
 
   quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
   console.log("HEALTH_AND_MEDICINE, next quizId: " + quizId);
+
+  var allQuiz = QuizCollection.find({"mainCategory": "HEALTH_AND_MEDICINE"}).fetch();
+  for (ii = 0; ii < allQuiz.length; ii++)
+    console.log("Quiz: " + JSON.stringify(allQuiz[ii]));
+
+  console.log("HEALTH_AND_MEDICINE number of quizzes" + allQuiz.length);
 });
 

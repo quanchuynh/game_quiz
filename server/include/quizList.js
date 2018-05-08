@@ -51,9 +51,11 @@ QuizList.prototype.initializeQuizCollection = function() {
   this.list.forEach(quiz => {
     let quizFromHttp = this.getQuiz(quiz.quiz_id);
     QuizCollection.insert({"id": quizFromHttp.id, 
-                           "title": quizFromHttp.id, 
+                           "title": quizFromHttp.title, 
                            "mainCategory": quizFromHttp.mainCategory,
-                           "quizType": quizFromHttp.quizType});
+                           "quizType": quizFromHttp.quizType,  
+                           "imagePath": quizFromHttp.image.fullUrl,
+                           "moreField": 0});
 
     var found = categories.find( (cat) => cat.category === quizFromHttp.mainCategory);
     if (found) { 
@@ -84,7 +86,6 @@ var getQuizIdForCategory
 var getNewCategoryQuizId = function(categoryName) {
   /* Return this category and array of single new quiz ID. */
   var categoryQuizId = {"category": categoryName, "quizId": []};
-console.log("getNewCategoryQuizId, categoryName: " + categoryName);
   let quiz = getQuizFromCategory(categoryName);
   let index = getRandomIndex(quiz.length);
   console.log("getNewCategoryQuizId - " + categoryName + ": " + JSON.stringify(quiz));
@@ -134,6 +135,7 @@ var getQuizFromCategory = function(categoryName) {
   if (found) return found.quizId
   else return null;
 }
+
 QuizList.prototype.getQuizFromCategory = function(categoryName) {
   return getQuizFromCategory(categoryName);
 }

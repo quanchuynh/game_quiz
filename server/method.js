@@ -17,7 +17,15 @@ Meteor.methods({
 
   getCategoryQuizId: function(category, gameId) {
     return quizList.getNewQuizIdForGame(gameId, category);
+  },
+
+  getAllQuizIn: function(category) {
+    cursor = QuizCollection.find({"mainCategory": category});
+    if (cursor) return cursor.fetch();
+    console.log("Could not find quiz in category: "  + category);
+    throw (new Meteor.Error(1, "Could not find quiz in category: "  + category));
   }
+
 });
 
 getAllCategories = function() {
