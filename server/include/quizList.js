@@ -54,8 +54,7 @@ QuizList.prototype.initializeQuizCollection = function() {
                            "title": quizFromHttp.title, 
                            "mainCategory": quizFromHttp.mainCategory,
                            "quizType": quizFromHttp.quizType,  
-                           "imagePath": quizFromHttp.image.fullUrl,
-                           "moreField": 0});
+                           "imagePath": quizFromHttp.image.fullUrl});
 
     var found = categories.find( (cat) => cat.category === quizFromHttp.mainCategory);
     if (found) { 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Button from '../components/Button';
+import ImageGallery from '../containers/ImageGallery';
 import '../index.css';
 
 const nextQuestionTime = 2;
@@ -9,7 +10,9 @@ class Categories extends Component {
     super(props);
     this.state = {
       active: false,
-      allCategories: []
+      allCategories: [],
+      quizList: [],
+      gameMode: this.props.mode
     };
     this.handelSelect = this.handelSelect.bind(this);
   }
@@ -22,10 +25,17 @@ class Categories extends Component {
 
   handelSelect(category) {
     let gameId = this.props.gameId;
-    Meteor.call('getCategoryQuizId', category, gameId, (err, ret) => {
-      let quizId = ret;
-      this.props.action(quizId);
-    });
+    if (this.state.gameMode) {
+      Meteor.call('getCategoryQuizId', category, gameId, (err, ret) => {
+        let quizId = ret;
+        this.props.action(quizId);
+      });
+    }
+    else {
+      Meteor.call('getAllQuizIn', category, (err, ret) => {
+        this.setState({quizList: ret});
+      });
+    }
   }
 
   render() {
@@ -36,6 +46,7 @@ class Categories extends Component {
     needAdd = needAdd == 4 ? 0 : needAdd;
     for (i = 0; i < needAdd; i++) allCategories = [...allCategories, "."];
     let selectText = {color: "#005780", fontSize: "1.5em"};
+    let galleryVisibility = this.state.gameMode ? 'is-hidden' : 'is-visible';
 
     return (
       <div className="categories"><p style={selectText}>Select a Category</p>
@@ -47,6 +58,9 @@ class Categories extends Component {
                 return <Button key={i} copy={cat} action={this.handelSelect} clName={colors[i%4] + ' button-4'}/>
           })
         }
+        <div className={galleryVisibility}>
+           <ImageGallery quizList={this.state.quizList}/>
+        </div>
       </div>
     );
   }
