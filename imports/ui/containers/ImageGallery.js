@@ -6,7 +6,7 @@ class ImageGallery extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pageCount: this.props.quizList.length / (4 * 3) + 1, 
+      pageCount: this.props.quizList.length / (4 * 3), 
       quizList: this.props.quizList,
       currentPage: 1
     };
@@ -26,7 +26,7 @@ class ImageGallery extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.quizList !== nextProps.quizList)
       return {quizList: nextProps.quizList,
-              pageCount: nextProps.quizList.length / (4 * 3) + 1
+              pageCount: nextProps.quizList.length / (4 * 3)
              };
     return null;
   }
@@ -34,8 +34,9 @@ class ImageGallery extends Component {
   render() {
     let quiz = this.state.quizList;
     let pages = [], currentPage = this.state.currentPage;
-    let images = quiz.slice((currentPage - 1)*12, currentPage * 12 - 1);
-    for (ii = 0; ii < this.state.pageCount; ii++) pages = [...pages, ii+1];
+    let images = quiz.slice((currentPage - 1)*12, currentPage * 12);
+    /* pageCount is number (e.g. 76/12 = 6.333 would produce 7 pages below) */
+    for (ii = 0; ii < this.state.pageCount; ii++) pages = [...pages, ii+1]; 
     return (
       <div className="image-gallery">
          <div className="gallery-header">
@@ -48,7 +49,7 @@ class ImageGallery extends Component {
          <div className="gallery-body">
          {
            images.map((image, i) => (
-             <ClickableImage className="button-4" key={i} action={this.handleImageClick} copy={image}/>)
+             <ClickableImage className="button-4 float-left" key={i} action={this.handleImageClick} copy={image}/>)
            )       
          }
          </div>
