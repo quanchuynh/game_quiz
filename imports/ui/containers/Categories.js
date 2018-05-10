@@ -14,16 +14,24 @@ class Categories extends Component {
       quizList: [],
       gameMode: this.props.mode
     };
-    this.handelSelect = this.handelSelect.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
+    this.handleImageClick = this.handleImageClick.bind(this);
   }
 
   componentDidMount() {
     Meteor.call('getCategories', (err, ret) => {
       this.setState({allCategories: ret});
+      Meteor.call('getAllQuizIn', ret[0], (err, ret2) => {
+        this.setState({quizList: ret2});
+      });
     });
   }
 
-  handelSelect(category) {
+  handleImageClick(image) {
+    this.props.action(image.id);
+  }
+
+  handleSelect(category) {
     let gameId = this.props.gameId;
     if (this.state.gameMode) {
       Meteor.call('getCategoryQuizId', category, gameId, (err, ret) => {
@@ -47,6 +55,7 @@ class Categories extends Component {
     for (i = 0; i < needAdd; i++) allCategories = [...allCategories, "."];
     let selectText = {color: "#005780", fontSize: "1.5em"};
     let galleryVisibility = this.state.gameMode ? 'is-hidden' : 'is-visible';
+    let quizList = this.state.quizList;
 
     return (
       <div className="categories"><p style={selectText}>Select a Category</p>
@@ -55,11 +64,12 @@ class Categories extends Component {
              if (cat === ".") 
                 return <Button key={i} copy={cat} clName={colors[i%4] + ' button-4'} disable={true}/>
              else
-                return <Button key={i} copy={cat} action={this.handelSelect} clName={colors[i%4] + ' button-4'}/>
+                return <Button key={i} copy={cat} action={this.handleSelect} 
+                   clName={colors[i%4] + ' category button-4'}/>
           })
         }
         <div className={galleryVisibility}>
-           <ImageGallery quizList={this.state.quizList}/>
+           <ImageGallery quizList={quizList} action={this.handleImageClick}/>
         </div>
       </div>
     );

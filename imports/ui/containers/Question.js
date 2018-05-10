@@ -110,7 +110,7 @@ class Question extends Component {
                                                    'columns small-6 is-visible float-center';
     let backgroundImage = {opacity: 0.2, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
-                        position: "absolute", top: "90px", float: "left"};
+                        position: "absolute", top: "120px", float: "left"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     console.log("Possible answers: " + questionMap.length);
