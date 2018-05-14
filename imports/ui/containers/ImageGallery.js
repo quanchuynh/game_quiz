@@ -37,8 +37,9 @@ class ImageGallery extends Component {
     let images = quiz.slice((currentPage - 1)*12, currentPage * 12);
     /* pageCount is number (e.g. 76/12 = 6.333 would produce 7 pages below) */
     for (ii = 0; ii < this.state.pageCount; ii++) pages = [...pages, ii+1]; 
+    let testDiv = {backgroundColor: "white", maxWidth: "1800px", margin: "auto"};
     return (
-      <div className="image-gallery">
+      <div>
          <div className="gallery-header">
          {
            pages.map((label, i) => (
@@ -49,7 +50,7 @@ class ImageGallery extends Component {
          <div className="gallery-body">
          {
            images.map((image, i) => (
-             <ClickableImage className="button-4 float-left" key={i} action={this.handleImageClick} copy={image}/>)
+             <ClickableImage className="float-center" key={i} action={this.handleImageClick} copy={image}/>)
            )       
          }
          </div>

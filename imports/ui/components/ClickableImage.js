@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
+import './ClickableImage.css';
 
 class ClickableImage extends Component {
   render() {
-      let clName= this.props.clName;
+      let clName= this.props.clName + ' gallery';
       let quizProfile = this.props.copy;
       let title = {__html: quizProfile.title};
       return (
-        <button className={clName} onClick={() => this.props.action(this.props.copy)}>
+        <div className={clName} onClick={() => this.props.action(this.props.copy)}>
            <img src={quizProfile.imagePath}/>
-           <div><p dangerouslySetInnerHTML={title}></p>
-                <span>{quizProfile.quizType.replace(/_/g, ' ')}</span>
-           </div>
-        </button> 
+           <div desc><p dangerouslySetInnerHTML={title}></p> </div>
+           <div desc> {quizProfile.quizType.replace(/_/g, ' ')}</div>
+        </div> 
       );
     }
 }

@@ -56,6 +56,7 @@ class Categories extends Component {
     let selectText = {color: "#005780", fontSize: "1.5em"};
     let galleryVisibility = this.state.gameMode ? 'is-hidden' : 'is-visible';
     let quizList = this.state.quizList;
+    let testDiv = {color: "#005780", backgroundColor: "white"};
 
     return (
       <div className="categories"><p style={selectText}>Select a Category</p>

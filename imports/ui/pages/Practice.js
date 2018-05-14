@@ -46,6 +46,7 @@ class Practice extends Component {
   render() {
     let quizId = this.state.quizId;
     let gameId = 123;
+    // <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
     return (
       <div className="Practice">
       {
@@ -54,7 +55,6 @@ class Practice extends Component {
           :
           <Quiz quizId={quizId} action={this.handleFinishQuiz} mode={this.state.gameMode}/>
       }
-      <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
       </div>
     );
   }

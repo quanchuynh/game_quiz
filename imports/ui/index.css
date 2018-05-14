@@ -4528,6 +4528,7 @@ button {
 .categories {
   padding-top: 2px;
   padding-bottom: 2px;
+  width: 100%;
 }
 
 .category-color1 {
@@ -4551,6 +4552,21 @@ p.no-padding {
   padding-bottom: 0;
   margin-top: 0;
   margin-bottom: 0;
+}
+
+/*
+@media only screen and (max-width: 3000px, min-width: 200px) {
+}
+*/
+
+.gallery-body {
+   width: 100%;
+   border: 2px solid white;
+}
+
+.gallery-header {
+   width: 100%;
+   border: 2px solid white;
 }
 
 .category:focus {
