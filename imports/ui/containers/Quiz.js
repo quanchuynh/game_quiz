@@ -37,13 +37,11 @@ class Quiz extends Component {
   }
 
   getQuiz(quizId) {
-     console.log("componentDidMount: " + quizId);
      /* Get quiz from backend. */
      Meteor.call('getQuiz', this.props.quizId, (err, ret) => {
        let quizData = ret;
        Meteor.call('getQuestion', this.props.quizId, (err, ret2) => {
          let questionData = ret2;
-         console.log("title: " + quizData.title + ", image: " + JSON.stringify(quizData.thumbnail));
          this.setState({
            title: quizData.title,
            introduction: quizData.description,
@@ -52,7 +50,8 @@ class Quiz extends Component {
            image: quizData.image,
            timer: quizData.seconds,
            questions: questionData,
-           quizId: quizId
+           quizId: quizId,
+           gameMode: this.props.mode
          })
        })
      }); 
@@ -144,6 +143,7 @@ class Quiz extends Component {
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} 
                     index={this.state.currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    gameMode={this.state.gameMode}
                     filePath={path}/>
               </div>
               <div className={resultsClass}>

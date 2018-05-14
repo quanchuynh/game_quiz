@@ -13,7 +13,8 @@ class Question extends Component {
       currentCount: nextQuestionTime,
       questionTime: this.props.timer,
       questionTimeLeft: this.props.timer,
-      disableButton: false
+      disableButton: false,
+      gameMode: this.props.gameMode
     };
     this.intervalId = setInterval(this.timer.bind(this), 1000);
     this.handleAnswer = this.handleAnswer.bind(this);
@@ -37,6 +38,7 @@ class Question extends Component {
   _getExplanation() {
     return {__html:  this.props.quest[this.props.index].explanation};
   }
+
   _resetQuestion(isCorrect, to) {
     clearInterval(to);
     this.setState({
@@ -69,12 +71,14 @@ class Question extends Component {
     this.setState({
       questionTimeLeft: this.state.questionTime
     })
+
     //set the question to answered which wil hide the buttonVisibility
     //set the time to elapse until the next question comes up
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       //counts down from a number
       var self = this;
       this.setState({ disableButton: true })
+
       let to = setInterval(() => {
         this.setState({
           currentCount: this.state.currentCount - 1
@@ -85,13 +89,16 @@ class Question extends Component {
           }
         })
       }, 1000);
+
     });
   }
+
   handleExpiration() {
     //set the question to answered which wil hide the buttonVisibility
     //set the time to elapse until the next question comes up
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       var self = this;
+
       let to = setInterval(() => {
         this.setState({
           currentCount: this.state.currentCount - 1
@@ -102,25 +109,28 @@ class Question extends Component {
           }
         })
       }, 1000);
+
     });
   }
+
   render() {
-    let visibility = (this.state.answered) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
+    let visibility = (this.state.answered && this.state.gameMode == false) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 
                                                    'columns small-6 is-visible float-center';
     let backgroundImage = {opacity: 0.2, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
                         position: "absolute", top: "120px", float: "left"};
+    let timeText = {color: "#005780", backgroundColor: "tranparent"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
-    console.log("Possible answers: " + questionMap.length);
     return (
       <div className="question">
-        {this.state.questionTimeLeft}
         <div className="grid">
           <div className="columns small-6 float-center">
             <img src={this.props.filePath} alt="Norway" style={backgroundImage}/>
-            <h4 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}/>
+            <h4 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}>
+            </h4>
+            <h4 style={timeText}>{this.state.questionTimeLeft} seconds left</h4>
             <div className={visibility}>
               <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
               <small>Next question in {this.state.currentCount} seconds.</small>

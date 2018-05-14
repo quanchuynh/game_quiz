@@ -26,7 +26,8 @@ class ImageGallery extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.quizList !== nextProps.quizList)
       return {quizList: nextProps.quizList,
-              pageCount: nextProps.quizList.length / (4 * 3)
+              pageCount: nextProps.quizList.length / (4 * 3),
+              currentPage: 1
              };
     return null;
   }
@@ -42,8 +43,13 @@ class ImageGallery extends Component {
       <div>
          <div className="gallery-header">
          {
-           pages.map((label, i) => (
-             <Button key={i} action={this.handlePageClick} copy={label.toString()}/>)
+           pages.map((label, i) => {
+             if (i == this.state.currentPage - 1) { 
+               return <Button key={i} clName="button-focus" action={this.handlePageClick} copy={label.toString()}/>
+             }
+             else
+               return <Button key={i} clName="none" action={this.handlePageClick} copy={label.toString()}/>
+             }
            )
          }
          </div>

@@ -12,7 +12,8 @@ class Categories extends Component {
       active: false,
       allCategories: [],
       quizList: [],
-      gameMode: this.props.mode
+      gameMode: this.props.mode,
+      currentActiveCategory: ""
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleImageClick = this.handleImageClick.bind(this);
@@ -20,7 +21,7 @@ class Categories extends Component {
 
   componentDidMount() {
     Meteor.call('getCategories', (err, ret) => {
-      this.setState({allCategories: ret});
+      this.setState({allCategories: ret, currentActiveCategory: ret[0]});
       Meteor.call('getAllQuizIn', ret[0], (err, ret2) => {
         this.setState({quizList: ret2});
       });
@@ -41,7 +42,7 @@ class Categories extends Component {
     }
     else {
       Meteor.call('getAllQuizIn', category, (err, ret) => {
-        this.setState({quizList: ret});
+        this.setState({quizList: ret, currentActiveCategory: category});
       });
     }
   }
@@ -54,9 +55,9 @@ class Categories extends Component {
     needAdd = needAdd == 4 ? 0 : needAdd;
     for (i = 0; i < needAdd; i++) allCategories = [...allCategories, "."];
     let selectText = {color: "#005780", fontSize: "1.5em"};
+    let activeCategory = {backgroundColor: "white"};
     let galleryVisibility = this.state.gameMode ? 'is-hidden' : 'is-visible';
     let quizList = this.state.quizList;
-    let testDiv = {color: "#005780", backgroundColor: "white"};
 
     return (
       <div className="categories"><p style={selectText}>Select a Category</p>
@@ -64,6 +65,10 @@ class Categories extends Component {
           allCategories.map((cat, i) => {
              if (cat === ".") 
                 return <Button key={i} copy={cat} clName={colors[i%4] + ' button-4'} disable={true}/>
+             else if (cat === this.state.currentActiveCategory) {
+                return <Button key={i} copy={cat} action={this.handleSelect} style={activeCategory}
+                   clName={' category-focus category button-4'}/>
+             }
              else
                 return <Button key={i} copy={cat} action={this.handleSelect} 
                    clName={colors[i%4] + ' category button-4'}/>
