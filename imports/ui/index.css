@@ -4591,6 +4591,9 @@ p.no-padding {
 .gallery-body {
    width: 100%;
    border: 2px solid white;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
 }
 
 .gallery-header {

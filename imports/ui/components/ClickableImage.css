@@ -2,12 +2,12 @@ div.gallery {
     margin: 0.5%;
     border: 1.0px solid #1a0000;
     float: left; 
-    width: 23%;
-    height: auto;
+    width: 24%;
+    /* height: 300px; */
     border-radius: 0.5rem;
     background-color: #d9d9d9;  /* #e6e6e6; */
     color: #005780;
-    box-shadow: 4px 4px;
+    box-shadow: 2px 4px;
 }
 
 div.gallery:hover {
@@ -15,10 +15,11 @@ div.gallery:hover {
     background-color: white;
     color: #005780;
     font-weight: bold;
+    transform: translate(4px, -4px);
+    box-shadow: 8px 8px;
 }
 
 div.gallery img {
-    
     width: 100%;
     height: auto%;
 }
