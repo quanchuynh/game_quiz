@@ -14,11 +14,13 @@ class Question extends Component {
       questionTime: this.props.timer,
       questionTimeLeft: this.props.timer,
       disableButton: false,
+      isCorrect: false,
       gameMode: this.props.gameMode
     };
     this.intervalId = setInterval(this.timer.bind(this), 1000);
     this.handleAnswer = this.handleAnswer.bind(this);
     this.handleExpiration = this.handleExpiration.bind(this);
+    this.handleNextQuestion = this.handleNextQuestion.bind(this);
   }
 
   timer() {
@@ -40,7 +42,7 @@ class Question extends Component {
   }
 
   _resetQuestion(isCorrect, to) {
-    clearInterval(to);
+    // clearInterval(to);
     this.setState({
       answered: false,
       currentCount: nextQuestionTime
@@ -69,7 +71,8 @@ class Question extends Component {
 
     clearTimeout(this.intervalId);
     this.setState({
-      questionTimeLeft: this.state.questionTime
+      questionTimeLeft: this.state.questionTime,
+      isCorrect: isCorrect
     })
 
     //set the question to answered which wil hide the buttonVisibility
@@ -79,6 +82,7 @@ class Question extends Component {
       var self = this;
       this.setState({ disableButton: true })
 
+/*
       let to = setInterval(() => {
         this.setState({
           currentCount: this.state.currentCount - 1
@@ -89,16 +93,23 @@ class Question extends Component {
           }
         })
       }, 1000);
+*/
 
     });
+  }
+
+  handleNextQuestion(isCorrect) {
+    var to = null;
+    this._resetQuestion(this.state.isCorrect, to);
   }
 
   handleExpiration() {
     //set the question to answered which wil hide the buttonVisibility
     //set the time to elapse until the next question comes up
-    this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
+    this.setState({answered: true, currentCount: nextQuestionTime, isCorrect: false}, ()=> {
       var self = this;
 
+/*
       let to = setInterval(() => {
         this.setState({
           currentCount: this.state.currentCount - 1
@@ -109,6 +120,7 @@ class Question extends Component {
           }
         })
       }, 1000);
+*/
 
     });
   }
@@ -133,7 +145,10 @@ class Question extends Component {
             <h4 style={timeText}>{this.state.questionTimeLeft} seconds left</h4>
             <div className={visibility}>
               <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
+              <Button clName='button-4' copy={this.state.isCorrect} action={this.handleNextQuestion.toString()}/>
+              {/*
               <small>Next question in {this.state.currentCount} seconds.</small>
+              */}
             </div>
           </div>
           <div className={buttonVisibility}>
