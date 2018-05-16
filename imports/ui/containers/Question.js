@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import Button from '../components/Button';
 import Answer from '../components/Answer';
+import { withTracker } from 'meteor/react-meteor-data';
+import { QuestionState } from '../../../lib/gCollection';
 import '../index.css';
 
 const nextQuestionTime = 2;
@@ -85,6 +87,7 @@ class Question extends Component {
   handleNextQuestion(notUse) {
     this.setState({questionTimeLeft: this.props.timer});
     this._resetQuestion(this.state.isCorrect);
+    console.log(JSON.stringify(userAnswer));
   }
 
   handleExpiration() {
@@ -137,4 +140,11 @@ class Question extends Component {
   }
 }
 
-export default Question;
+// export default Question;
+
+export default withTracker(() => {
+  return {
+    events: QuestionState.find(userAnswer).fetch()
+  }
+})(Question);
+

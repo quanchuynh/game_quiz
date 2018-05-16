@@ -4,6 +4,8 @@ import Image from './components/Image';
 import NavBar from './navigation/NavBar';
 import Practice from './pages/Practice';
 import Home from './pages/Home';
+import CreateGame from './pages/CreateGame';
+import Register from './pages/Register';
 
 class App extends Component {
   render() {
@@ -13,6 +15,11 @@ class App extends Component {
       <BrowserRouter>
         <Switch>
            <Route path='/practice' component={Practice}/>
+           <Route path='/create-game' component={CreateGame}/>
+           <Route path='/add-player' component={CreateGame}/>
+           <Route path='/join-game' component={CreateGame}/>
+           <Route path='/watch-game' component={CreateGame}/>
+           <Route path='/register' component={Register}/>
            <Route path='/'         component={Home}/>
         </Switch>
       </BrowserRouter>

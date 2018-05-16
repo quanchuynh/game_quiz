@@ -1,0 +1,60 @@
+<template name='signup'>
+    <form>
+        <h1> Sign Up </h1>
+        <input type='text' id='su-email' placeholder='Email Address' />
+        <input type='text' id='su-username' placeholder='Username' />
+        <button id="sign_up"> Sign Up </button>
+    </form>
+</template>
+
+<template name='login'>
+    <form>
+        <h1> Log In </h1>
+        <input type='text' id='li-username' placeholder='Username' />
+        <input type='password' id='li-password' placeholder='Password' />
+        <button id="login"> Log In </button>
+    </form>
+</template>
+
+<template name='change_password'>
+    <form>
+        <h5> Change Password </h5>
+        <input type='password' id='new-password' placeholder='New Password' />
+        <input type='password' id='confirm-password' placeholder='Confirm New Password' />
+        <button id="change_password" name="{{ currentUser.username }}">Change</button>
+    </form>
+</template>
+
+<template name='reset_password'>
+    <form>
+        <h2> Forget User Name/Password </h2>
+        <input type='text' id='resetp-email' placeholder='Email Address' />
+        <button id="reset_password">Reset Password</button>
+    </form>
+</template>
+
+<template name='logout'>
+    <form>
+        ({{ currentUser.username }})
+        <button id="logout"> Log Out </button>
+    </form>
+</template>
+
+<template name='signupLogin'>
+<div id='login'>
+    {{#if loggingIn}}
+        Logging in . . .
+    {{else}}
+        {{#if currentUser}}
+            {{> logout}}
+            {{> doodle_update }}
+            <hr>
+            {{> change_password }}
+        {{else}}
+            {{> signup}}
+            {{> login}}
+            {{> reset_password}}
+        {{/if}}
+    {{/if}}
+</div>
+</template>

@@ -51,8 +51,11 @@ class Quiz extends Component {
            timer: quizData.seconds,
            questions: questionData,
            quizId: quizId,
+           currentQuestion: 0,
            gameMode: this.props.mode
          })
+         userAnswer.questionId = 0;
+         userAnswer.quizId = this.state.quizId;
        })
      }); 
   }
@@ -68,9 +71,10 @@ class Quiz extends Component {
         return _.sample(msg.comments);
   }
   nextQuestion(result) {
+    userAnswer.questionId = this.state.currentQuestion + 1;
     this.setState({
-          currentQuestion: (this.state.currentQuestion + 1),
-          correct: (result) ? (this.state.correct + 1) : this.state.correct
+      currentQuestion: (this.state.currentQuestion + 1),
+      correct: (result) ? (this.state.correct + 1) : this.state.correct
     });
   }
   finishQuiz(result) {
@@ -90,7 +94,7 @@ class Quiz extends Component {
   }
 
   updateQuizId(quizId) {
-    console.log("Ge Quiz: " + quizId);
+    console.log("Get Quiz: " + quizId);
     getQuiz(quizId);
   }
 
