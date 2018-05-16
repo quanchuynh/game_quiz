@@ -15,6 +15,8 @@ class Question extends Component {
       questionTimeLeft: this.props.timer,
       disableButton: false,
       isCorrect: false,
+      correctAnswer: '',
+      userAnswer: '',
       gameMode: this.props.gameMode
     };
     this.intervalId = setInterval(this.timer.bind(this), 1000);
@@ -41,11 +43,9 @@ class Question extends Component {
     return {__html:  this.props.quest[this.props.index].explanation};
   }
 
-  _resetQuestion(isCorrect, to) {
-    // clearInterval(to);
+  _resetQuestion(isCorrect) {
     this.setState({
       answered: false,
-      currentCount: nextQuestionTime
     }, () => {
       if ((this.props.index + 1) >= this.props.quest.length) {
         this.props.done(isCorrect);
@@ -71,58 +71,25 @@ class Question extends Component {
 
     clearTimeout(this.intervalId);
     this.setState({
-      questionTimeLeft: this.state.questionTime,
-      isCorrect: isCorrect
+      isCorrect: isCorrect,
+      correctAnswer: correctAnswer,
+      userAnswer: userAnswer 
     })
 
     //set the question to answered which wil hide the buttonVisibility
-    //set the time to elapse until the next question comes up
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
-      //counts down from a number
-      var self = this;
       this.setState({ disableButton: true })
-
-/*
-      let to = setInterval(() => {
-        this.setState({
-          currentCount: this.state.currentCount - 1
-        }, () => {
-          if (self.state.currentCount <= 0) {
-            self._resetQuestion(isCorrect, to);
-            this.setState({ disableButton: false })
-          }
-        })
-      }, 1000);
-*/
-
     });
   }
 
-  handleNextQuestion(isCorrect) {
-    var to = null;
-    this._resetQuestion(this.state.isCorrect, to);
+  handleNextQuestion(notUse) {
+    this.setState({questionTimeLeft: this.props.timer});
+    this._resetQuestion(this.state.isCorrect);
   }
 
   handleExpiration() {
     //set the question to answered which wil hide the buttonVisibility
-    //set the time to elapse until the next question comes up
-    this.setState({answered: true, currentCount: nextQuestionTime, isCorrect: false}, ()=> {
-      var self = this;
-
-/*
-      let to = setInterval(() => {
-        this.setState({
-          currentCount: this.state.currentCount - 1
-        }, () => {
-          if (self.state.currentCount === 0) {
-            //if time ran out then the answer is wrong
-            self._resetQuestion(false, to);
-          }
-        })
-      }, 1000);
-*/
-
-    });
+    this.setState({answered: true, isCorrect: false});
   }
 
   render() {
@@ -135,6 +102,7 @@ class Question extends Component {
     let timeText = {color: "#005780", backgroundColor: "tranparent"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
+    let incorrectText = {color: "red"}, correctText = {color: "green"}
     return (
       <div className="question">
         <div className="grid">
@@ -144,11 +112,17 @@ class Question extends Component {
             </h4>
             <h4 style={timeText}>{this.state.questionTimeLeft} seconds left</h4>
             <div className={visibility}>
+              {
+                 this.state.isCorrect ? 
+                   <p style={correctText}>Correct</p> 
+                 : 
+                   <div>
+                      <p style={incorrectText}>Incorrect</p>
+                      <p> Correct answer: {this.state.correctAnswer}, your answer: {this.state.userAnswer}</p>
+                   </div>
+              }
               <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
-              <Button clName='button-4' copy={this.state.isCorrect} action={this.handleNextQuestion.toString()}/>
-              {/*
-              <small>Next question in {this.state.currentCount} seconds.</small>
-              */}
+              <Button clName='button-2' copy='Next Question' action={this.handleNextQuestion}/>
             </div>
           </div>
           <div className={buttonVisibility}>
