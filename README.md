@@ -10,12 +10,8 @@
 #      meteor add gadicc:blaze-react-component
 #   2. meteor add react-meteor-data  (for integrating meteor data system). Use withTracker
 #   3. Will need to "meteor remove autopublish" to limit automatic publish
-
-#   import React from 'react';
-#   import Blaze from 'meteor/gadicc:blaze-react-component';
-#   
-#   const App = () => (
-#     <div>
-#       <Blaze template="itemsList" items={items} />
-#     </div>
-#   );
+#
+#   1. meteor add react-template-helper  -- react in Blaze template
+#
+#   Authentication
+#   1. meteor add accounts-base, meteor add accounts-password

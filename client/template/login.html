@@ -42,19 +42,39 @@
 
 <template name='signupLogin'>
 <div id='login'>
+    <!-- Parameters: component, (valid actions: 'create', 'join', 'add', 'watch'  -->
     {{#if loggingIn}}
         Logging in . . .
     {{else}}
         {{#if currentUser}}
             {{> logout}}
-            {{> doodle_update }}
-            <hr>
             {{> change_password }}
+            <hr>
+            {{#if reactComponent 'create' component }} {{> create}} {{/if}}
+            {{#if reactComponent 'add' component }} {{> add}} {{/if}}
+            {{#if reactComponent 'join' component }} {{> join}} {{/if}}
+            {{#if reactComponent 'watch' component }} {{> watch}} {{/if}}
         {{else}}
             {{> signup}}
-            {{> login}}
+            {{> login }}
             {{> reset_password}}
         {{/if}}
     {{/if}}
 </div>
+</template>
+
+<template name='create'>
+   <p>Create Game Component</p>
+</template>
+
+<template name='join'>
+   <p>Join Game Component</p>
+</template>
+
+<template name='add'>
+   <p>Add Player Component</p>
+</template>
+
+<template name='watch'>
+   <p>Watch Game Component</p>
 </template>

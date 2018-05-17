@@ -3,10 +3,12 @@ Template.signup.events({
         var email = template.find('#su-email').value;
         var username = template.find('#su-username').value;
         evt.preventDefault();
+/*
         if (!Emails.findOne({"email": email})) {
           alert("Email: " + email + " not authorized to create account");
           return;
         }
+*/
 
         console.log("Call remote createUserAccount: " + username);
         Meteor.call('createUserAccount', email, username, function(err, result) {
@@ -70,3 +72,8 @@ Template.logout.events({
     }
 });
 
+Template.signupLogin.helpers({
+  reactComponent: function(component, nameEntered) {
+    return (component == nameEntered);
+  }
+});
