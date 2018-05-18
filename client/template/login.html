@@ -47,15 +47,27 @@
         Logging in . . .
     {{else}}
         {{#if currentUser}}
-            {{> logout}}
-            {{> change_password }}
-            <hr>
             {{#if reactComponent 'create' component }} {{> create}} {{/if}}
             {{#if reactComponent 'add' component }} {{> add}} {{/if}}
             {{#if reactComponent 'join' component }} {{> join}} {{/if}}
             {{#if reactComponent 'watch' component }} {{> watch}} {{/if}}
         {{else}}
-            {{> signup}}
+            {{> signIn }}
+        {{/if}}
+    {{/if}}
+</div>
+</template>
+
+<template name='signIn'>
+<div id='signIn'>
+    {{#if loggingIn}}
+        Logging in . . .
+    {{else}}
+        {{#if currentUser}}
+            {{> logout}}
+            {{> change_password }}
+            <hr>
+        {{else}}
             {{> login }}
             {{> reset_password}}
         {{/if}}
@@ -66,24 +78,32 @@
 <template name='create'>
   <p>Create Game Component</p>
   <div>
-   {{> React component=createGame }}
+   {{> React component=createGame 
+             currentUser=currentUser
+   }}
   </div>
 </template>
 
 <template name='join'>
   <div>
-   {{> React component=joinGame }}
+   {{> React component=joinGame 
+             currentUser=currentUser
+   }}
   </div>
 </template>
 
 <template name='add'>
   <div>
-   {{> React component=addPlayer }}
+   {{> React component=addPlayer 
+             currentUser=currentUser
+   }}
   </div>
 </template>
 
 <template name='watch'>
   <div>
-   {{> React component=watchGame }}
+   {{> React component=watchGame 
+             currentUser=currentUser
+   }}
   </div>
 </template>

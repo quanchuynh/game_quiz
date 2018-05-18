@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 
-class Register extends Component {
+class SignUp extends Component {
   constructor(props) {
      super(props);
      this.state = {
@@ -28,4 +28,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default SignUp;

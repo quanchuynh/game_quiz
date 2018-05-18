@@ -98,7 +98,8 @@ a {
      */
 a:active,
 a:hover {
-  outline-width: 0; }
+  outline-width: 0; 
+}
 
 /* Text-level semantics
        ========================================================================== */

@@ -16,6 +16,13 @@
   text-decoration: none;
 }
 
+.navbar a.active, .DropdownNavItem button.active
+{
+  background-color: #33CCCC;
+  border: 4px solid #CCFFFF;
+  border-style:inset;
+}
+
 /* The DropdownNavItem container */
 .DropdownNavItem {
   float: left;

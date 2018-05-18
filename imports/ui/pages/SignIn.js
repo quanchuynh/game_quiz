@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
-import Welcome from '../components/Welcome';
 
-class CreateGame extends Component {
+class SignIn extends Component {
   constructor(props) {
      super(props);
      this.state = {
@@ -25,18 +24,17 @@ class CreateGame extends Component {
   }
 
   render() {
+     let currentUser = Meteor.user();
+     let componentName = getComponentAfterLogin();
+  
      return (
        <div>
           <div>
-             <Welcome name={this.props.currentUser.username} />
-             <h4>Enter a Unique Name For Your New Game</h4>
-             <input type = "text" value = {this.state.data} onChange={this.updateState}/>
-             <button onClick={this.handleSubmit}>Submit</button>
-             <h4>{this.state.data}</h4>
+             <Blaze template="signIn" />
           </div>
        </div>
      );
   }
 }
 
-export default CreateGame;
+export default SignIn;

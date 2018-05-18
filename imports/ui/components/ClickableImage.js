@@ -9,8 +9,8 @@ class ClickableImage extends Component {
       return (
         <div className={clName} onClick={() => this.props.action(this.props.copy)}>
            <img src={quizProfile.imagePath}/>
-           <div desc><p dangerouslySetInnerHTML={title}></p> </div>
-           <div desc><p>{quizProfile.quizType.replace(/_/g, ' ')}</p></div>
+           <div className="desc"><p dangerouslySetInnerHTML={title}></p> </div>
+           <div className="desc"><p className="cap">{quizProfile.quizType.replace(/_/g, ' ').toLowerCase()}</p></div>
         </div> 
       );
     }

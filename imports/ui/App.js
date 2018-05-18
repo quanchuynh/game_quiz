@@ -5,7 +5,8 @@ import NavBar from './navigation/NavBar';
 import Practice from './pages/Practice';
 import Home from './pages/Home';
 import Game from './pages/Game';
-import Register from './pages/Register';
+import SignUp from './pages/SignUp';
+import SignIn from './pages/SignIn';
 
 class App extends Component {
   constructor(props) {
@@ -14,12 +15,16 @@ class App extends Component {
     this.joinGamePath = joinGamePath;
     this.addPlayerPath = addPlayerPath
     this.watchGamePath = watchGamePath;
+    this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  handleSelect(link) {
   }
 
   render() {
     return (
       <div className="App">
-      <NavBar/>
+      <NavBar action={this.handleSelect}/>
       <BrowserRouter>
         <Switch>
            <Route path='/practice' component={Practice}/>
@@ -27,7 +32,8 @@ class App extends Component {
            <Route path={this.addPlayerPath} component={Game}/>
            <Route path={this.joinGamePath} component={Game}/>
            <Route path={this.watchGamePath} component={Game}/>
-           <Route path='/register' component={Register}/>
+           <Route path='/SignIn' component={SignIn}/>
+           <Route path='/SignUp' component={SignUp}/>
            <Route path='/'         component={Home}/>
         </Switch>
       </BrowserRouter>

@@ -1,6 +1,9 @@
 import { Template } from 'meteor/templating';
 import './template/login.html';
 import CreateGame from '../imports/ui/pages/CreateGame';
+import JoinGame from '../imports/ui/pages/JoinGame';
+import AddPlayer from '../imports/ui/pages/AddPlayer';
+import WatchGame from '../imports/ui/pages/WatchGame';
 
 
 Template.signup.events({
@@ -14,7 +17,6 @@ Template.signup.events({
           return;
         }
 */
-
         console.log("Call remote createUserAccount: " + username);
         Meteor.call('createUserAccount', email, username, function(err, result) {
           if (err) { 
@@ -85,7 +87,25 @@ Template.signupLogin.helpers({
 
 Template.create.helpers({
   createGame() { 
-    console.log("return CreateGame");
     return CreateGame; 
   } 
 });
+
+Template.join.helpers({
+  joinGame() { 
+    return JoinGame; 
+  } 
+});
+
+Template.add.helpers({
+  addPlayer() { 
+    return AddPlayer; 
+  } 
+});
+
+Template.watch.helpers({
+  watchGame() { 
+    return WatchGame; 
+  } 
+});
+

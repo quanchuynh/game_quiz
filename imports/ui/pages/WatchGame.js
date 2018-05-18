@@ -4,7 +4,7 @@ import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
 
-class CreateGame extends Component {
+class WatchGame extends Component {
   constructor(props) {
      super(props);
      this.state = {
@@ -29,7 +29,7 @@ class CreateGame extends Component {
        <div>
           <div>
              <Welcome name={this.props.currentUser.username} />
-             <h4>Enter a Unique Name For Your New Game</h4>
+             <h4>Enter Name of the Game to Watch</h4>
              <input type = "text" value = {this.state.data} onChange={this.updateState}/>
              <button onClick={this.handleSubmit}>Submit</button>
              <h4>{this.state.data}</h4>
@@ -39,4 +39,4 @@ class CreateGame extends Component {
   }
 }
 
-export default CreateGame;
+export default WatchGame;
