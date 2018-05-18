@@ -4,27 +4,29 @@ import Image from './components/Image';
 import NavBar from './navigation/NavBar';
 import Practice from './pages/Practice';
 import Home from './pages/Home';
-import CreateGame from './pages/CreateGame';
+import Game from './pages/Game';
 import Register from './pages/Register';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.createGamePath = createGamePath;
+    this.joinGamePath = joinGamePath;
+    this.addPlayerPath = addPlayerPath
+    this.watchGamePath = watchGamePath;
+  }
+
   render() {
-    /* Use global for consistency of route paths */
-    let createGamePath = createGamePath,
-        addPlayerPath = addPlayerPath,
-        joinGamePath = joinGamePath,
-        watchGamePath = watchGamePath;
-        
     return (
       <div className="App">
       <NavBar/>
       <BrowserRouter>
         <Switch>
            <Route path='/practice' component={Practice}/>
-           <Route path={createGamePath} component={CreateGame}/>
-           <Route path={addPlayerPath} component={CreateGame}/>
-           <Route path={joinGamePath} component={CreateGame}/>
-           <Route path={watchGamePath} component={CreateGame}/>
+           <Route path={this.createGamePath} component={Game}/>
+           <Route path={this.addPlayerPath} component={Game}/>
+           <Route path={this.joinGamePath} component={Game}/>
+           <Route path={this.watchGamePath} component={Game}/>
            <Route path='/register' component={Register}/>
            <Route path='/'         component={Home}/>
         </Switch>

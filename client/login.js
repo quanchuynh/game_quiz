@@ -1,3 +1,8 @@
+import { Template } from 'meteor/templating';
+import './template/login.html';
+import CreateGame from '../imports/ui/pages/CreateGame';
+
+
 Template.signup.events({
     'click #sign_up': function (evt, template) {
         var email = template.find('#su-email').value;
@@ -76,4 +81,11 @@ Template.signupLogin.helpers({
   reactComponent: function(component, nameEntered) {
     return (component == nameEntered);
   }
+});
+
+Template.create.helpers({
+  createGame() { 
+    console.log("return CreateGame");
+    return CreateGame; 
+  } 
 });
