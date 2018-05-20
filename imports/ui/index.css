@@ -4486,7 +4486,15 @@ a.thumbnail image {
     font-size: 2em; }
 
 .question .hidden {
-  display: none; }
+  position: relative;
+  top: 10px;
+  display: none; 
+}
+
+.Quiz {
+  position: relative;
+  top: 50px;
+}
 
 body {
   text-align: center;
@@ -4559,6 +4567,9 @@ button {
   padding-top: 2px;
   padding-bottom: 2px;
   width: 100%;
+  position: relative;
+  top: 10px;
+  z-index: 1;
 }
 
 .category-color1 {
@@ -4613,3 +4624,9 @@ p.no-padding {
   color: black; 
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
+
+.homePage {
+  position: relative;
+  top: 100px;
+}
+

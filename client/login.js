@@ -37,6 +37,24 @@ Template.login.events({
         Meteor.loginWithPassword(
             username, template.find('#li-password').value
         );
+    },
+
+    'click #reset_password': function (evt, template) {
+        evt.preventDefault();
+        var email = template.find('#li-username').value;
+        if (!email) {
+          alert("Enter your user name or email");
+          return;
+        }
+        Meteor.call('resetPasswordByEmail', email, function(err, result) {
+          if (err) { alert(err); }
+          return;
+        });
+    }, 
+
+    'click #login-signup': function (evt, template) {
+       console.log("Swith to sign in");
+       window.location.href = SignUpPath; 
     }
 });
 
@@ -52,21 +70,6 @@ Template.change_password.events({
         }
         Meteor.call('changeUserPassword', userName, newPassword, function(err, result) {
           if (err) { alert("Server side error: " + err); }
-          return;
-        });
-    }  
-});
-
-Template.reset_password.events({
-    'click #reset_password': function (evt, template) {
-        evt.preventDefault();
-        var email = template.find('#resetp-email').value;
-        if (!email) {
-          alert("Need to enter your email");
-          return;
-        }
-        Meteor.call('resetPasswordByEmail', email, function(err, result) {
-          if (err) { alert(err); }
           return;
         });
     }  

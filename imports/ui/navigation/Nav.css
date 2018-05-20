@@ -1,9 +1,12 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css");
 
 .navbar {
-  overflow: hidden;
+  position: fixed;
+  top: 0px;
   background-color: #004666;
   font-family: Arial;
+  width: 100%;
+  z-index: 10;
 }
 
 /* Links inside the navbar */
