@@ -78,6 +78,7 @@
   font-weight:normal;
 }
 .gameForm #submit_game, .gameForm #join_game, .gameForm #watch_game, .gameForm #add_player {
+    margin-bottom: 10px;
     algin: center;
     width: 25%;
     border: solid 2px blue;
