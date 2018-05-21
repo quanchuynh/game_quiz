@@ -1,0 +1,92 @@
+.gameForm {
+  position: relative;
+  top: 50px;
+  margin-top: 30px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 450px;
+  font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+  background: white;
+  border-radius: 5px;
+  border: solid 1px #005780;
+  box-shadow:
+    0px 0px 0px 5px rgba( 255,255,255,0.4 ),
+    0px 4px 20px rgba( 0,0,0,0.33 );
+}
+.gameForm .header {
+  float: center;
+}
+.gameForm label {
+  display:block;
+  margin-bottom: 10px;
+}
+.gameForm label > span {
+  float: left;
+  width: 100px;
+  color: #005780;
+  font-weight: bold;
+  font-size: 13px;
+  text-shadow: 1px 1px 1px #fff;
+}
+.gameForm textarea {
+  width:270px;
+  height:100px;
+}
+
+.gameForm input[type=text],
+.gameForm input[type=date],
+.gameForm input[type=datetime],
+.gameForm input[type=number],
+.gameForm input[type=search],
+.gameForm input[type=time],
+.gameForm input[type=url],
+.gameForm input[type=email],
+.gameForm select, .gameForm textarea
+{
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border: 1px solid #005780;
+  outline: none;
+  color: #005780;
+  padding: 5px 8px 5px 8px;
+  box-shadow: inset 1px 1px 4px #FFD5E7;
+  -moz-box-shadow: inset 1px 1px 4px #FFD5E7;
+  -webkit-box-shadow: inset 1px 1px 4px #FFD5E7;
+  background: #f2f2f2;
+  width:65%;
+}
+
+.gameForm input[type=submit],
+.gameForm input[type=button]
+{
+  background: #EB3B88;
+  border: 1px solid #C94A81;
+  padding: 5px 15px 5px 15px;
+  color: #005780;
+  box-shadow: inset -1px -1px 3px #FF62A7;
+  -moz-box-shadow: inset -1px -1px 3px #FF62A7;
+  -webkit-box-shadow: inset -1px -1px 3px #FF62A7;
+  border-radius: 3px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;    
+  font-weight: bold;
+}
+.required {
+  color:red;
+  font-weight:normal;
+}
+.gameForm #submit_game, .gameForm #join_game, .gameForm #watch_game, .gameForm #add_player {
+    algin: center;
+    width: 25%;
+    border: solid 2px blue;
+    color: white;
+    box-shadow:
+        0px 0px 0px 5px rgba( 255,255,255,0.4 ),
+        0px 4px 20px rgba( 0,0,0,0.33 );
+    background-color: #005780;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+}
+

@@ -3,6 +3,8 @@ import axios from 'axios';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
+import SelectInput from '../components/SelectInput';
+import './CreateGame.css';
 
 class JoinGame extends Component {
   constructor(props) {
@@ -21,19 +23,22 @@ class JoinGame extends Component {
 
   handleSubmit() {
      console.log("New game: " + this.state.data);
-     window.location.href = "/add-player";
   }
 
   render() {
+     let gameNames = [],
+         yes = true, no = false;
      return (
-       <div>
-          <div>
+       <div className="gameForm">
+          <div className="header">
              <Welcome name={this.props.currentUser.username} />
-             <h4>Enter Name Of Game To Join</h4>
-             <input type = "text" value = {this.state.data} onChange={this.updateState}/>
-             <button onClick={this.handleSubmit}>Submit</button>
-             <h4>{this.state.data}</h4>
           </div>
+          <form>
+             <SelectInput options={gameNames} isRequired={yes} fieldLabel="Game Name"
+                optId="gameNameId" placeHolder="Name Of Game To Join"
+             />
+             <button id="join_game" onClick={this.handleSubmit}>Join Game</button>
+          </form>
        </div>
      );
   }

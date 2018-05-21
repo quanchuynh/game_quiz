@@ -3,6 +3,8 @@ import axios from 'axios';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
+import SelectInput from '../components/SelectInput';
+import './CreateGame.css';
 
 class WatchGame extends Component {
   constructor(props) {
@@ -25,18 +27,24 @@ class WatchGame extends Component {
   }
 
   render() {
+     let gameNames = [],
+         yes = true, no = false;
      return (
-       <div>
-          <div>
+       <div className="gameForm">
+          <div className="header">
              <Welcome name={this.props.currentUser.username} />
-             <h4>Enter Name of the Game to Watch</h4>
-             <input type = "text" value = {this.state.data} onChange={this.updateState}/>
-             <button onClick={this.handleSubmit}>Submit</button>
-             <h4>{this.state.data}</h4>
           </div>
+          <form>
+             <SelectInput options={gameNames} isRequired={yes} fieldLabel="Game Name"
+                optId="gameNameId" placeHolder="Name Of Game To Watch"
+             />
+             <button id="watch_game" onClick={this.handleSubmit}>Watch Game</button>
+          </form>
        </div>
      );
   }
 }
 
 export default WatchGame;
+
+
