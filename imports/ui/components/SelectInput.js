@@ -19,7 +19,8 @@ const SelectInput = (props) => {
           options.map((opt, i) => <option key={i} value={opt}>{opt}</option>)
         }
       </datalist>
-      <input type="text" list={optId} placeholder={placeHolder}/>
+      <input type="text" list={optId} placeholder={placeHolder} 
+             onKeyUp={(e) => props.keyUp(e)} onBlur={(e) => props.select(e)} />
     </label>
   );
 };

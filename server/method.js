@@ -5,6 +5,22 @@ var categories = [];
 var categoriesIdMap = [];
 
 Meteor.methods({
+  checkGameName: function(name) {
+    if (CreatedGame.findOne({name: name})) {
+      let ii = 1;
+      let recommendedName = name + ' ' + ii++;
+      while (CreatedGame.findOne(recommendedName)) {
+        recommendedName =  name + ' ' + ii++;
+      }
+      return {found: true, recommend: recommendedName};
+    }
+    return {found: false, recommend: ''};
+  },
+
+  getUsers: function(partialName) {
+    return getUsers(partialName);
+  },
+
   getQuiz: function(quizId) {
      return quizList.getQuiz(quizId);
   },
@@ -70,6 +86,19 @@ getAllCategories = function() {
   return categories;
 }
 
+getUsers = function(partialName) {
+  console.log("getUsers ...");
+  var regexString = '.*' + partialName + '.*';
+  var match = Meteor.users.find({username: {$regex: regexString}});
+  if (match) {
+    var users = match.fetch(), players = [];
+    for (ii = 0; ii < 5 && ii < users.length; ii++) players[ii] = users[ii].username;
+    return players;
+  }
+  return [];
+}
+
+
 function randomId()
 {
   var text = "C_";
@@ -99,3 +128,4 @@ function DbError(message) {
   this.name = 'DbError';
   this.message = message || 'Error executing SQL';
 }
+

@@ -7,30 +7,113 @@ import FormField from '../components/FormField';
 import SelectInput from '../components/SelectInput';
 import './CreateGame.css';
 
+nullOrEmpty = function(name) {
+  return (!name || name == undefined || name == "" || name.length == 0) ;
+};
+
 class CreateGame extends Component {
   constructor(props) {
      super(props);
      this.state = {
         data: '',
-        logIn: false
+        logIn: false,
+        players: []
      }
      this.updateState = this.updateState.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
+     this.handleQuizCountKeyup = this.handleQuizCountKeyup.bind(this);
+     this.handleQuizCountSelect = this.handleQuizCountSelect.bind(this);
+     this.handleGameName = this.handleGameName.bind(this);
+     this.game = { name: '', count: 1, player1: null, player2: null, player3: null};
   };
+
+  componentDidMount() {
+    Meteor.call('getUsers', '', (err, ret) => {
+      this.setState({players: ret});
+      console.log("Palyers: " + JSON.stringify(ret));
+    });
+  }
+
+  handleQuizPlayer1_Keyup(e) {
+    console.log("Key up value: " + e.currentTarget.value);
+  }
+
+  handleQuizPlayer1_Select(e) {
+    console.log("Select value: " + e.currentTarget.value);
+  }
+
+  handleQuizCountKeyup(e) {
+    console.debug("Key up value: " + e.currentTarget.value);
+  }
+
+  handleQuizCountSelect(e) {
+    var parsed = parseInt(e.currentTarget.value);
+    if (isNaN(parsed)) {
+      alert("Number of quizzes must be a number");
+      return;
+    }
+    if (parsed > 100) {
+      alert("Too many quizzes, maximum is 100");
+      return;
+    }
+    this.game.count = parsed;
+  }
+
+  handleGameName(e) {
+    console.log("Select value: " + e.currentTarget.value);
+    let name = e.currentTarget.value;
+    if (nullOrEmpty(name)) {
+      alert("You must enter a name of this game");
+      return;
+    }
+    Meteor.call('checkGameName', name, (err, ret) => {
+      if (ret.found) {
+        alert('"' + name + '" already exists, recommended "' + ret.recommend + '"');
+        return;
+      }
+    });
+    this.game.name = name;
+  }
 
   updateState(e) {
      this.setState({data: e.target.value});
   }
 
   handleSubmit() {
-     console.log("New game: " + this.state.data);
-     window.location.href = "/add-player";
+    if (!this.nameEnter()) {
+      alert("You must enter a name of this game");
+      return;
+    }
+    if (nullOrEmpty(this.game.player1)) {
+      alert("User name of player 1 is required");
+      return;
+    }
+    if (nullOrEmpty(this.game.player2)) {
+      alert("User name of player 2 is required");
+      return;
+    }
+    if (this.game.player2 == this.game.player1) {
+      alert("You must have unique player, 1 and 2 are the same.");
+      return;
+    }
+    if (this.game.player1 == this.game.player3) {
+      alert("You must have unique player, 1 and 3 are the same.");
+      return;
+    }
+    if (this.game.player2 == this.game.player3) {
+      alert("You must have unique player, 2 and 3 are the same.");
+      return;
+    }
+  }
+
+  nameEnter() {
+    return (this.game.name != ""  && this.game.name.length > 0);
   }
 
   render() {
      let no = false, yes = true,
          opts = [1, 2, 3, 4, 5];
-         players = [];
+         players = this.state.players;
      return (
        <div className="gameForm">
           <div className="header">
@@ -38,9 +121,10 @@ class CreateGame extends Component {
           </div>
           <form>
              <FormField forName="field1" fieldLabel="Name" placeholder="Unique Name Of New Game"
-                isRequired={yes} inputType="text" action={this.updateState}/>
+                isRequired={yes} inputType="text" action={this.handleGameName}/>
              <SelectInput options={opts} isRequired={yes} fieldLabel="# of Quizzes" 
                 optId="quizCount" placeHolder="Number of quizzes in this game"
+                keyUp={this.handleQuizCountKeyup} select={this.handleQuizCountSelect}
              />
              <SelectInput options={players} isRequired={yes} fieldLabel="Player 1" 
                 optId="player1" placeHolder="User name of 1st player"
