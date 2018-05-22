@@ -19,12 +19,19 @@ class CreateGame extends Component {
         logIn: false,
         players: []
      }
+     this.game = { name: '', count: 1, player1: null, player2: null, player3: null};
+
      this.updateState = this.updateState.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
      this.handleQuizCountKeyup = this.handleQuizCountKeyup.bind(this);
      this.handleQuizCountSelect = this.handleQuizCountSelect.bind(this);
      this.handleGameName = this.handleGameName.bind(this);
-     this.game = { name: '', count: 1, player1: null, player2: null, player3: null};
+     this.handleQuizPlayer1_Keyup = this.handleQuizPlayer1_Keyup.bind(this); 
+     this.handleQuizPlayer1_Select = this.handleQuizPlayer1_Select.bind(this);
+     this.handleQuizPlayer2_Keyup = this.handleQuizPlayer2_Keyup.bind(this); 
+     this.handleQuizPlayer2_Select = this.handleQuizPlayer2_Select.bind(this);
+     this.handleQuizPlayer3_Keyup = this.handleQuizPlayer3_Keyup.bind(this); 
+     this.handleQuizPlayer3_Select = this.handleQuizPlayer3_Select.bind(this);
   };
 
   componentDidMount() {
@@ -39,7 +46,42 @@ class CreateGame extends Component {
   }
 
   handleQuizPlayer1_Select(e) {
-    console.log("Select value: " + e.currentTarget.value);
+    var player1 = e.currentTarget.value;
+    Meteor.call('checkUserName', player1, (err, ret) => {
+      if (!ret) {
+        alert('Player 1 "' + player1 + '" has not signed up');
+        return;
+      }
+      this.game.player1 = player1;
+    });
+  }
+
+  handleQuizPlayer2_Keyup(e) {
+  }
+
+  handleQuizPlayer2_Select(e) {
+    var player2 = e.currentTarget.value;
+    Meteor.call('checkUserName', player2, (err, ret) => {
+      if (!ret) {
+        alert('Player 2 "' + player2 + '" has not signed up');
+        return;
+      }
+      this.game.player2 = player2;
+    });
+  }
+
+  handleQuizPlayer3_Keyup(e) {
+  }
+
+  handleQuizPlayer3_Select(e) {
+    var player3 = e.currentTarget.value;
+    Meteor.call('checkUserName', player3, (err, ret) => {
+      if (!ret) {
+        alert('Player 3 "' + player3 + '" has not signed up');
+        return;
+      }
+      this.game.player3 = player3;
+    });
   }
 
   handleQuizCountKeyup(e) {
@@ -85,11 +127,11 @@ class CreateGame extends Component {
       return;
     }
     if (nullOrEmpty(this.game.player1)) {
-      alert("User name of player 1 is required");
+      alert("Valid signed up user name of player 1 is required");
       return;
     }
     if (nullOrEmpty(this.game.player2)) {
-      alert("User name of player 2 is required");
+      alert("Valid signed up user name of player 2 is required");
       return;
     }
     if (this.game.player2 == this.game.player1) {
@@ -104,6 +146,7 @@ class CreateGame extends Component {
       alert("You must have unique player, 2 and 3 are the same.");
       return;
     }
+    window.location.href = joinGamePath;
   }
 
   nameEnter() {
@@ -125,19 +168,22 @@ class CreateGame extends Component {
              <SelectInput options={opts} isRequired={yes} fieldLabel="# of Quizzes" 
                 optId="quizCount" placeHolder="Number of quizzes in this game"
                 keyUp={this.handleQuizCountKeyup} select={this.handleQuizCountSelect}
+                reset={this.state.player1}
              />
              <SelectInput options={players} isRequired={yes} fieldLabel="Player 1" 
                 optId="player1" placeHolder="User name of 1st player"
+                keyUp={this.handleQuizPlayer1_Keyup} select={this.handleQuizPlayer1_Select}
              />
              <SelectInput options={players} isRequired={yes} fieldLabel="Player 2" 
                 optId="player2" placeHolder="User name of 2nd player"
+                keyUp={this.handleQuizPlayer2_Keyup} select={this.handleQuizPlayer2_Select}
              />
              <SelectInput options={players} isRequired={no} fieldLabel="Player 3" 
                 optId="player3" placeHolder="User name of 3rd player"
+                keyUp={this.handleQuizPlayer3_Keyup} select={this.handleQuizPlayer3_Select}
              />
-             <button id="submit_game" onClick={this.handleSubmit}>Creae Game</button>
-             <h4>{this.state.data}</h4>
           </form>
+          <button id="submit_game" onClick={this.handleSubmit}>Creae Game</button>
        </div>
      );
   }

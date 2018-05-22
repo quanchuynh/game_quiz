@@ -17,6 +17,11 @@ Meteor.methods({
     return {found: false, recommend: ''};
   },
 
+  checkUserName(userName) {
+    if (Meteor.users.findOne({username: userName})) return true;
+    return false;
+  },
+
   getUsers: function(partialName) {
     return getUsers(partialName);
   },
@@ -87,7 +92,6 @@ getAllCategories = function() {
 }
 
 getUsers = function(partialName) {
-  console.log("getUsers ...");
   var regexString = '.*' + partialName + '.*';
   var match = Meteor.users.find({username: {$regex: regexString}});
   if (match) {
