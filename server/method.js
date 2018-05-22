@@ -5,6 +5,27 @@ var categories = [];
 var categoriesIdMap = [];
 
 Meteor.methods({
+  joinGame: function(gameName, userName) {
+    return joinGame(gameName,userName);
+  },
+
+  getMatchGames: function(userName) {
+    return getGames(userName);
+  },
+
+  insertNewGame: function(game) {
+    /* Insert new game. Initially wait for players. */
+    var waitList = [game.player1, game.player2];
+    waitList = game.player3 == null ? waitList : [...waitList, game.player3 ];
+    game.waitList = waitList;
+    CreatedGame.insert(game);
+    return true;
+  },
+
+  checkGame: function(gameName, userName) {
+    return checkGame(gameName, userName);
+  },
+
   checkGameName: function(name) {
     if (CreatedGame.findOne({name: name})) {
       let ii = 1;
@@ -84,6 +105,58 @@ Meteor.methods({
   }
 
 });
+
+joinGame = function(gameName, userName) {
+  console.log("Join " + gameName + ", by " + userName);
+
+  var match = CreatedGame.findOne({name: gameName});
+  if (!match) {
+    return {ok: false, errorMessage: "Could not find " + gameName + " in game list"};
+  }
+
+  console.log("Join " + gameName + ", by " + userName);
+
+  var checkResult = checkGame(gameName, userName);
+  if (!checkResult.ok) return checkResult;
+
+  var waitList = match.waitList;
+  if (!waitList.includes(userName)) {
+    return {ok: false, errorMessage: "Player " + userName + " already joined"};
+  }
+  waitList = waitList.filter(e => e != userName);
+  console.log("Joined User: " + userName + ", waits: " + JSON.stringify(waitList));
+  CreatedGame.update({_id: match._id}, {$set: {waitList: waitList}}, {$inc: {joinCount: 1}});
+  return {ok: true, errorMessage: "None", waitList: waitList};
+}
+
+checkGame = function(gameName, userName) {
+  var match = CreatedGame.findOne({name: gameName}); /* gameName is unique */
+  if (!match) return null;
+  var orCodintion = {$or: [{player1: userName}, {player2: userName}, {player3: userName}]};
+  var condition = {$and: [{name: gameName}, orCodintion]}; 
+  match = CreatedGame.findOne(condition); /* gameName is unique */
+  if (!match) {
+    return {ok: false, errorMessage: 'User: "' + userName + '" is not a player in game "' + gameName};
+  }
+  if (!match.active) {
+    return {ok: false, errorMessage: 'Game: "' + gameName + '" is not active'};
+  }
+  return {ok: true, errorMessage: 'No Error'};
+}
+
+getGames = function(userName) {
+  /* Support join game. Use must be in the player list. */
+  var names = [];
+  match = CreatedGame.find({$or: [{player1: userName}, {player1: userName}, {player1: userName}]});
+  if (match) {
+    var matches = match.fetch();
+    for (ii = 0; ii < matches.length; ii++) {
+      names[ii] = matches[ii].name; 
+    }
+  }
+  console.log("Games: " + JSON.stringify(names));
+  return names;
+}
 
 getAllCategories = function() {
   if (categories.length === 0) 

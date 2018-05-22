@@ -38,5 +38,18 @@ Meteor.startup(() => {
     console.log("Quiz: " + JSON.stringify(allQuiz[ii]));
 
   console.log("HEALTH_AND_MEDICINE number of quizzes" + allQuiz.length);
+  getGames('qhuynh');
+
+  var noMatch = checkGame('game name', 'user name');
+  if (noMatch) console.log('checkGame, noMatch is ok');
+
+  var match = checkGame('Demo game', 'user name');
+  console.log("checkGame: " + JSON.stringify(match));
+
+  match = checkGame('Demo game', 'qhuynh');
+  console.log("checkGame: " + JSON.stringify(match));
+
+  match = checkGame('Demo game 1', 'qhuynh');
+  console.log("checkGame: " + JSON.stringify(match));
 });
 

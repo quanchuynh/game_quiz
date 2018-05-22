@@ -42,11 +42,12 @@ class CreateGame extends Component {
   }
 
   handleQuizPlayer1_Keyup(e) {
-    console.log("Key up value: " + e.currentTarget.value);
+    console.log("Key up value: " + e.target.value);
   }
 
   handleQuizPlayer1_Select(e) {
-    var player1 = e.currentTarget.value;
+    if (nullOrEmpty(e.target.value)) return;
+    var player1 = e.target.value;
     Meteor.call('checkUserName', player1, (err, ret) => {
       if (!ret) {
         alert('Player 1 "' + player1 + '" has not signed up');
@@ -60,7 +61,8 @@ class CreateGame extends Component {
   }
 
   handleQuizPlayer2_Select(e) {
-    var player2 = e.currentTarget.value;
+    if (nullOrEmpty(e.target.value)) return;
+    var player2 = e.target.value;
     Meteor.call('checkUserName', player2, (err, ret) => {
       if (!ret) {
         alert('Player 2 "' + player2 + '" has not signed up');
@@ -74,22 +76,24 @@ class CreateGame extends Component {
   }
 
   handleQuizPlayer3_Select(e) {
-    var player3 = e.currentTarget.value;
+    if (nullOrEmpty(e.target.value)) return;
+    var player3 = e.target.value;
     Meteor.call('checkUserName', player3, (err, ret) => {
       if (!ret) {
         alert('Player 3 "' + player3 + '" has not signed up');
-        return;
       }
       this.game.player3 = player3;
+      return;
     });
   }
 
   handleQuizCountKeyup(e) {
-    console.debug("Key up value: " + e.currentTarget.value);
+    console.debug("Key up value: " + e.target.value);
   }
 
   handleQuizCountSelect(e) {
-    var parsed = parseInt(e.currentTarget.value);
+    if (nullOrEmpty(e.target.value)) return;
+    var parsed = parseInt(e.target.value);
     if (isNaN(parsed)) {
       alert("Number of quizzes must be a number");
       return;
@@ -102,8 +106,8 @@ class CreateGame extends Component {
   }
 
   handleGameName(e) {
-    console.log("Select value: " + e.currentTarget.value);
-    let name = e.currentTarget.value;
+    console.log("Select value: " + e.target.value);
+    let name = e.target.value;
     if (nullOrEmpty(name)) {
       alert("You must enter a name of this game");
       return;
@@ -127,6 +131,7 @@ class CreateGame extends Component {
       return;
     }
     if (nullOrEmpty(this.game.player1)) {
+      console.log("this.game.player1: " + this.game.player1);
       alert("Valid signed up user name of player 1 is required");
       return;
     }
@@ -146,7 +151,41 @@ class CreateGame extends Component {
       alert("You must have unique player, 2 and 3 are the same.");
       return;
     }
-    window.location.href = joinGamePath;
+    Meteor.call('checkGameName', this.game.name, (err, ret) => {
+      if (ret.found) {
+        alert('"' + this.game.name + '" already exists, recommended "' + ret.recommend + '"');
+        return;
+      }
+      if (!nullOrEmpty(this.game.player3)) {
+        var player3 = this.game.player3;
+        Meteor.call('checkUserName', player3, (err, ret) => {
+          if (!ret) {
+            alert('Player 3 "' + player3 + '" has not signed up');
+            return;
+          }
+          this.insertNewGame()
+        });
+      }
+      else this.insertNewGame();
+    });
+  }
+
+  insertNewGame() {
+    this.game.playerCount = this.playerCount();
+    this.game.joinCount = 0;
+    this.game.active = true;
+    Meteor.call('insertNewGame', this.game, (err, ret) => {
+      if (err) {
+        alert("Server error: " + err);
+        return;
+      }
+      window.location.href = joinGamePath;
+    });
+  }
+
+  playerCount() {
+    if (!nullOrEmpty(this.game.player3)) return 3;
+    return 2; 
   }
 
   nameEnter() {
@@ -168,7 +207,6 @@ class CreateGame extends Component {
              <SelectInput options={opts} isRequired={yes} fieldLabel="# of Quizzes" 
                 optId="quizCount" placeHolder="Number of quizzes in this game"
                 keyUp={this.handleQuizCountKeyup} select={this.handleQuizCountSelect}
-                reset={this.state.player1}
              />
              <SelectInput options={players} isRequired={yes} fieldLabel="Player 1" 
                 optId="player1" placeHolder="User name of 1st player"
