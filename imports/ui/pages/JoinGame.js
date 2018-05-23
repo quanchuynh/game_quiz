@@ -91,7 +91,7 @@ class JoinGame extends Component {
          yes = true, no = false;
      return (
        this.state.start ?
-         <StartGame gameName={this.state.gameName} />
+         <StartGame gameName={this.state.gameName} mode='play' player='this.props.currentUser.username'/>
        :
          <div className="gameForm">
             <div className="header">

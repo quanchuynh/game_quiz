@@ -14,7 +14,7 @@ class StartGame extends Component {
   }
   
   render() {
-    let waitList = this.props.game.waitList;
+    let waitList = this.props.game.waitList, others = this.props.game.waitList;
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
     const tempStyle = {position: "relative", top: "100px", float: "center"};
     return (
@@ -29,18 +29,31 @@ class StartGame extends Component {
             </ul>
             </div>
         :
-          <div> Game Begin ... </div>
+          <div> Game Begin ... 
+            <ul>
+              { 
+                waitList.map((user, i) => <li key={i}> {user}</li>)
+              }
+            </ul>
+          </div>
       }
       </div>
     );
   } 
 }
 
-export default withTracker(({gameName}) => {
+export default withTracker(({gameName, mode, player}) => {
   console.debug("withTracker Game name: " + gameName);
   var game = CreatedGame.findOne({name: gameName});
+  var allPlayers = [game.player1, game.player2];
+  allPlayers = game.player3 == null ? allPlayers : [...allPlayers, game.player3 ];
+  var otherPlayers = allPlayers.filter(e => e != player);
+
   console.debug("Start game: " + JSON.stringify(game));
   return {
-    game: game
+    game: game,
+    mode: mode,
+    player: player,
+    others: otherPlayers
   }
 }) (StartGame);

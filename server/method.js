@@ -5,6 +5,10 @@ var categories = [];
 var categoriesIdMap = [];
 
 Meteor.methods({
+  getActiveGames: function() {
+    return getActiveGames();
+  },
+
   joinGame: function(gameName, userName) {
     return joinGame(gameName,userName);
   },
@@ -142,6 +146,20 @@ checkGame = function(gameName, userName) {
     return {ok: false, errorMessage: 'Game: "' + gameName + '" is not active'};
   }
   return {ok: true, errorMessage: 'No Error'};
+}
+
+getActiveGames = function() {
+  /* list. */
+  var names = [];
+  match = CreatedGame.find({active: true});
+  if (match) {
+    var matches = match.fetch();
+    for (ii = 0; ii < matches.length; ii++) {
+      names[ii] = matches[ii].name; 
+    }
+  }
+  console.log("getActiveGames Games: " + JSON.stringify(names));
+  return names;
 }
 
 getGames = function(userName) {
