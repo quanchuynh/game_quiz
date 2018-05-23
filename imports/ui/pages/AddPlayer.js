@@ -23,7 +23,7 @@ class AddPlayer extends Component {
   }
 
   handleSubmit() {
-     console.log("New game: " + this.state.data);
+     console.debug("New game: " + this.state.data);
      window.location.href = "/add-player";
   }
 

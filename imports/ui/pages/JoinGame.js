@@ -4,6 +4,7 @@ import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
 import SelectInput from '../components/SelectInput';
+import StartGame from '../containers/StartGame';
 import './CreateGame.css';
 
 nullOrEmpty = function(name) {
@@ -15,7 +16,8 @@ class JoinGame extends Component {
      super(props);
      this.state = {
         data: '',
-        games: []
+        games: [],
+        gameName: ''
      }
      this.updateState = this.updateState.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,10 +29,16 @@ class JoinGame extends Component {
   handleKeyup(e) {
   }
 
+  componentDidMount() {
+    console.debug("Join Game, componentDidMount ");
+    this.setState({start: false});
+  }
+
   handleSelect(e) {
     var name = e.target.value;
     if (nullOrEmpty(name)) return;
     let userName = this.props.currentUser.username;
+    console.debug("Join game, Handle select: ");
     Meteor.call('checkGame', name, userName, (err, ret) => {
       if (!ret) {
         alert('Game "' + name + ' is not created yet. Create it first.');
@@ -49,7 +57,7 @@ class JoinGame extends Component {
   }
 
   handleSubmit() {
-    console.log("New game: " + this.state.data);
+    console.debug("Join Game, handleSubmit, game: " + this.state.gameName);
     let userName = this.props.currentUser.username;
     Meteor.call('checkGame', this.gameName, userName, (err, ret) => {
       if (!ret) {
@@ -60,12 +68,13 @@ class JoinGame extends Component {
         alert(ret.errorMessage);
         return;
       }
-      /* Begin game here. */
       Meteor.call('joinGame', this.gameName, userName, (err, ret) => {
         if (!ret.ok) {
           alert(ret.errorMessage);
           return;
         }
+        console.debug("Join Game, handleSubmit, succeeded");
+        this.setState({gameName: this.gameName, start: true});
       });
     });
   }
@@ -81,18 +90,21 @@ class JoinGame extends Component {
      let gameNames = this.state.games,
          yes = true, no = false;
      return (
-       <div className="gameForm">
-          <div className="header">
-             <Welcome name={this.props.currentUser.username} />
-          </div>
-          <form>
-             <SelectInput options={gameNames} isRequired={yes} fieldLabel="Game Name"
-                optId="gameNameId" placeHolder="Name Of Game To Join"
-                keyUp={this.handleKeyup} select={this.handleSelect}
-             />
-             <button id="join_game" onClick={this.handleSubmit}>Join Game</button>
-          </form>
-       </div>
+       this.state.start ?
+         <StartGame gameName={this.state.gameName} />
+       :
+         <div className="gameForm">
+            <div className="header">
+               <Welcome name={this.props.currentUser.username} />
+            </div>
+            <form>
+               <SelectInput options={gameNames} isRequired={yes} fieldLabel="Game Name"
+                  optId="gameNameId" placeHolder="Name Of Game To Join"
+                  keyUp={this.handleKeyup} select={this.handleSelect}
+               />
+            </form>
+            <button id="join_game" onClick={this.handleSubmit}>Join Game</button>
+         </div>
      );
   }
 }

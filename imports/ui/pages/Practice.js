@@ -28,7 +28,7 @@ class Practice extends Component {
   }
 
   updateQuizId(quizId) {
-    console.log("New Quiz ID: " + quizId);
+    console.debug("New Quiz ID: " + quizId);
     this.setState({quizId: quizId, gotQuiz: true});
   }
 

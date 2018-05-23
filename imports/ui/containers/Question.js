@@ -87,7 +87,7 @@ class Question extends Component {
   handleNextQuestion(notUse) {
     this.setState({questionTimeLeft: this.props.timer});
     this._resetQuestion(this.state.isCorrect);
-    console.log(JSON.stringify(userAnswer));
+    console.debug(JSON.stringify(userAnswer));
   }
 
   handleExpiration() {

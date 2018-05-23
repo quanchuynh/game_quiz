@@ -35,7 +35,7 @@ class NavBar extends Component {
     let signUp = getSelectedNav() == SignUpPath ? "active" : "inactive";  
     let signInTitle = SignInTitle;
 
-    console.log("Selected Nav: " + getSelectedNav());
+    console.debug("Selected Nav: " + getSelectedNav());
 
     return (
       <div className="navbar">

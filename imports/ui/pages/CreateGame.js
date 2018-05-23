@@ -37,12 +37,12 @@ class CreateGame extends Component {
   componentDidMount() {
     Meteor.call('getUsers', '', (err, ret) => {
       this.setState({players: ret});
-      console.log("Palyers: " + JSON.stringify(ret));
+      console.debug("Palyers: " + JSON.stringify(ret));
     });
   }
 
   handleQuizPlayer1_Keyup(e) {
-    console.log("Key up value: " + e.target.value);
+    console.debug("Key up value: " + e.target.value);
   }
 
   handleQuizPlayer1_Select(e) {
@@ -106,7 +106,7 @@ class CreateGame extends Component {
   }
 
   handleGameName(e) {
-    console.log("Select value: " + e.target.value);
+    console.debug("Select value: " + e.target.value);
     let name = e.target.value;
     if (nullOrEmpty(name)) {
       alert("You must enter a name of this game");
@@ -131,7 +131,7 @@ class CreateGame extends Component {
       return;
     }
     if (nullOrEmpty(this.game.player1)) {
-      console.log("this.game.player1: " + this.game.player1);
+      console.debug("this.game.player1: " + this.game.player1);
       alert("Valid signed up user name of player 1 is required");
       return;
     }

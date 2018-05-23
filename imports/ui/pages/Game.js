@@ -4,6 +4,7 @@ import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 
 class Game extends Component {
+  /* Switch case for drop down menu under Game tab. */
   constructor(props) {
      super(props);
      this.state = {
@@ -19,7 +20,7 @@ class Game extends Component {
   }
 
   handleSubmit() {
-     console.log("New game: " + this.state.data);
+     console.debug("New game: " + this.state.data);
      window.location.href = "/add-player";
   }
 

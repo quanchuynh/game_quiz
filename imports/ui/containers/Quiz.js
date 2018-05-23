@@ -94,7 +94,7 @@ class Quiz extends Component {
   }
 
   updateQuizId(quizId) {
-    console.log("Get Quiz: " + quizId);
+    console.debug("Get Quiz: " + quizId);
     getQuiz(quizId);
   }
 
