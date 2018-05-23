@@ -147,7 +147,7 @@ checkGame = function(gameName, userName) {
 getGames = function(userName) {
   /* Support join game. Use must be in the player list. */
   var names = [];
-  match = CreatedGame.find({$or: [{player1: userName}, {player1: userName}, {player1: userName}]});
+  match = CreatedGame.find({$or: [{player1: userName}, {player2: userName}, {player3: userName}]});
   if (match) {
     var matches = match.fetch();
     for (ii = 0; ii < matches.length; ii++) {

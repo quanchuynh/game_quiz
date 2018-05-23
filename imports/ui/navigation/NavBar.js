@@ -33,6 +33,7 @@ class NavBar extends Component {
     let game = getSelectedNav() == GamePath ? "active" : "inactive";  
     let signIn = getSelectedNav() == SignInPath ? "active" : "inactive";  
     let signUp = getSelectedNav() == SignUpPath ? "active" : "inactive";  
+    let signInTitle = SignInTitle;
 
     console.log("Selected Nav: " + getSelectedNav());
 
@@ -41,7 +42,7 @@ class NavBar extends Component {
            <NavItem clName={home} link={HomePath} title="Home" exact action={this.handleSelect}></NavItem>
            <NavItem clName={practice} link={PracticePath} title="Practice" exact action={this.handleSelect}></NavItem>
            <DropdownNavItem clName={game} label="Game" opts={dropdown} exact action={this.handleSelect}></DropdownNavItem>
-           <NavItem clName={signIn} link={SignInPath} title="Sign In" action={this.handleSelect}></NavItem>
+           <NavItem clName={signIn} link={SignInPath} title={signInTitle} action={this.handleSelect}></NavItem>
            <NavItem clName={signUp} link={SignUpPath} title="Sign Up" action={this.handleSelect}></NavItem>
       </div>
     );

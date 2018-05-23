@@ -36,7 +36,15 @@ Template.login.events({
         console.log("Login with password, username: " + username); 
         Meteor.loginWithPassword(
             username, template.find('#li-password').value
+            , (e) => {
+                if (e) {
+                  alert("Log in error: " + e + ", user: " + username);
+                  return
+                }
+                SignInTitle = 'Log Out';
+              }
         );
+        
     },
 
     'click #reset_password': function (evt, template) {

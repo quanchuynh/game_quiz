@@ -10,6 +10,7 @@ SignUpPath = '/SignUp';
 HomePath = '/';
 PracticePath = '/Practice';
 GamePath = "Game";  /* this is only a label not a path. */
+SignInTitle = 'Sign In';  /* toggle between sign in and log out */
 
 /* React component after login */
 createGame = 'create';
