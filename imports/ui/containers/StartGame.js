@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { QuestionState } from '../../../lib/gCollection';
+import CountDown from '../components/CountDown';
 import './StartGame.css';
 
 class StartGame extends Component {
@@ -10,6 +11,10 @@ class StartGame extends Component {
       started: false
     };
     console.debug("StartGame constructor: " + this.props.gameName);
+    this.handleTimeExpire = this.handleTimeExpire.bind(this);
+  }
+
+  handleTimeExpire() {
   }
   
   render() {
@@ -34,12 +39,8 @@ class StartGame extends Component {
             </ul>
             </div>
         :
-          <div className="container"> Game Begin ... 
-            <ul>
-              { 
-                waitList.map((user, i) => <li key={i}> {user}</li>)
-              }
-            </ul>
+          <div className="container"> 
+            <CountDown action={this.handleTimeExpire}/>
           </div>
       }
       </div>
