@@ -47,7 +47,7 @@ class WatchGame extends Component {
          start = this.state.start;
      return (
        start ? 
-         <StartGame gameName={this.state.gameName} mode='watch' player='this.props.currentUser.username'/>
+         <StartGame gameName={this.state.gameToWatch} mode='watch' player='this.props.currentUser.username'/>
        :
          <div className="gameForm">
             <div className="header">

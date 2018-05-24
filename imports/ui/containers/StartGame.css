@@ -1,0 +1,16 @@
+
+ul .wait-list {
+  list-style-type: circle;
+  list-style-position: inside;
+  margin-left: 0;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+ul .wait-list li {
+  padding-left: 0;
+  left: -10px;
+  text-align: left;
+}
+
