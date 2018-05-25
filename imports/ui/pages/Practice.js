@@ -9,6 +9,8 @@ import NavBar from '../navigation/NavBar';
 import endMessages from '../constants/end_messages.js';
 import _ from 'lodash';
 
+/* props: gameMode gameName categorySelector player */
+
 class Practice extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +27,9 @@ class Practice extends Component {
   }
 
   componentDidMount() {
+    if (this.props.gameMode) {
+      this.setState({gameMode: true});
+    }
   }
 
   updateQuizId(quizId) {
@@ -44,14 +49,20 @@ class Practice extends Component {
   }
 
   render() {
-    let quizId = this.state.quizId;
-    let gameId = 123;
+    let quizId = this.state.quizId,
+        gameId = this.props.gameName ?  this.props.gameName : 123;
+        categorySelector = this.props.categorySelector,
+        player = this.props.player;
+
+    console.log("Practice props: " + JSON.stringify(this.props));
+
     // <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
     return (
       <div className="Practice">
       {
         this.state.gotQuiz == false ? 
-          <Categories action={this.updateQuizId} gameId={gameId} mode={this.state.gameMode}/> 
+          <Categories action={this.updateQuizId} gameId={gameId} mode={this.state.gameMode} 
+             player={player} categorySelector={categorySelector}/> 
           :
           <Quiz quizId={quizId} action={this.handleFinishQuiz} mode={this.state.gameMode}/>
       }

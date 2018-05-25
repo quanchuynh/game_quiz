@@ -5,6 +5,9 @@ var categories = [];
 var categoriesIdMap = [];
 
 Meteor.methods({
+  submitCorrectAnswer: function(result) {
+  },
+
   getActiveGames: function() {
     return getActiveGames();
   },
@@ -64,7 +67,13 @@ Meteor.methods({
   },
 
   getCategoryQuizId: function(category, gameId) {
-    return quizList.getNewQuizIdForGame(gameId, category);
+    var quizId = quizList.getNewQuizIdForGame(gameId, category);
+    var match = CreatedGame.findOne({name: gameId});
+    if (match)
+    {
+      CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
+    }
+    return quizId;
   },
 
   getAllQuizIn: function(category) {
@@ -110,6 +119,10 @@ Meteor.methods({
 
 });
 
+submitCorrectAnswer = function(result) {
+  var match = CreatedGame.findOne({name: gameName});
+}
+
 joinGame = function(gameName, userName) {
   console.log("Join " + gameName + ", by " + userName);
 
@@ -130,6 +143,18 @@ joinGame = function(gameName, userName) {
   waitList = waitList.filter(e => e != userName);
   console.log("Joined User: " + userName + ", waits: " + JSON.stringify(waitList));
   CreatedGame.update({_id: match._id}, {$set: {waitList: waitList}}, {$inc: {joinCount: 1}});
+  if (waitList.length == 0) {
+    var countDown = 10;
+    CreatedGame.update({_id: match._id}, {$set: {countDown: countDown}});
+    tInterval = setInterval(() => {
+      countDown--;
+      CreatedGame.update({_id: match._id}, {$set: {countDown: countDown}});
+      if (countDown <= 0) {
+        clearInterval(tInterval);
+        CreatedGame.update({_id: match._id}, {$set: {categorySelector: false}});
+      }
+    }, 1000);
+  }
   return {ok: true, errorMessage: "None", waitList: waitList};
 }
 

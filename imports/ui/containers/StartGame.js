@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { QuestionState } from '../../../lib/gCollection';
 import CountDown from '../components/CountDown';
+import Practice from '../pages/Practice';
 import './StartGame.css';
 
 class StartGame extends Component {
@@ -20,9 +21,11 @@ class StartGame extends Component {
   render() {
     let waitList = this.props.game.waitList, 
         others = this.props.others,
-        countDown = 10,
-        gameName = this.props.game.name;
+        countDown = this.props.game.countDown,
+        gameName = this.props.game.name,
+        countDownMessage = "Game will start in " + this.props.game.countDown + " seconds";
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
+    const yes = true, no = false;
     const tempStyle = {position: "relative", top: "70px", 
                        align: "center", textAlign: "left", marginLeft: "auto", marginRight: "auto",
                        width: "60%", fontSize: "18px"
@@ -40,9 +43,15 @@ class StartGame extends Component {
             </ul>
             </div>
         :
-          <div className="container"> 
-            <CountDown action={this.handleTimeExpire} message="Game will start " fromSeconds={countDown}/>
-          </div>
+          <span>
+          {
+            countDown > 0 ?
+              <div className="container"> {countDownMessage} </div>
+            :
+              <Practice gameMode={yes} gameName={gameName} 
+                        categorySelector={this.props.game.categorySelector} player={this.props.player}/>
+          }
+          </span>
       }
       </div>
     );
