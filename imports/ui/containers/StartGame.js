@@ -49,7 +49,10 @@ class StartGame extends Component {
               <div className="container"> {countDownMessage} </div>
             :
               <Practice gameMode={yes} gameName={gameName} 
-                        categorySelector={this.props.game.categorySelector} player={this.props.player}/>
+                        categorySelector={this.props.game.categorySelector} 
+                        player={this.props.player}
+                        quizId={this.props.game.currentQuizId}
+              />
           }
           </span>
       }

@@ -37,6 +37,15 @@ class Practice extends Component {
     this.setState({quizId: quizId, gotQuiz: true});
   }
 
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.quizId !== nextProps.quizId)
+      return {quizId: nextProps.quizId,
+              gotQuiz: true
+             };
+    return null;
+  }
+
+
   handleFinishQuiz(newScore, questionCount) {
     let currentQuizCount = this.state.quizCount,
         currentTotalScore = this.state.totalScore,
