@@ -20,6 +20,7 @@ class StartGame extends Component {
   render() {
     let waitList = this.props.game.waitList, 
         others = this.props.others,
+        countDown = 10,
         gameName = this.props.game.name;
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
     const tempStyle = {position: "relative", top: "70px", 
@@ -40,7 +41,7 @@ class StartGame extends Component {
             </div>
         :
           <div className="container"> 
-            <CountDown action={this.handleTimeExpire}/>
+            <CountDown action={this.handleTimeExpire} message="Game will start " fromSeconds={countDown}/>
           </div>
       }
       </div>
