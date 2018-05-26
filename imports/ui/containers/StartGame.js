@@ -28,7 +28,7 @@ class StartGame extends Component {
     const yes = true, no = false;
     const tempStyle = {position: "relative", top: "70px", 
                        align: "center", textAlign: "left", marginLeft: "auto", marginRight: "auto",
-                       width: "60%", fontSize: "18px"
+                       width: "auto", fontSize: "18px"
                       };
     console.log("game name: " + gameName);
     return (

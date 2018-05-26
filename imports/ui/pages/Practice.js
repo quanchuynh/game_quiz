@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Image from '../components/Image';
 import Button from '../components/Button';
 import Question from '../containers/Question';
@@ -38,13 +37,13 @@ class Practice extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    if (prevState.quizId !== nextProps.quizId)
-      return {quizId: nextProps.quizId,
-              gotQuiz: true
-             };
+    if (!prevState.gameMode) return null;
+    if (prevState.quizId !== nextProps.quizId) {
+      console.log("New ID: " + nextProps.quizId);
+      return {quizId: nextProps.quizId, gotQuiz: true };
+    }
     return null;
   }
-
 
   handleFinishQuiz(newScore, questionCount) {
     let currentQuizCount = this.state.quizCount,

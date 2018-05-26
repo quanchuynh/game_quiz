@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Image from '../components/Image';
 import Button from '../components/Button';
 import Question from './Question';
@@ -22,18 +21,35 @@ class Quiz extends Component {
       started: false,
       finished: false,
       questions: [],
-      quizId: 0
+      quizId: 0,
+      newQuiz: false
     };
 
     this.startQuiz = this.startQuiz.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
     this.finishQuiz = this.finishQuiz.bind(this);
-    this.updateQuizId = this.updateQuizId.bind(this);
   }
+
   componentDidMount() {
-    //Set up initial state of component based off of the json files
-    //provided.
     this.getQuiz(this.props.quizId);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log("Quiz, derived state, gameMode: " + prevState.mode);
+    if (!nextProps.mode) return null;
+    if (prevState.quizId !== nextProps.quizId) {
+      console.log("Quiz component, derived state, quiz ID: " + nextProps.quizId);
+      return {quizId: nextProps.quizId, newQuiz: true};
+    }
+    return null;
+  }
+
+  componentDidUpdate() {
+    console.log("componentDidUpdate: " + this.state.quizId);
+    if (this.state.newQuiz) {
+      this.getQuiz(this.state.quizId);
+      this.setState({newQuiz: false});
+    }
   }
 
   getQuiz(quizId) {
@@ -56,6 +72,7 @@ class Quiz extends Component {
          })
          userAnswer.questionId = 0;
          userAnswer.quizId = this.state.quizId;
+         console.log("Quiz component, New quiz ID: " + this.state.quizId);
        })
      }); 
   }
@@ -91,11 +108,6 @@ class Quiz extends Component {
 
   startQuiz() {
     this.setState({started : true});
-  }
-
-  updateQuizId(quizId) {
-    console.debug("Get Quiz: " + quizId);
-    getQuiz(quizId);
   }
 
   render() {

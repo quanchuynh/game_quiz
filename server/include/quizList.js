@@ -19,6 +19,7 @@ QuizList.prototype.getQuizList = function(quizId) {
 QuizList.prototype.getQuiz = function(quizId) {
   var fut = new Future();
   var data;
+  console.log("axios.get, quizUrl + quizId: " + quizUrl + quizId);
   axios.get(quizUrl + quizId)
     .then(ret => { 
             data = ret.data;
@@ -30,6 +31,7 @@ QuizList.prototype.getQuiz = function(quizId) {
 QuizList.prototype.getQuestion = function(quizId) {
   var fut = new Future();
   var data;
+  console.log("axios.get, quizId + question: " + quizId + "/questions");
   axios.get(quizUrl + quizId + "/questions")
     .then(ret => { 
             data = ret.data;
