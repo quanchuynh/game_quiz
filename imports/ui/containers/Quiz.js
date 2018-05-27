@@ -3,6 +3,7 @@ import Image from '../components/Image';
 import Button from '../components/Button';
 import Question from './Question';
 import endMessages from '../constants/end_messages.js';
+import CountDown from '../components/CountDown';
 import _ from 'lodash';
 
 class Quiz extends Component {
@@ -150,7 +151,12 @@ class Quiz extends Component {
                 <div className="small-6 small-push-3">
                   <p className="float-center" 
                      dangerouslySetInnerHTML={this._getIntroduction()} />
-                  <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
+                  {
+                    this.props.mode ?
+                      <CountDown message="quiz will start" fromSeconds={5} action={this.startQuiz}/>
+                    :
+                      <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
+                  }
                 </div>
               </div>
             </div>

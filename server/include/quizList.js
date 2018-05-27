@@ -132,6 +132,7 @@ QuizList.prototype.getNewQuizIdForGame = function(gameId, categoryName) {
 
 var getQuizFromCategory = function(categoryName) {
   /* Return array of quiz IDs in the given categoryName */
+  console.log("getQuizFromCategory: " + categoryName);
   var found = categories.find((cat) => cat.category === categoryName);
   if (found) return found.quizId
   else return null;

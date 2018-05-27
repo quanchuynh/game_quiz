@@ -70,6 +70,9 @@ class JoinGame extends Component {
       Meteor.call('joinGame', this.gameName, userName, (err, ret) => {
         if (!ret.ok) {
           alert(ret.errorMessage);
+          if (ret.errorType && ret.errorType == 'joined') { 
+            this.setState({gameName: this.gameName, start: true});
+          }
           return;
         }
         console.debug("Join Game, handleSubmit, succeeded");
@@ -90,7 +93,7 @@ class JoinGame extends Component {
          yes = true, no = false;
      return (
        this.state.start ?
-         <StartGame gameName={this.state.gameName} mode='play' player='this.props.currentUser.username'/>
+         <StartGame gameName={this.state.gameName} mode='play' player={this.props.currentUser.username}/>
        :
          <div className="gameForm">
             <div className="header">

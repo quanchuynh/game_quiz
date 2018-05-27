@@ -67,13 +67,7 @@ Meteor.methods({
   },
 
   getCategoryQuizId: function(category, gameId) {
-    var quizId = quizList.getNewQuizIdForGame(gameId, category);
-    var match = CreatedGame.findOne({name: gameId});
-    if (match)
-    {
-      CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
-    }
-    return quizId;
+    return getCategoryQuizId(category, gameId);
   },
 
   getAllQuizIn: function(category) {
@@ -119,13 +113,21 @@ Meteor.methods({
 
 });
 
+getCategoryQuizId = function(category, gameId) {
+  var quizId = quizList.getNewQuizIdForGame(gameId, category);
+  var match = CreatedGame.findOne({name: gameId});
+  if (match)
+  {
+    CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
+  }
+  return quizId;
+}
+
 submitCorrectAnswer = function(result) {
   var match = CreatedGame.findOne({name: gameName});
 }
 
 joinGame = function(gameName, userName) {
-  console.log("Join " + gameName + ", by " + userName);
-
   var match = CreatedGame.findOne({name: gameName});
   if (!match) {
     return {ok: false, errorMessage: "Could not find " + gameName + " in game list"};
@@ -138,20 +140,23 @@ joinGame = function(gameName, userName) {
 
   var waitList = match.waitList;
   if (!waitList.includes(userName)) {
-    return {ok: false, errorMessage: "Player " + userName + " already joined"};
+    return {ok: false, errorMessage: "Player " + userName + " already joined", errorType: 'joined'};
   }
   waitList = waitList.filter(e => e != userName);
   console.log("Joined User: " + userName + ", waits: " + JSON.stringify(waitList));
   CreatedGame.update({_id: match._id}, {$set: {waitList: waitList}}, {$inc: {joinCount: 1}});
   if (waitList.length == 0) {
-    var countDown = 10;
+    var countDown = 5;
     CreatedGame.update({_id: match._id}, {$set: {countDown: countDown}});
-    tInterval = setInterval(() => {
+    tInterval = Meteor.setInterval(() => {
       countDown--;
       CreatedGame.update({_id: match._id}, {$set: {countDown: countDown}});
       if (countDown <= 0) {
         clearInterval(tInterval);
         CreatedGame.update({_id: match._id}, {$set: {categorySelector: false}});
+        var randomCategory = getRandomCategory();
+        console.log("Random category: " + randomCategory + ", game name: " + match.name);
+        getCategoryQuizId(randomCategory, match.name); 
       }
     }, 1000);
   }
@@ -227,6 +232,12 @@ function randomId()
   for( var i=0; i < 7; i++ )
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   return text;
+}
+
+getRandomCategory = function() 
+{
+  var categories = getAllCategories();
+  return categories[Math.floor(Math.random() * categories.length)];
 }
 
 function sendMail(receivers, subject, body) {
