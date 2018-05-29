@@ -118,7 +118,26 @@ getCategoryQuizId = function(category, gameId) {
   var match = CreatedGame.findOne({name: gameId});
   if (match)
   {
+    let questCount = quizList.getQuestion(quizId).length;
     CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
+    TrackQuizQuestion.insert({gameName: gameId, quizId: quizId, 
+                              currentQuestion: 0, lastQuestion: questCount - 1,
+                              countDown: 10});
+    let currentQuestion = 0;
+    tInterval = Meteor.setInterval(() => {
+      TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+                               {$set: {$inc: {countDown: -1}} });
+      let countDown = TrackQuizQuestion.findOne({gameName: gameId, quizId: quizId}).countDown;
+      if (countDown <= 0) {
+        if (currentQuestion == questCount - 1) {
+          clearInterval(tInterval);
+          return;
+        }
+        currentQuestion++;
+        TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+                                 {$set: {currentQuestion: currentQuestion}}); 
+      }
+    }, 1000);
   }
   return quizId;
 }

@@ -58,7 +58,7 @@ class Practice extends Component {
 
   render() {
     let quizId = this.state.quizId,
-        gameId = this.props.gameName ?  this.props.gameName : 123;
+        gameId = this.props.gameName ?  this.props.gameName : practiceGameName;
         categorySelector = this.props.categorySelector,
         player = this.props.player;
 
