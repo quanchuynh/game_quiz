@@ -4,7 +4,10 @@ import Button from '../components/Button';
 import Question from './Question';
 import endMessages from '../constants/end_messages.js';
 import CountDown from '../components/CountDown';
+import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
+
+/* props: quizId, mode, action */
 
 class Quiz extends Component {
   constructor(props) {
@@ -88,13 +91,27 @@ class Quiz extends Component {
     let msg = _.find(endMessages, (o) => { return o.numberCorrect === this.state.correct });
         return _.sample(msg.comments);
   }
+
   nextQuestion(result) {
-    userAnswer.questionId = this.state.currentQuestion + 1;
-    this.setState({
-      currentQuestion: (this.state.currentQuestion + 1),
-      correct: (result) ? (this.state.correct + 1) : this.state.correct
-    });
+    if (!this.props.mode) {
+      this.setState({
+        currentQuestion: (this.state.currentQuestion + 1),
+        correct: (result) ? (this.state.correct + 1) : this.state.correct
+      });
+      return;
+    }
+
+    if (result) {
+      var correctAnswer = { gameName: this.props.gameName,
+                                  quizId: this.props.quizId, 
+                                  player: this.props.player,
+                                  currentQuestion: this.props.currentQuestion
+                                };
+      Meteor.call('submitCorrectAnswer', correctAnswer, (err, ret) => {
+      });
+    }
   }
+
   finishQuiz(result) {
     this.setState({
       finished: true,
@@ -102,9 +119,6 @@ class Quiz extends Component {
     })
 
     this.props.action(this.state.correct, this.state.questionCount);
-
-    /* Meteor.call('updateScore', this.state, (err, result) => { 
-       }); */
   }
 
   startQuiz() {
@@ -121,7 +135,10 @@ class Quiz extends Component {
         questionObject = this.state.questions,
         question = questionObject,
         resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
-        questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden';
+        questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden',
+        startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " sconds",
+        currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
+
     let scoreLabel = {paddingRight: "10px", backgroundColor: "#e6f7ff", 
                       color: "#005780", borderWidth: "2px", borderStyle: "groove"};
     return (
@@ -130,9 +147,9 @@ class Quiz extends Component {
           <div className=".top-bar-title float-center">
             <strong dangerouslySetInnerHTML={this._getTitle()}/>
           {
-            this.state.started === true ?
+            this.state.started === true || this.props.startQuiz ?
               <div className="float-center" style={paddingTop}>
-                <span style={scoreLabel}>Question {this.state.currentQuestion + 1} out of {this.state.questions.length}
+                <span style={scoreLabel}>Question {currentQuestion + 1} out of {this.state.questions.length}
                       </span>
                 <span style={scoreLabel}>{this.state.correct} Correct</span>
               </div> :
@@ -142,7 +159,7 @@ class Quiz extends Component {
        </div>
         <div className="container">
         {
-          this.state.started === false ?
+          this.state.started === false || this.props.startQuiz ?
             <div className="introduction">
               <div className="grid">
                 <div className="small-6 float-center">
@@ -153,7 +170,7 @@ class Quiz extends Component {
                      dangerouslySetInnerHTML={this._getIntroduction()} />
                   {
                     this.props.mode ?
-                      <CountDown message="quiz will start" fromSeconds={5} action={this.startQuiz}/>
+                      <div>{startQuizMessage}</div>
                     :
                       <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
                   }
@@ -164,8 +181,8 @@ class Quiz extends Component {
             <div className="quiz">
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} 
-                    index={this.state.currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
-                    gameMode={this.state.gameMode}
+                    index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    gameMode={this.props.mode}
                     filePath={path}/>
               </div>
               <div className={resultsClass}>
@@ -180,4 +197,25 @@ class Quiz extends Component {
   }
 }
 
-export default Quiz;
+/* props: quizId, mode, action */
+export default withTracker(({gameName, mode, player, quizId, action}) => {
+  if (!mode) {
+    return {mode: mode, quizId: quizId, action: action, startQuiz: false};
+  }
+
+  var trackQuiz = TrackQuizQuestion.findOne({gameName: gameName, quizId: quizId});
+  console.log("trackQuiz: " + JSON.stringify(trackQuiz));
+  let startQuiz = trackQuiz.quizStartTime <= 0; 
+  return {
+    mode: mode, 
+    gameName: gameId, 
+    quizId: quizId, 
+    player: player,
+    action: action,
+    currentQuestion: trackQuiz.currentQuestion,
+    countDown: trackQuiz.countDown,
+    quizStartTime: trackQuiz.quizStartTime,
+    startQuiz: startQuiz
+  };
+
+}) (Quiz);

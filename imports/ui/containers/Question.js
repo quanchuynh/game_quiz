@@ -7,6 +7,8 @@ import '../index.css';
 
 const nextQuestionTime = 2;
 
+/* props: timer, gameMode, quest, index, done(isCorrect), next(isCorrect), filePath */
+
 class Question extends Component {
   constructor(props) {
     super(props);

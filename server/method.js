@@ -5,7 +5,11 @@ var categories = [];
 var categoriesIdMap = [];
 
 Meteor.methods({
-  submitCorrectAnswer: function(result) {
+  submitCorrectAnswer: function(user) {
+    /* Stop other user from submitting */
+    TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
+    TrackCorrectPlayer.insert(
+      {gameName: user.gameName, quizId: user.quizId, player: user.player, question: user.currentQuestion});
   },
 
   getActiveGames: function() {
@@ -122,24 +126,42 @@ getCategoryQuizId = function(category, gameId) {
     CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
     TrackQuizQuestion.insert({gameName: gameId, quizId: quizId, 
                               currentQuestion: 0, lastQuestion: questCount - 1,
-                              countDown: 10});
-    let currentQuestion = 0;
+                              countDown: 10, quizComplete: false, quizStartTime: 5});
+    quizStartTime = 5;
     tInterval = Meteor.setInterval(() => {
-      TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
-                               {$set: {$inc: {countDown: -1}} });
-      let countDown = TrackQuizQuestion.findOne({gameName: gameId, quizId: quizId}).countDown;
-      if (countDown <= 0) {
-        if (currentQuestion == questCount - 1) {
-          clearInterval(tInterval);
-          return;
-        }
-        currentQuestion++;
-        TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
-                                 {$set: {currentQuestion: currentQuestion}}); 
+      quizStartTime--;
+      TrackQuizQuestion.update({gameName: gameId, quizId: quizId}, {$set: {quizStartTime: quizStartTime}});
+      if (quizStartTime <= 0) {
+        clearInterval(tInterval);
+        startQuestionTracker(gameId, quizId);
       }
     }, 1000);
   }
   return quizId;
+}
+
+startQuestionTracker = function(gameName, quizId) {
+  /* Expire each question in 10 seconds and roll to the next question
+   * countDown can be update outside of this function t0 <= 0 in which case the current question
+   * expires immediately. 
+   */
+  let currentQuestion = 0;
+  tInterval = Meteor.setInterval(() => {
+    TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+                             {$set: {$inc: {countDown: -1}} });
+    let countDown = TrackQuizQuestion.findOne({gameName: gameId, quizId: quizId}).countDown;
+    if (countDown <= 0) {
+      if (currentQuestion == questCount - 1) {
+        clearInterval(tInterval);
+        TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+                             {$set: {quizComplete: true} });
+        return;
+      }
+      currentQuestion++;
+      TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+                               {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
+    }
+  }, 1000);
 }
 
 submitCorrectAnswer = function(result) {
