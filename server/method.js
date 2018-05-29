@@ -147,7 +147,7 @@ startQuestionTracker = function(gameName, quizId) {
    */
   let currentQuestion = 0;
   tInterval = Meteor.setInterval(() => {
-    TrackQuizQuestion.update({gameName: gameId, quizId: quizId},
+    TrackQuizQuestion.update({gameName: gameName, quizId: quizId},
                              {$set: {$inc: {countDown: -1}} });
     let countDown = TrackQuizQuestion.findOne({gameName: gameId, quizId: quizId}).countDown;
     if (countDown <= 0) {
