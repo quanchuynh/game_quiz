@@ -159,7 +159,20 @@ class Quiz extends Component {
        </div>
         <div className="container">
         {
-          this.state.started === false || this.props.startQuiz ?
+          this.state.started  || this.props.startQuiz ?
+            <div className="quiz">
+              <div className={questionClass}>
+                <Question timer={this.state.timer} quest={this.state.questions} 
+                    index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    gameMode={this.props.mode}
+                    filePath={path}/>
+              </div>
+              <div className={resultsClass}>
+                <h4>{this._getEndMessage()}</h4>
+                <p>You got {this.state.correct} out of {this.state.questionCount} correct.</p>
+              </div>
+            </div>
+            :
             <div className="introduction">
               <div className="grid">
                 <div className="small-6 float-center">
@@ -177,19 +190,6 @@ class Quiz extends Component {
                 </div>
               </div>
             </div>
-            :
-            <div className="quiz">
-              <div className={questionClass}>
-                <Question timer={this.state.timer} quest={this.state.questions} 
-                    index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
-                    gameMode={this.props.mode}
-                    filePath={path}/>
-              </div>
-              <div className={resultsClass}>
-                <h4>{this._getEndMessage()}</h4>
-                <p>You got {this.state.correct} out of {this.state.questionCount} correct.</p>
-              </div>
-            </div>
         }
         </div>
       </div>
@@ -203,12 +203,14 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
     return {mode: mode, quizId: quizId, action: action, startQuiz: false};
   }
 
+  console.log("trackQuiz, gameName: " +  gameName + ", quizId: " + quizId);
+
   var trackQuiz = TrackQuizQuestion.findOne({gameName: gameName, quizId: quizId});
   console.log("trackQuiz: " + JSON.stringify(trackQuiz));
-  let startQuiz = trackQuiz.quizStartTime <= 0; 
+  let startQuiz = trackQuiz.quizStartTime <= 0 ? true : false;
   return {
     mode: mode, 
-    gameName: gameId, 
+    gameName: gameName, 
     quizId: quizId, 
     player: player,
     action: action,
