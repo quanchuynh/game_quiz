@@ -30,6 +30,11 @@ class Question extends Component {
   }
 
   timer() {
+    if (this.props.quizComplete) {
+      this.setState({ questionTimeLeft: 0 });
+      clearInterval(this.intervalId);
+      return;
+    }
     this.setState({
       questionTimeLeft: this.state.questionTimeLeft - 1
     })
@@ -98,6 +103,8 @@ class Question extends Component {
   }
 
   render() {
+    console.log("Question component, questionCount: " + this.props.quest.length + 
+            " index: " + this.props.index + ", quiz complete: " + this.props.quizComplete);
     let visibility = (this.state.answered && this.state.gameMode == false) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 
                                                    'columns small-6 is-visible float-center';
@@ -132,8 +139,11 @@ class Question extends Component {
           </div>
           <div className={buttonVisibility}>
           {
-            questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} action={this.handleAnswer} 
-              clName={colors[i%4] + " button-whole"} /></p>))
+            this.props.quizComplete ?
+              <div style={timeText}> Quiz Completed </div>
+            :
+              questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} action={this.handleAnswer} 
+                clName={colors[i%4] + " button-whole"} /></p>))
           }
           </div>
         </div>

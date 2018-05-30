@@ -33,6 +33,7 @@ Meteor.methods({
     var quizId = getCategoryQuizId(randomCategory, game.name);
     game.currentQuizId = quizId;
     CreatedGame.insert(game);
+    createQuizQuestionTracker(game.name);
     return true;
   },
 
@@ -127,15 +128,22 @@ Meteor.methods({
 
 });
 
-trackQuizQuestion = function(gameId) {
+createQuizQuestionTracker = function(gameId) {
   var match = CreatedGame.findOne({name: gameId});
-  if (match)
-  {
+  if (match) {
     var quizId = match.currentQuizId;
     let questCount = quizList.getQuestion(quizId).length;
     TrackQuizQuestion.insert({gameName: gameId, quizId: quizId, 
                               currentQuestion: 0, lastQuestion: questCount - 1,
                               countDown: 10, quizComplete: false, quizStartTime: 5});
+  }
+}
+
+trackQuizQuestion = function(gameId) {
+  var match = CreatedGame.findOne({name: gameId});
+  if (match)
+  {
+    var quizId = match.currentQuizId;
     quizStartTime = 5;
     tInterval = Meteor.setInterval(() => {
       quizStartTime--;

@@ -26,12 +26,14 @@ class Quiz extends Component {
       finished: false,
       questions: [],
       quizId: 0,
-      newQuiz: false
+      newQuiz: false,
+      gotQuiz: false
     };
 
     this.startQuiz = this.startQuiz.bind(this);
     this.nextQuestion = this.nextQuestion.bind(this);
     this.finishQuiz = this.finishQuiz.bind(this);
+    this.renderQuiz = this.renderQuiz.bind(this);
   }
 
   componentDidMount() {
@@ -56,6 +58,14 @@ class Quiz extends Component {
     }
   }
 
+  renderQuiz() {
+    console.log("renderQuiz");
+    if (this.state.quizId && this.state.questions.length == 0) {
+      this.getQuiz(this.state.quizId); 
+      console.log("renderQuiz, got quiz");
+    }
+  }
+
   getQuiz(quizId) {
      /* Get quiz from backend. */
      Meteor.call('getQuiz', this.props.quizId, (err, ret) => {
@@ -72,11 +82,13 @@ class Quiz extends Component {
            questions: questionData,
            quizId: quizId,
            currentQuestion: 0,
-           gameMode: this.props.mode
+           gameMode: this.props.mode,
+           gotQuiz: true
          })
          userAnswer.questionId = 0;
          userAnswer.quizId = this.state.quizId;
-         console.log("Quiz component, New quiz ID: " + this.state.quizId);
+         console.log("Quiz component, getQuiz(), New quiz ID: " + this.state.quizId +
+                     " question count: " + questionData.length);
        })
      }); 
   }
@@ -126,14 +138,15 @@ class Quiz extends Component {
   }
 
   render() {
+    console.log("Quiz render, quizId: " + this.state.quizId);
+    this.renderQuiz();
     let paddingTop = {paddingTop: "12px"},
         path = this.state.image.fullUrl,
         height = this.state.image.height,
         width = this.state.image.width,
         alt = this.state.image.altText,
         credit = this.state.image.credit,
-        questionObject = this.state.questions,
-        question = questionObject,
+        question = this.state.questions,
         resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
         questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden',
         startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " sconds",
@@ -159,12 +172,12 @@ class Quiz extends Component {
        </div>
         <div className="container">
         {
-          this.state.started  || this.props.startQuiz ?
+          (this.state.started  || this.props.startQuiz) && this.state.gotQuiz ?
             <div className="quiz">
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} 
                     index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
-                    gameMode={this.props.mode}
+                    gameMode={this.props.mode} quizComplete={this.props.quizComplete}
                     filePath={path}/>
               </div>
               <div className={resultsClass}>
@@ -206,7 +219,7 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
   console.log("trackQuiz, gameName: " +  gameName + ", quizId: " + quizId);
 
   var trackQuiz = TrackQuizQuestion.findOne({gameName: gameName, quizId: quizId});
-  console.log("trackQuiz: " + JSON.stringify(trackQuiz));
+  console.log("trackQuiz, from TrackQuizQuestion: " + JSON.stringify(trackQuiz));
   let startQuiz = trackQuiz.quizStartTime <= 0 ? true : false;
   return {
     mode: mode, 
@@ -217,7 +230,8 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
     currentQuestion: trackQuiz.currentQuestion,
     countDown: trackQuiz.countDown,
     quizStartTime: trackQuiz.quizStartTime,
-    startQuiz: startQuiz
+    startQuiz: startQuiz,
+    quizComplete: trackQuiz.quizComplete
   };
 
 }) (Quiz);
