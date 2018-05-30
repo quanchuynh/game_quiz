@@ -3,6 +3,8 @@ var syncExec = Meteor.wrapAsync(exec);
 var quizList = new QuizList('quiz_list.json');
 var categories = [];
 var categoriesIdMap = [];
+var testMode = true;
+var testQuizId = 5031;
 
 Meteor.methods({
   submitCorrectAnswer: function(user) {
@@ -32,6 +34,7 @@ Meteor.methods({
     var randomCategory = getRandomCategory();   /* First quiz is pre-selected from random category. */
     var quizId = getCategoryQuizId(randomCategory, game.name);
     game.currentQuizId = quizId;
+    if (testMode) game.currentQuizId = testQuizId;    /* quiz ID for easy testing. */
     CreatedGame.insert(game);
     createQuizQuestionTracker(game.name);
     return true;
