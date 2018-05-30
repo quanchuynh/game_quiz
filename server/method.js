@@ -29,6 +29,9 @@ Meteor.methods({
     var waitList = [game.player1, game.player2];
     waitList = game.player3 == null ? waitList : [...waitList, game.player3 ];
     game.waitList = waitList;
+    var randomCategory = getRandomCategory();   /* First quiz is pre-selected from random category. */
+    var quizId = getCategoryQuizId(randomCategory, game.name);
+    game.currentQuizId = quizId;
     CreatedGame.insert(game);
     return true;
   },
@@ -71,7 +74,14 @@ Meteor.methods({
   },
 
   getCategoryQuizId: function(category, gameId) {
-    return getCategoryQuizId(category, gameId);
+    /* Winner selected a category. Generate a new quizId for this game. */
+    var quizId = getCategoryQuizId(category, gameId);
+    var match = CreatedGame.findOne({name: gameId});
+    if (match) {
+      CreatedGame.update({name: gameId}, {$set: {currentQuizId: quizId}});
+      trackQuizQuestion(gameId);
+    }
+    return quizId;
   },
 
   getAllQuizIn: function(category) {
@@ -117,14 +127,12 @@ Meteor.methods({
 
 });
 
-getCategoryQuizId = function(category, gameId) {
-  var quizId = quizList.getNewQuizIdForGame(gameId, category);
-  console.log("getCategoryQuizId, quizId: " + quizId + ", category: " + category); 
+trackQuizQuestion = function(gameId) {
   var match = CreatedGame.findOne({name: gameId});
   if (match)
   {
+    var quizId = match.currentQuizId;
     let questCount = quizList.getQuestion(quizId).length;
-    CreatedGame.update({_id: match._id}, {$set: {currentQuizId: quizId}});
     TrackQuizQuestion.insert({gameName: gameId, quizId: quizId, 
                               currentQuestion: 0, lastQuestion: questCount - 1,
                               countDown: 10, quizComplete: false, quizStartTime: 5});
@@ -138,6 +146,11 @@ getCategoryQuizId = function(category, gameId) {
       }
     }, 1000);
   }
+}
+
+getCategoryQuizId = function(category, gameId) {
+  var quizId = quizList.getNewQuizIdForGame(gameId, category);
+  console.log("getCategoryQuizId, quizId: " + quizId + ", category: " + category); 
   return quizId;
 }
 
@@ -174,7 +187,6 @@ joinGame = function(gameName, userName) {
   if (!match) {
     return {ok: false, errorMessage: "Could not find " + gameName + " in game list"};
   }
-
   console.log("Join " + gameName + ", by " + userName);
 
   var checkResult = checkGame(gameName, userName);
@@ -186,6 +198,7 @@ joinGame = function(gameName, userName) {
   }
   waitList = waitList.filter(e => e != userName);
   console.log("Joined User: " + userName + ", waits: " + JSON.stringify(waitList));
+
   CreatedGame.update({_id: match._id}, {$set: {waitList: waitList}}, {$inc: {joinCount: 1}});
   if (waitList.length == 0) {
     var countDown = 5;
@@ -196,9 +209,8 @@ joinGame = function(gameName, userName) {
       if (countDown <= 0) {
         clearInterval(tInterval);
         CreatedGame.update({_id: match._id}, {$set: {categorySelector: false}});
-        var randomCategory = getRandomCategory();
-        console.log("Random category: " + randomCategory + ", game name: " + match.name);
-        getCategoryQuizId(randomCategory, match.name); 
+        /* First quiz begins, let track questions */
+        trackQuizQuestion(match.name);
       }
     }, 1000);
   }
