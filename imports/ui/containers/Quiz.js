@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import Question from './Question';
 import endMessages from '../constants/end_messages.js';
 import CountDown from '../components/CountDown';
+import ScoreBoard from '../components/ScoreBoard';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 
@@ -113,6 +114,8 @@ class Quiz extends Component {
       return;
     }
 
+    console.log("Quiz, nextQuestion, result: " + result + " of " + this.state.currentQuestion);
+
     if (result) {
       var correctAnswer = { gameName: this.props.gameName,
                                   quizId: this.props.quizId, 
@@ -150,6 +153,7 @@ class Quiz extends Component {
         resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
         questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden',
         startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " sconds",
+        gameMode = this.props.mode,
         currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
 
     let scoreLabel = {paddingRight: "10px", backgroundColor: "#e6f7ff", 
@@ -161,12 +165,20 @@ class Quiz extends Component {
             <strong dangerouslySetInnerHTML={this._getTitle()}/>
           {
             this.state.started === true || this.props.startQuiz ?
-              <div className="float-center" style={paddingTop}>
-                <span style={scoreLabel}>Question {currentQuestion + 1} out of {this.state.questions.length}
-                      </span>
-                <span style={scoreLabel}>{this.state.correct} Correct</span>
-              </div> :
-              <p></p>
+                <div className="float-center" style={paddingTop}>
+                  {
+                  gameMode ?
+                  <ScoreBoard gameName={this.props.gameName} quizId={this.props.quizId} questionCount={question.length}/>
+                  :
+                  <div>
+                  <span style={scoreLabel}>Question {currentQuestion + 1} out of {this.state.questions.length}
+                        </span>
+                  <span style={scoreLabel}>{this.state.correct} Correct</span>
+                  </div>
+                  }
+                </div> 
+            :
+                <p></p>
           }
           </div>
        </div>
@@ -177,8 +189,8 @@ class Quiz extends Component {
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} 
                     index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
-                    gameMode={this.props.mode} quizComplete={this.props.quizComplete}
-                    filePath={path}/>
+                    gameMode={this.props.mode} countDown={this.props.countDown}
+                    quizComplete={this.props.quizComplete} filePath={path}/>
               </div>
               <div className={resultsClass}>
                 <h4>{this._getEndMessage()}</h4>

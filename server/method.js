@@ -8,6 +8,7 @@ var testQuizId = 4856;
 
 Meteor.methods({
   submitCorrectAnswer: function(user) {
+    console.log("submitCorrectAnswer: " + JSON.stringify(user));
     /* Stop other user from submitting */
     TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
     TrackCorrectPlayer.insert(

@@ -35,6 +35,17 @@ class Question extends Component {
       clearInterval(this.intervalId);
       return;
     }
+    if (this.props.gameMode) {
+      this.remoteTimer();
+    }
+    else this.practiceTimer();
+  }
+
+  remoteTimer() {
+    this.setState({questionTimeLeft: this.props.countDown });
+  }
+
+  practiceTimer() {
     this.setState({
       questionTimeLeft: this.state.questionTimeLeft - 1
     })
@@ -45,6 +56,7 @@ class Question extends Component {
       })
     }
   }
+
   _getQuestion() {
     return {__html:  this.props.quest[this.props.index].question};
   }
@@ -91,7 +103,7 @@ class Question extends Component {
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       this.setState({ disableButton: true })
     });
-    if (this.props.gameMode) this.handleNextQuestion();
+    if (this.props.gameMode) this._resetQuestion(isCorrect);
   }
 
   handleNextQuestion(notUse) {
