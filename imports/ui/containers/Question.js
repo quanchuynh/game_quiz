@@ -76,7 +76,7 @@ class Question extends Component {
   handleAnswer(userAnswer) {
     let correctAnswerIndex = this.props.quest[this.props.index].correct - 1,     //the correct answer for this question
         correctAnswer = this.props.quest[this.props.index].answers[correctAnswerIndex]
-        isCorrect = (userAnswer === correctAnswer) ? true : false; //translate into a bool
+        isCorrect = (userAnswer === correctAnswer) ? true : false;
 
     clearTimeout(this.intervalId);
     this.setState({
@@ -85,10 +85,13 @@ class Question extends Component {
       userAnswer: userAnswer 
     })
 
+    console.log("handleAnswer: " + this.props.index + ", is correct: " + isCorrect);
+
     //set the question to answered which wil hide the buttonVisibility
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       this.setState({ disableButton: true })
     });
+    if (this.props.gameMode) this.handleNextQuestion();
   }
 
   handleNextQuestion(notUse) {
@@ -105,8 +108,9 @@ class Question extends Component {
   render() {
     console.log("Question component, questionCount: " + this.props.quest.length + 
             " index: " + this.props.index + ", quiz complete: " + this.props.quizComplete);
-    let visibility = (this.state.answered && this.state.gameMode == false) ? 'callout secondary is-visible' : 'callout secondary is-hidden';
-    let buttonVisibility = (this.state.answered) ? 'columns small-6 is-hidden' : 
+    let visibleTest = this.state.answered && this.state.gameMode == false;
+    let visibility = visibleTest ? 'callout secondary is-visible' : 'callout secondary is-hidden';
+    let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 
                                                    'columns small-6 is-visible float-center';
     let backgroundImage = {opacity: 0.2, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 

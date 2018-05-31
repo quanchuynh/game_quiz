@@ -4,7 +4,7 @@ var quizList = new QuizList('quiz_list.json');
 var categories = [];
 var categoriesIdMap = [];
 var testMode = true;
-var testQuizId = 5031;
+var testQuizId = 4856;
 
 Meteor.methods({
   submitCorrectAnswer: function(user) {
