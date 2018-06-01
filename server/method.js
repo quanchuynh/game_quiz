@@ -40,8 +40,10 @@ Meteor.methods({
     var randomCategory = getRandomCategory();   /* First quiz is pre-selected from random category. */
     var quizId = getCategoryQuizId(randomCategory, game.name);
     game.currentQuizId = quizId;
+    game.currentQuizNumber = 1;
     if (testMode) game.currentQuizId = testQuizId;    /* quiz ID for easy testing. */
     CreatedGame.insert(game);
+    GameQuizNumber.insert({gameName: game.name, quizId: game.currentQuizId, quizNumber: game.currentQuizNumber});
     createQuizQuestionTracker(game.name);
     return true;
   },
@@ -88,7 +90,9 @@ Meteor.methods({
     var quizId = getCategoryQuizId(category, gameId);
     var match = CreatedGame.findOne({name: gameId});
     if (match) {
-      CreatedGame.update({name: gameId}, {$set: {currentQuizId: quizId}});
+      let currentQuizNumber = match.currentQuizNumber + 1;
+      CreatedGame.update({name: gameId}, {$set: {currentQuizId: quizId, currentQuizNumber: currentQuizNumber}});
+      GameQuizNumber.insert({gameName: gameId, quizId: quizId, quizNumber: currentQuizNumber + 1});
       trackQuizQuestion(gameId);
     }
     return quizId;
@@ -193,6 +197,9 @@ startQuestionTracker = function(gameName, quizId) {
                                {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
     }
   }, 1000);
+}
+
+creatGameeQuizSummary = function(gameName, quizId) {
 }
 
 joinGame = function(gameName, userName) {
