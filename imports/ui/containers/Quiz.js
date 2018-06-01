@@ -116,15 +116,14 @@ class Quiz extends Component {
 
     console.log("Quiz, nextQuestion, result: " + result + " of " + this.state.currentQuestion);
 
-    if (result) {
-      var correctAnswer = { gameName: this.props.gameName,
-                                  quizId: this.props.quizId, 
-                                  player: this.props.player,
-                                  currentQuestion: this.props.currentQuestion
-                                };
-      Meteor.call('submitCorrectAnswer', correctAnswer, (err, ret) => {
-      });
-    }
+    var correctAnswer = { gameName: this.props.gameName,
+                                quizId: this.props.quizId, 
+                                player: this.props.player,
+                                question: this.props.currentQuestion,
+                                isCorrect: result
+                              };
+    Meteor.call('submitAnswer', correctAnswer, (err, ret) => {
+    });
   }
 
   finishQuiz(result) {

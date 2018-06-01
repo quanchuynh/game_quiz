@@ -4,8 +4,10 @@ import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
 import SelectInput from '../components/SelectInput';
 import StartGame from '../containers/StartGame';
+import { withTracker } from 'meteor/react-meteor-data';
 import './CreateGame.css';
 
+/* props: this.props.currentUser.username */
 nullOrEmpty = function(name) {
   return (!name || name == undefined || name == "" || name.length == 0) ;
 };
@@ -89,7 +91,7 @@ class JoinGame extends Component {
   }
 
   render() {
-     let gameNames = this.state.games,
+     let gameNames = this.props.games,
          yes = true, no = false;
      return (
        this.state.start ?
@@ -111,4 +113,22 @@ class JoinGame extends Component {
   }
 }
 
-export default JoinGame;
+export default withTracker( ({currentUser}) => {
+  /* Make the game name reactive. So new names are available w/o refresh. */
+  var gameNames = [];
+  let userName = currentUser.username;
+  var orCodintion = {$or: [{player1: userName}, {player2: userName}, {player3: userName}]};
+  var condition = {$and: [{active: true}, orCodintion]};
+  match = CreatedGame.find(condition);
+  if (match) {
+    var matches = match.fetch();
+    for (ii = 0; ii < matches.length; ii++) {
+      gameNames[ii] = matches[ii].name;
+    }
+  }
+
+  return {
+    currentUser: currentUser,
+    games: gameNames
+  }
+})(JoinGame);

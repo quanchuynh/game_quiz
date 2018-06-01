@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
 import FormField from '../components/FormField';
 import SelectInput from '../components/SelectInput';
+import { withTracker } from 'meteor/react-meteor-data';
 import './CreateGame.css';
 
 nullOrEmpty = function(name) {
@@ -226,4 +227,21 @@ class CreateGame extends Component {
   }
 }
 
-export default CreateGame;
+export default withTracker( ({currentUser}) => {
+  /* Make the game name reactive. So new names are available w/o refresh. */
+  var allUsers = [];
+  let userName = currentUser.username;
+  match = Meteor.users.find();  /* NEED OPTIMIZE */
+  if (match) {
+    var matches = match.fetch();
+    for (ii = 0; ii < matches.length; ii++) {
+      allUsers[ii] = matches[ii].username;
+    }
+  }
+
+  return {
+    currentUser: currentUser,
+    allUsers: allUsers
+  }
+})(CreateGame);
+

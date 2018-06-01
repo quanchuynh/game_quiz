@@ -26,7 +26,8 @@ class ScoreBoard extends Component {
                       whiteSpace: "pre", 
                       backgroundColor: "#e6f7ff",
                       color: "#005780", borderWidth: "2px", borderStyle: "groove"},
-        noPadding = {padding: "0px"};
+        noPadding = {padding: "0px"},
+        colors = ["green", "blue"];
     return (
           <div style={scoreLabel}>
             <span>Question {this.props.currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
@@ -48,7 +49,9 @@ export default withTracker(({gameName, quizId, questionCount, currentQuestion}) 
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();
     for (ii = 0; ii < correctPlayer.length; ii++) {
-      let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player});
+      if (!correctPlayer[ii].isCorrect) continue;
+      let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player }
+      );
       if (pl) pl.score++;
       else userScore.push({player: correctPlayer[ii].player, score: 1});
     }    

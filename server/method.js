@@ -7,12 +7,17 @@ var testMode = true;
 var testQuizId = 4856;
 
 Meteor.methods({
-  submitCorrectAnswer: function(user) {
+  submitAnswer: function(user) {
     console.log("submitCorrectAnswer: " + JSON.stringify(user));
-    /* Stop other user from submitting */
-    TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
-    TrackCorrectPlayer.insert(
-      {gameName: user.gameName, quizId: user.quizId, player: user.player, question: user.currentQuestion});
+    match = TrackCorrectPlayer.findOne({gameName: user.gameName, quizId: user.quizId, 
+                               player: user.player, question: user.question});
+    if (match) return;   /* Anwser already submitted for this question */
+
+    if (user.isCorrect) {
+      /* Stop other user from answer this question. */
+      TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
+    }
+    TrackCorrectPlayer.insert(user);
   },
 
   getActiveGames: function() {
@@ -188,10 +193,6 @@ startQuestionTracker = function(gameName, quizId) {
                                {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
     }
   }, 1000);
-}
-
-submitCorrectAnswer = function(result) {
-  var match = CreatedGame.findOne({name: gameName});
 }
 
 joinGame = function(gameName, userName) {

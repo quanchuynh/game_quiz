@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 import Welcome from '../components/Welcome';
 import SelectInput from '../components/SelectInput';
 import StartGame from '../containers/StartGame';
+import { withTracker } from 'meteor/react-meteor-data';
 import './CreateGame.css';
 
 class WatchGame extends Component {
@@ -41,7 +42,7 @@ class WatchGame extends Component {
   }
 
   render() {
-     let gameNames = this.state.games,
+     let gameNames = this.props.games,
          yes = true, no = false,
          start = this.state.start;
      return (
@@ -65,6 +66,20 @@ class WatchGame extends Component {
   }
 }
 
-export default WatchGame;
+export default withTracker( ({currentUser}) => {
+  /* Make the game name reactive. So new names are available w/o refresh. */
+  var gameNames = [];
+  let userName = currentUser.username;
+  match = CreatedGame.find({active: true});
+  if (match) {
+    var matches = match.fetch();
+    for (ii = 0; ii < matches.length; ii++) {
+      gameNames[ii] = matches[ii].name;
+    }
+  }
 
-
+  return {
+    currentUser: currentUser,
+    games: gameNames
+  }
+})(WatchGame);
