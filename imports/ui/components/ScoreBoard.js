@@ -14,19 +14,35 @@ class ScoreBoard extends Component {
   componentDidMount() {
   }
 
+  renderUserScore() {
+    let userScore = this.props.userScore;
+    console.log("userScore: " + userScore.length);
+  }
+
   render() {
     let userScore = this.props.userScore;
+    console.log("userScore: " + userScore.length);
+    let scoreLabel = {padding: "5px 10px 10px 10px", /* t, r, b, l */
+                      whiteSpace: "pre", 
+                      backgroundColor: "#e6f7ff",
+                      color: "#005780", borderWidth: "2px", borderStyle: "groove"},
+        noPadding = {padding: "0px"};
     return (
-      <div> <span>Question {this.props.currentQuestion} of {this.props.questionCount} </span>
-            "SCORES: "
-            userScore.map((user, i) => ( <span key={i}>{user.player}: {user.score}</span> ) )
-      </div>
-      
+          <div style={scoreLabel}>
+            <span>Question {this.props.currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
+            <span>Score:   </span>
+            {
+              userScore.length ?
+                userScore.map((u,i) => (<span key={i}>{u.player} {u.score}   </span>))
+            :
+              <span></span>
+            }
+          </div>
     );
   }
 }
 
-export default withTracker(({gameName, quizId, questionCount}) => {
+export default withTracker(({gameName, quizId, questionCount, currentQuestion}) => {
   var userScore = [];
   var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId});
   if (match) { /* possible that no player score yet */
@@ -40,7 +56,9 @@ export default withTracker(({gameName, quizId, questionCount}) => {
   return {
     gameName: gameName,
     quizId: quizId,
-    questionCount: questionCount
+    questionCount: questionCount,
+    userScore: userScore,
+    currentQuestion: currentQuestion 
   }
 })(ScoreBoard);
 

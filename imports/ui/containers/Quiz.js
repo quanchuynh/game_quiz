@@ -106,7 +106,7 @@ class Quiz extends Component {
   }
 
   nextQuestion(result) {
-    if (!this.props.mode) {
+    if (!this.props.mode || this.props.watchMode == 'watch') {
       this.setState({
         currentQuestion: (this.state.currentQuestion + 1),
         correct: (result) ? (this.state.correct + 1) : this.state.correct
@@ -168,10 +168,11 @@ class Quiz extends Component {
                 <div className="float-center" style={paddingTop}>
                   {
                   gameMode ?
-                  <ScoreBoard gameName={this.props.gameName} quizId={this.props.quizId} questionCount={question.length}/>
+                  <ScoreBoard gameName={this.props.gameName} quizId={this.props.quizId} 
+                              questionCount={question.length} currentQuestion={currentQuestion + 1}/>
                   :
                   <div>
-                  <span style={scoreLabel}>Question {currentQuestion + 1} out of {this.state.questions.length}
+                  <span style={scoreLabel}>Question {currentQuestion + 1} of {this.state.questions.length}
                         </span>
                   <span style={scoreLabel}>{this.state.correct} Correct</span>
                   </div>

@@ -73,7 +73,7 @@ class Practice extends Component {
              player={player} categorySelector={categorySelector}/> 
           :
           <Quiz quizId={quizId} action={this.handleFinishQuiz} mode={this.state.gameMode}
-                gameName={gameId} player={player} />
+                gameName={gameId} player={player} watchMode={this.props.watchMode}/>
       }
       </div>
     );

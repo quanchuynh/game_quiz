@@ -52,6 +52,7 @@ class StartGame extends Component {
                         categorySelector={this.props.game.categorySelector} 
                         player={this.props.player}
                         quizId={this.props.game.currentQuizId}
+                        watchMode={this.props.mode}
               />
           }
           </span>
@@ -72,7 +73,7 @@ export default withTracker(({gameName, mode, player}) => {
   return {
     game: game,
     gameName: gameName,
-    mode: mode,
+    mode: mode, /* watch or play */
     player: player,
     others: otherPlayers
   }
