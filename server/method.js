@@ -185,6 +185,7 @@ startQuestionTracker = function(gameName, quizId) {
     TrackQuizQuestion.update({gameName: gameName, quizId: quizId}, {$inc: {countDown: -1}});
     let trackQuiz = TrackQuizQuestion.findOne({gameName: gameName, quizId: quizId});
     let countDown = trackQuiz.countDown, lastQuestion = trackQuiz.lastQuestion;
+    currentQuestion = trackQuiz.currentQuestion;
     if (countDown <= 0) {
       if (currentQuestion == lastQuestion) {
         clearInterval(tInterval);
@@ -193,6 +194,7 @@ startQuestionTracker = function(gameName, quizId) {
         return;
       }
       currentQuestion++;
+      console.log("startQuestionTracker, currentQuestion: " + currentQuestion);
       TrackQuizQuestion.update({gameName: gameName, quizId: quizId},
                                {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
     }

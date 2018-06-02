@@ -35,7 +35,7 @@ class StartGame extends Component {
       <div style={tempStyle}>
       {
         waitList.length ?
-            <div><p>Wait for {waitList.length} players to join <em>{gameName}</em></p>
+            <div><p>Wait for {waitList.length} players to join game <em>{gameName}</em></p>
             <ul className="wait-list">
               { 
                 waitList.map((user, i) => <li key={i}>{user}</li>)

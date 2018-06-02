@@ -35,6 +35,7 @@ class Quiz extends Component {
     this.nextQuestion = this.nextQuestion.bind(this);
     this.finishQuiz = this.finishQuiz.bind(this);
     this.renderQuiz = this.renderQuiz.bind(this);
+    this.updateScore = this.updateScore.bind(this); 
   }
 
   componentDidMount() {
@@ -101,21 +102,19 @@ class Quiz extends Component {
     return {__html: this.state.introduction};
   }
   _getEndMessage() {
-    let msg = _.find(endMessages, (o) => { return o.numberCorrect === this.state.correct });
-        return _.sample(msg.comments);
+    let correctCount = this.state.correct < 7 ? this.state.correct : 6;
+    let msg = _.find(endMessages, (o) => { return o.numberCorrect === correctCount });
+      return _.sample(msg.comments);
   }
 
-  nextQuestion(result) {
+  updateScore(result) {
     if (!this.props.mode || this.props.watchMode == 'watch') {
-      this.setState({
-        currentQuestion: (this.state.currentQuestion + 1),
-        correct: (result) ? (this.state.correct + 1) : this.state.correct
-      });
-      return;
+      if (result) this.setState({correct: this.state.correct + 1});
     }
+    this.remoteSubmitAnswer(result);
+  }
 
-    console.log("Quiz, nextQuestion, result: " + result + " of " + this.state.currentQuestion);
-
+  remoteSubmitAnswer(result) {
     var correctAnswer = { gameName: this.props.gameName,
                                 quizId: this.props.quizId, 
                                 player: this.props.player,
@@ -126,12 +125,17 @@ class Quiz extends Component {
     });
   }
 
-  finishQuiz(result) {
+  nextQuestion() {
+    this.setState({
+      currentQuestion: (this.state.currentQuestion + 1),
+    });
+    return;
+  }
+
+  finishQuiz() {
     this.setState({
       finished: true,
-      correct: (result) ? (this.state.correct + 1) : this.state.correct
     })
-
     this.props.action(this.state.correct, this.state.questionCount);
   }
 
@@ -189,6 +193,7 @@ class Quiz extends Component {
               <div className={questionClass}>
                 <Question timer={this.state.timer} quest={this.state.questions} 
                     index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    score={this.updateScore} 
                     gameMode={this.props.mode} countDown={this.props.countDown}
                     quizComplete={this.props.quizComplete} filePath={path}/>
               </div>

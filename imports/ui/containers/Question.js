@@ -42,7 +42,15 @@ class Question extends Component {
   }
 
   remoteTimer() {
+    if (this.props.countDown < 1) {
+      this.handleExpiration();
+      return;
+    }
     this.setState({questionTimeLeft: this.props.countDown });
+  }
+
+  lastQuiz() {
+    return (this.props.index + 1) >= this.props.quest.length
   }
 
   practiceTimer() {
@@ -64,15 +72,15 @@ class Question extends Component {
     return {__html:  this.props.quest[this.props.index].explanation};
   }
 
-  _resetQuestion(isCorrect) {
+  _resetQuestion() {
     this.setState({
       answered: false,
     }, () => {
       if ((this.props.index + 1) >= this.props.quest.length) {
-        this.props.done(isCorrect);
+        this.props.done();
       }
       else {
-        this.props.next(isCorrect);
+        this.props.next();
         this.intervalId = setInterval(this.timer.bind(this), 1000);
       }
     });
@@ -97,18 +105,21 @@ class Question extends Component {
       userAnswer: userAnswer 
     })
 
+    this.props.score(isCorrect);
+
     console.log("handleAnswer: " + this.props.index + ", is correct: " + isCorrect);
 
     //set the question to answered which wil hide the buttonVisibility
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       this.setState({ disableButton: true })
     });
-    if (this.props.gameMode) this._resetQuestion(isCorrect);
+
+    if (this.props.gameMode && !this.lastQuiz()) this._resetQuestion();
   }
 
   handleNextQuestion(notUse) {
     this.setState({questionTimeLeft: this.props.timer});
-    this._resetQuestion(this.state.isCorrect);
+    this._resetQuestion();
     console.debug(JSON.stringify(userAnswer));
   }
 
@@ -131,6 +142,7 @@ class Question extends Component {
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     let incorrectText = {color: "red"}, correctText = {color: "green"}
+    let lastQuestion = (this.props.index == this.props.quest.length - 1);
     return (
       <div className="question">
         <div className="grid">
@@ -150,7 +162,12 @@ class Question extends Component {
                    </div>
               }
               <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
-              <Button clName='button-2' copy='Next Question' action={this.handleNextQuestion}/>
+              {
+                lastQuestion ?
+                  <Button clName='button-2' copy='Select Another Quiz' action={this.handleNextQuestion}/>
+                :
+                  <Button clName='button-2' copy='Next Question' action={this.handleNextQuestion}/>
+              }
             </div>
           </div>
           <div className={buttonVisibility}>

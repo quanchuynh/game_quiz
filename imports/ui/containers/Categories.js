@@ -3,8 +3,6 @@ import Button from '../components/Button';
 import ImageGallery from '../containers/ImageGallery';
 import '../index.css';
 
-const nextQuestionTime = 2;
-
 /* props: mode, action, gameId, categorySelector, player */
 
 class Categories extends Component {
