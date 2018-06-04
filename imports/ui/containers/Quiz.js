@@ -5,6 +5,7 @@ import Question from './Question';
 import endMessages from '../constants/end_messages.js';
 import CountDown from '../components/CountDown';
 import ScoreBoard from '../components/ScoreBoard';
+import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import _ from 'lodash';
 
@@ -36,6 +37,7 @@ class Quiz extends Component {
     this.finishQuiz = this.finishQuiz.bind(this);
     this.renderQuiz = this.renderQuiz.bind(this);
     this.updateScore = this.updateScore.bind(this); 
+    this.detailResult = this.detailResult.bind(this);
   }
 
   componentDidMount() {
@@ -52,9 +54,29 @@ class Quiz extends Component {
     return null;
   }
 
+  detailResult() {
+    Meteor.call('getResultDetail', this.props.gameName, this.props.quizId, (err, ret) => {
+      if (err) Session.set("quizDetailResul", err);
+      else Session.set("quizDetailResult", ret);
+    });
+
+    /* return {__html:  '<span>Quiz details</span><br/>next line'}; */
+    /* Will build a simple table. For now return blank */
+    var retVal = Session.get("quizDetailResult");
+    var content = '';
+    if (retVal) {
+      content = '<span style="float: left">' + retVal.gameName + ', ' + retVal.quizId + '</span><br/>' +
+                retVal.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' + player.score
+                      + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
+                '<span style="float: left">' + retVal.winner + ' will select next category</span>'; 
+      console.log("quizDetailResult: " + content);
+    }
+    return {__html:  content};
+  }
+
   componentDidUpdate() {
-    console.log("componentDidUpdate: " + this.state.quizId);
     if (this.state.newQuiz) {
+      console.log("componentDidUpdate, new quiz: " + this.state.quizId);
       this.getQuiz(this.state.quizId);
       this.setState({newQuiz: false});
     }
@@ -64,7 +86,6 @@ class Quiz extends Component {
     console.log("renderQuiz");
     if (this.state.quizId && this.state.questions.length == 0) {
       this.getQuiz(this.state.quizId); 
-      console.log("renderQuiz, got quiz");
     }
   }
 
@@ -110,6 +131,7 @@ class Quiz extends Component {
   updateScore(result) {
     if (!this.props.mode || this.props.watchMode == 'watch') {
       if (result) this.setState({correct: this.state.correct + 1});
+      return;
     }
     this.remoteSubmitAnswer(result);
   }
@@ -144,6 +166,7 @@ class Quiz extends Component {
   }
 
   render() {
+    let questionText = {backgroundColor: "tranparent", textAlign: "center", padding: "10px"};
     console.log("Quiz render, quizId: " + this.state.quizId);
     this.renderQuiz();
     let paddingTop = {paddingTop: "12px"},
@@ -155,7 +178,7 @@ class Quiz extends Component {
         question = this.state.questions,
         resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
         questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden',
-        startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " sconds",
+        startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " seconds",
         gameMode = this.props.mode,
         currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
 
@@ -182,7 +205,11 @@ class Quiz extends Component {
                   }
                 </div> 
             :
-                <p></p>
+                <span>
+                  {
+                    this.props.mode ? <div style={questionText}>{startQuizMessage}</div> : <span/>
+                  }
+                </span>
           }
           </div>
        </div>
@@ -195,6 +222,7 @@ class Quiz extends Component {
                     index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
                     score={this.updateScore} 
                     gameMode={this.props.mode} countDown={this.props.countDown}
+                    detailResult={this.detailResult}
                     quizComplete={this.props.quizComplete} filePath={path}/>
               </div>
               <div className={resultsClass}>
@@ -212,8 +240,7 @@ class Quiz extends Component {
                   <p className="float-center" 
                      dangerouslySetInnerHTML={this._getIntroduction()} />
                   {
-                    this.props.mode ?
-                      <div>{startQuizMessage}</div>
+                    this.props.mode ? <span/>
                     :
                       <Button copy="Start Quiz" action={this.startQuiz} clName='success'/>
                   }

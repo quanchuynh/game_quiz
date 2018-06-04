@@ -24,3 +24,4 @@ gadicc:blaze-react-component
 accounts-base
 accounts-password
 react-template-helper
+session

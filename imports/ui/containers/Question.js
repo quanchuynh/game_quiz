@@ -65,7 +65,13 @@ class Question extends Component {
     }
   }
 
+  isLastQuestion() {
+    return (this.props.index == this.props.quest.length - 1);
+  }
+
   _getQuestion() {
+    if (this.props.gameMode && this.props.quizComplete)
+      return this.props.detailResult();
     return {__html:  this.props.quest[this.props.index].question};
   }
   _getExplanation() {
@@ -125,7 +131,14 @@ class Question extends Component {
 
   handleExpiration() {
     //set the question to answered which wil hide the buttonVisibility
-    this.setState({answered: true, isCorrect: false});
+    let correctAnswerIndex = this.props.quest[this.props.index].correct - 1,
+        correctAnswer = this.props.quest[this.props.index].answers[correctAnswerIndex];
+    this.setState({
+      answered: true, 
+      isCorrect: false,
+      correctAnswer: correctAnswer,
+      userAnswer: "no answer"
+    })
   }
 
   render() {
@@ -137,20 +150,24 @@ class Question extends Component {
                                                    'columns small-6 is-visible float-center';
     let backgroundImage = {opacity: 0.2, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
-                        position: "absolute", top: "120px", float: "left"};
-    let timeText = {color: "#005780", backgroundColor: "tranparent"};
+                        position: "absolute", top: "130px", textAlign: "center"};
+    let timeText = {color: "#005780", backgroundColor: "tranparent", textAlign: "center"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     let incorrectText = {color: "red"}, correctText = {color: "green"}
     let lastQuestion = (this.props.index == this.props.quest.length - 1);
+    let timeLeft = this.props.gameMode ? this.props.countDown : this.state.questionTimeLeft;
     return (
       <div className="question">
         <div className="grid">
           <div className="columns small-6 float-center">
-            <img src={this.props.filePath} alt="Norway" style={backgroundImage}/>
-            <h4 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}>
-            </h4>
-            <h4 style={timeText}>{this.state.questionTimeLeft} seconds left</h4>
+            <img src={this.props.filePath} style={backgroundImage}/>
+            <h5 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}>
+            </h5>
+            {
+              timeLeft > 0 ?
+                <h4 style={timeText}>{timeLeft} seconds left</h4> : <span/>
+            }
             <div className={visibility}>
               {
                  this.state.isCorrect ? 
@@ -173,7 +190,7 @@ class Question extends Component {
           <div className={buttonVisibility}>
           {
             this.props.quizComplete ?
-              <div style={timeText}> Quiz Completed </div>
+              <h4 style={timeText}> Quiz Completed </h4>
             :
               questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} action={this.handleAnswer} 
                 clName={colors[i%4] + " button-whole"} /></p>))
