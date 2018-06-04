@@ -206,6 +206,17 @@ trackQuizQuestion = function(game) {
   }
 }
 
+nextCategoryCountDown = function(gameName, quizId) {
+  categoryStartTime = 5;
+  tInterval = Meteor.setInterval(() => {
+    categoryStartTime--;
+    TrackQuizQuestion.update({gameName: gameName, quizId: quizId}, {$set: {categoryStartTime: categoryStartTime}});
+    if (categoryStartTime <= 0) {
+      Meteor.clearInterval(tInterval);
+    }
+  }, 1000);
+}
+
 getCategoryQuizId = function(category, gameId) {
   var quizId = quizList.getNewQuizIdForGame(gameId, category);
   console.log("getCategoryQuizId, quizId: " + quizId + ", category: " + category); 
@@ -228,6 +239,7 @@ startQuestionTracker = function(game) {
         Meteor.clearInterval(tInterval);
         TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId},
                              {$set: {quizComplete: true} });
+        nextCategoryCountDown(game.name, game.quizId);
         return;
       }
       currentQuestion++;

@@ -68,7 +68,10 @@ class Quiz extends Component {
       content = '<span style="float: left">' + retVal.gameName + ', ' + retVal.quizId + '</span><br/>' +
                 retVal.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' + player.score
                       + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
-                '<span style="float: left">' + retVal.winner + ' will select next category</span>'; 
+                '<span style="float: left">' + retVal.winner + ' will select next category</span></br>';
+/*
+                '<span style="float: left">in ' + this.props.categoryStartTime + ' minutes</span>';
+ */
       console.log("quizDetailResult: " + content);
     }
     return {__html:  content};
@@ -275,7 +278,8 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
     countDown: trackQuiz.countDown,
     quizStartTime: trackQuiz.quizStartTime,
     startQuiz: startQuiz,
-    quizComplete: trackQuiz.quizComplete
+    quizComplete: trackQuiz.quizComplete,
+    categoryStartTime: trackQuiz.categoryStartTime
   };
 
 }) (Quiz);
