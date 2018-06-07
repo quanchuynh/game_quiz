@@ -38,6 +38,7 @@ class Quiz extends Component {
     this.renderQuiz = this.renderQuiz.bind(this);
     this.updateScore = this.updateScore.bind(this); 
     this.detailResult = this.detailResult.bind(this);
+    this.renderQuestion = this.renderQuestion.bind(this) ;
   }
 
   componentDidMount() {
@@ -86,8 +87,8 @@ class Quiz extends Component {
   }
 
   renderQuiz() {
-    console.log("renderQuiz");
     if (this.state.quizId && this.state.questions.length == 0) {
+      /* Get new quiz if not already there. */
       this.getQuiz(this.state.quizId); 
     }
   }
@@ -162,11 +163,34 @@ class Quiz extends Component {
       finished: true,
     })
     this.props.action(this.state.correct, this.state.questionCount);
+    console.log("finish quiz");
   }
 
   startQuiz() {
     this.setState({started : true});
   }
+
+  renderQuestion() {
+    let path = this.state.image.fullUrl,
+        currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion,
+        resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
+        questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden';
+    return (
+            <div>
+              <div className={questionClass}>
+                <Question timer={this.state.timer} quest={this.state.questions} 
+                    index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
+                    score={this.updateScore} 
+                    gameMode={this.props.mode} countDown={this.props.countDown}
+                    quizComplete={this.props.quizComplete} filePath={path}/>
+              </div>
+              <div className={resultsClass}>
+                <h4>{this._getEndMessage()}</h4>
+                <p>You got {this.state.correct} out of {this.state.questionCount} correct.</p>
+              </div>
+            </div>
+    );
+  } 
 
   render() {
     let questionText = {backgroundColor: "tranparent", textAlign: "center", padding: "10px"};
@@ -179,8 +203,6 @@ class Quiz extends Component {
         alt = this.state.image.altText,
         credit = this.state.image.credit,
         question = this.state.questions,
-        resultsClass = (this.state.finished) ? 'results is-visible' : 'results is-hidden',
-        questionClass = (!this.state.finished) ? 'question-wrap is-visible animate fadeIn': 'question-wrap is-hidden',
         startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " seconds",
         gameMode = this.props.mode,
         currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
@@ -219,20 +241,7 @@ class Quiz extends Component {
         <div className="container">
         {
           (this.state.started  || this.props.startQuiz) && this.state.gotQuiz ?
-            <div className="quiz">
-              <div className={questionClass}>
-                <Question timer={this.state.timer} quest={this.state.questions} 
-                    index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
-                    score={this.updateScore} 
-                    gameMode={this.props.mode} countDown={this.props.countDown}
-                    detailResult={this.detailResult}
-                    quizComplete={this.props.quizComplete} filePath={path}/>
-              </div>
-              <div className={resultsClass}>
-                <h4>{this._getEndMessage()}</h4>
-                <p>You got {this.state.correct} out of {this.state.questionCount} correct.</p>
-              </div>
-            </div>
+            <div className="questionContainer"> {this.renderQuestion()} </div>
             :
             <div className="introduction">
               <div className="grid">

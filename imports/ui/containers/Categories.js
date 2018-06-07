@@ -81,7 +81,7 @@ class Categories extends Component {
                      clName={colors[i%4] + ' category button-4'}/>
             })
           }
-          <div className={galleryVisibility}>
+          <div className={galleryVisibility}> {/* visible in practice mode */}
              <ImageGallery quizList={quizList} action={this.handleImageClick}/>
           </div>
         </div>

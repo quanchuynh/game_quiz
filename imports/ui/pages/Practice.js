@@ -8,7 +8,7 @@ import NavBar from '../navigation/NavBar';
 import endMessages from '../constants/end_messages.js';
 import _ from 'lodash';
 
-/* props: gameMode gameName categorySelector player */
+/* props: gameMode gameName categorySelector player (quizComplete?) */
 
 class Practice extends Component {
   constructor(props) {

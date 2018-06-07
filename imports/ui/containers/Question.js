@@ -71,7 +71,7 @@ class Question extends Component {
 
   _getQuestion() {
     if (this.props.gameMode && this.props.quizComplete)
-      return this.props.detailResult();
+      this.props.done();
     return {__html:  this.props.quest[this.props.index].question};
   }
   _getExplanation() {
@@ -188,13 +188,10 @@ class Question extends Component {
             </div>
           </div>
           <div className={buttonVisibility}>
-          {
-            this.props.quizComplete ?
-              <h4 style={timeText}> Quiz Completed </h4>
-            :
-              questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} action={this.handleAnswer} 
-                clName={colors[i%4] + " button-whole"} /></p>))
-          }
+            {
+              questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} 
+                action={this.handleAnswer} clName={colors[i%4] + " button-whole"} /></p>))
+            }
           </div>
         </div>
       </div>
