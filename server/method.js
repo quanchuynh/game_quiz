@@ -49,6 +49,7 @@ Meteor.methods({
     var quizId = getCategoryQuizId(randomCategory, game.name);
     game.currentQuizId = quizId;
     game.currentQuizNumber = 1;
+    game.quizComplete = false;
     if (testMode) game.currentQuizId = testQuizId;    /* quiz ID for easy testing. */
     CreatedGame.insert(game);
     GameQuizNumber.insert({gameName: game.name, quizId: game.currentQuizId, quizNumber: game.currentQuizNumber});
@@ -99,8 +100,8 @@ Meteor.methods({
     var match = CreatedGame.findOne({name: gameId});
     if (match) {
       let currentQuizNumber = match.currentQuizNumber + 1;
-      CreatedGame.update({name: gameId}, {$set: {currentQuizId: quizId, currentQuizNumber: currentQuizNumber}});
-      GameQuizNumber.insert({gameName: gameId, quizId: quizId, quizNumber: currentQuizNumber + 1});
+      CreatedGame.update({name: gameId}, 
+           {$set: {currentQuizId: quizId, currentQuizNumber: currentQuizNumber, quizComplete: false}});
       trackQuizQuestion(match);
     }
     return quizId;
@@ -239,6 +240,10 @@ startQuestionTracker = function(game) {
         Meteor.clearInterval(tInterval);
         TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId},
                              {$set: {quizComplete: true} });
+        var match = CreatedGame.findOne({name: gameName});
+        if (match) {
+          CreatedGame.update({name: gameName}, {$set: {quizComplete: true}});
+        }
         nextCategoryCountDown(game.name, game.quizId);
         return;
       }

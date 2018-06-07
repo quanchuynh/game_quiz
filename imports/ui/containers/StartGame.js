@@ -23,6 +23,7 @@ class StartGame extends Component {
         others = this.props.others,
         countDown = this.props.game.countDown,
         gameName = this.props.game.name,
+        quizComplete = this.props.game.quizComplete,
         countDownMessage = "Game will start in " + this.props.game.countDown + " seconds";
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
     const yes = true, no = false;
@@ -52,7 +53,7 @@ class StartGame extends Component {
                         categorySelector={this.props.game.categorySelector} 
                         player={this.props.player}
                         quizId={this.props.game.currentQuizId}
-                        watchMode={this.props.mode}
+                        watchMode={this.props.mode} quizComplete={quizComplete}
               />
           }
           </span>
