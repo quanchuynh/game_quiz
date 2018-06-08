@@ -235,6 +235,9 @@ startQuestionTracker = function(game) {
   tInterval = Meteor.setInterval(() => {
     TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId}, {$inc: {countDown: -1}});
     let trackQuiz = TrackQuizQuestion.findOne({gameName: game.name, quizId: game.quizId});
+    if (!trackQuiz) {
+      console.log("ERROR: Could not find track_quiz for gameName: " + game.name + ", quizId: " + game.quizId);
+    }
     let countDown = trackQuiz.countDown, lastQuestion = trackQuiz.lastQuestion;
     currentQuestion = trackQuiz.currentQuestion;
     if (countDown <= 0) {
