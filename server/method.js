@@ -103,9 +103,12 @@ Meteor.methods({
       match.currentQuizId = quizId;
       createQuizQuestionTracker(match);
       trackQuizQuestion(match);
-      /* Client side begin to see new quiz here. */
+      /* Client side begin to see new quiz here. Game already started, no game countDown. */
       CreatedGame.update({name: gameId}, 
-           {$set: {currentQuizId: quizId, currentQuizNumber: match.currentQuizNumber, quizComplete: false}});
+           {$set: {currentQuizId: quizId, currentQuizNumber: match.currentQuizNumber, 
+                   quizComplete: false, categorySelector: false, countDown: 0}});
+      let check = CreatedGame.findOne({name: gameId});
+      console.log("New quiz for game: " + gameId + ", " + JSON.stringify(check));
     }
     return quizId;
   },
@@ -191,20 +194,16 @@ createQuizQuestionTracker = function(game) {
 }
 
 trackQuizQuestion = function(game) {
-  var match = CreatedGame.findOne({name: game.name});
-  if (match)
-  {
-    var quizId = match.currentQuizId;
-    quizStartTime = 5;
-    tInterval = Meteor.setInterval(() => {
-      quizStartTime--;
-      TrackQuizQuestion.update({gameName: game.name, quizId: quizId}, {$set: {quizStartTime: quizStartTime}});
-      if (quizStartTime <= 0) {
-        Meteor.clearInterval(tInterval);
-        startQuestionTracker(game);
-      }
-    }, 1000);
-  }
+  var quizId = game.currentQuizId;
+  quizStartTime = 5;
+  tInterval = Meteor.setInterval(() => {
+    quizStartTime--;
+    TrackQuizQuestion.update({gameName: game.name, quizId: quizId}, {$set: {quizStartTime: quizStartTime}});
+    if (quizStartTime <= 0) {
+      Meteor.clearInterval(tInterval);
+      startQuestionTracker(game);
+    }
+  }, 1000);
 }
 
 nextCategoryCountDown = function(gameName, quizId) {
@@ -215,7 +214,7 @@ nextCategoryCountDown = function(gameName, quizId) {
     if (categoryStartTime <= 0) {
         Meteor.clearInterval(tInterval);
         let winner = getQuizWinner(gameName, quizId);
-        CreatedGame.update({name: gameName, quizId: quizId}, {$set: {categorySelector: winner}}); 
+        CreatedGame.update({name: gameName, currentQuizId: quizId}, {$set: {categorySelector: winner}}); 
     }
   }, 1000);
 }
@@ -233,31 +232,32 @@ startQuestionTracker = function(game) {
    */
   let currentQuestion = 0;
   tInterval = Meteor.setInterval(() => {
-    TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId}, {$inc: {countDown: -1}});
-    let trackQuiz = TrackQuizQuestion.findOne({gameName: game.name, quizId: game.quizId});
+        /* currentQuizId */
+    TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId}, {$inc: {countDown: -1}});
+    let trackQuiz = TrackQuizQuestion.findOne({gameName: game.name, quizId: game.currentQuizId});
     if (!trackQuiz) {
-      console.log("ERROR: Could not find track_quiz for gameName: " + game.name + ", quizId: " + game.quizId);
+      console.log("ERROR: Could not find track_quiz for gameName: " + game.name + ", quizId: " + game.currentQuizId);
     }
     let countDown = trackQuiz.countDown, lastQuestion = trackQuiz.lastQuestion;
     currentQuestion = trackQuiz.currentQuestion;
     if (countDown <= 0) {
       if (currentQuestion == lastQuestion) {
         Meteor.clearInterval(tInterval);
-        TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId},
+        TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
                              {$set: {quizComplete: true} });
         var match = CreatedGame.findOne({name: game.name});
         if (match) {
+          console.log("Quiz complete, game name: " + game.name + ", quiz ID: " + game.currentQuizId);
           CreatedGame.update({name: game.name}, {$set: {quizComplete: true}});
           if (game.currentQuizNumber == game.count) {
             CreatedGame.update({name: game.name}, {$set: {gameComplete: true, active: false}});
           }
         }
-        nextCategoryCountDown(game.name, game.quizId);
+        nextCategoryCountDown(game.name, game.currentQuizId);
         return;
       }
       currentQuestion++;
-      console.log("startQuestionTracker, currentQuestion: " + currentQuestion);
-      TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId},
+      TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
                                {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
     }
   }, 1000);
