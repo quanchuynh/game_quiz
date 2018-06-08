@@ -248,6 +248,9 @@ startQuestionTracker = function(game) {
         var match = CreatedGame.findOne({name: game.name});
         if (match) {
           CreatedGame.update({name: game.name}, {$set: {quizComplete: true}});
+          if (game.currentQuizNumber == game.count) {
+            CreatedGame.update({name: game.name}, {$set: {gameComplete: true, active: false}});
+          }
         }
         nextCategoryCountDown(game.name, game.quizId);
         return;
