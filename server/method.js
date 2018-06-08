@@ -100,7 +100,7 @@ Meteor.methods({
     var match = CreatedGame.findOne({name: gameId});
     if (match) {
       match.currentQuizNumber++;
-      match.quizId = quizId;
+      match.currentQuizId = quizId;
       createQuizQuestionTracker(match);
       trackQuizQuestion(match);
       /* Client side begin to see new quiz here. */
