@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Button from '../components/Button';
+import SelectCategoryCountDown from '../components/SelectCategoryCountDown';
 import ImageGallery from '../containers/ImageGallery';
 import '../index.css';
 
-/* props: mode, action, gameId, categorySelector, player */
+/* props: mode, action, gameId, quizId, categorySelector, player */
 
 class Categories extends Component {
   constructor(props) {
@@ -17,6 +18,17 @@ class Categories extends Component {
     };
     this.handleSelect = this.handleSelect.bind(this);
     this.handleImageClick = this.handleImageClick.bind(this);
+    this.scoreSummary = {__html:  ''};
+  }
+
+  detailResult() {
+    Meteor.call('getResultDetail', this.props.gameId, this.props.quizId, (err, ret) => {
+      var content = '<span style="float: left">' + ret.gameName + ', ' + ret.quizId + '</span><br/>' +
+                ret.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' 
+                + player.score + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
+                '<span style="float: left">' + ret.winner + ' will select next category</span></br>';
+      this.scoreSummary = {__html:  content};
+    });
   }
 
   componentDidMount() {
@@ -86,7 +98,10 @@ class Categories extends Component {
           </div>
         </div>
       :
-        <div>Wait player {categorySelector} selects a category </div>
+        <div className="columns small-8 float-center"> {this.detailResult()}
+           <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/>
+           <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}/>
+        </div>
     );
   }
 }

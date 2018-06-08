@@ -63,7 +63,7 @@ class Practice extends Component {
         player = this.props.player,
         showQuiz = this.state.gotQuiz && (!this.props.quizComplete);
 
-    console.log("Practice props: " + JSON.stringify(this.props));
+    console.log("Practice, show quiz: " + showQuiz + ', quizComplete: ' + this.props.quizComplete);
 
     // <p className="lead">Your Score: {this.state.totalScore} out of {this.state.totalQuestion}</p>
     return (
@@ -74,7 +74,8 @@ class Practice extends Component {
                 gameName={gameId} player={player} watchMode={this.props.watchMode}/>
           :
           <Categories action={this.updateQuizId} gameId={gameId} mode={this.state.gameMode} 
-             player={player} categorySelector={categorySelector} quizComplete={this.props.quizComplete}/> 
+             player={player} categorySelector={categorySelector} 
+             quizComplete={this.props.quizComplete} quizId={this.props.quizId}/> 
       }
       </div>
     );

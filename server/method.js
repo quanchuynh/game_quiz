@@ -99,10 +99,13 @@ Meteor.methods({
     var quizId = getCategoryQuizId(category, gameId);
     var match = CreatedGame.findOne({name: gameId});
     if (match) {
-      let currentQuizNumber = match.currentQuizNumber + 1;
-      CreatedGame.update({name: gameId}, 
-           {$set: {currentQuizId: quizId, currentQuizNumber: currentQuizNumber, quizComplete: false}});
+      match.currentQuizNumber++;
+      match.quizId = quizId;
+      createQuizQuestionTracker(match);
       trackQuizQuestion(match);
+      /* Client side begin to see new quiz here. */
+      CreatedGame.update({name: gameId}, 
+           {$set: {currentQuizId: quizId, currentQuizNumber: match.currentQuizNumber, quizComplete: false}});
     }
     return quizId;
   },
@@ -180,14 +183,11 @@ getResultDetail = function(gameName, quizId) {
 }
 
 createQuizQuestionTracker = function(game) {
-  var match = CreatedGame.findOne({name: game.name});
-  if (match) {
-    var quizId = match.currentQuizId;
-    let questCount = quizList.getQuestion(quizId).length;
-    TrackQuizQuestion.insert({gameName: game.name, quizId: quizId, quizNumber: game.currentQuizNumber, 
-                              currentQuestion: 0, lastQuestion: questCount - 1,
-                              countDown: 10, quizComplete: false, quizStartTime: 5});
-  }
+  var quizId = game.currentQuizId;
+  let questCount = quizList.getQuestion(quizId).length;
+  TrackQuizQuestion.insert({gameName: game.name, quizId: quizId, quizNumber: game.currentQuizNumber, 
+                            currentQuestion: 0, lastQuestion: questCount - 1,
+                            countDown: 10, quizComplete: false, quizStartTime: 5});
 }
 
 trackQuizQuestion = function(game) {
@@ -213,7 +213,9 @@ nextCategoryCountDown = function(gameName, quizId) {
     categoryStartTime--;
     TrackQuizQuestion.update({gameName: gameName, quizId: quizId}, {$set: {categoryStartTime: categoryStartTime}});
     if (categoryStartTime <= 0) {
-      Meteor.clearInterval(tInterval);
+        Meteor.clearInterval(tInterval);
+        let winner = getQuizWinner(gameName, quizId);
+        CreatedGame.update({name: gameName, quizId: quizId}, {$set: {categorySelector: winner}}); 
     }
   }, 1000);
 }
@@ -240,9 +242,9 @@ startQuestionTracker = function(game) {
         Meteor.clearInterval(tInterval);
         TrackQuizQuestion.update({gameName: game.name, quizId: game.quizId},
                              {$set: {quizComplete: true} });
-        var match = CreatedGame.findOne({name: gameName});
+        var match = CreatedGame.findOne({name: game.name});
         if (match) {
-          CreatedGame.update({name: gameName}, {$set: {quizComplete: true}});
+          CreatedGame.update({name: game.name}, {$set: {quizComplete: true}});
         }
         nextCategoryCountDown(game.name, game.quizId);
         return;

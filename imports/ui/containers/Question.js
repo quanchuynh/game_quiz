@@ -31,7 +31,7 @@ class Question extends Component {
 
   timer() {
     if (this.props.quizComplete) {
-      this.setState({ questionTimeLeft: 0 });
+      // this.setState({ questionTimeLeft: 0 });
       clearInterval(this.intervalId);
       return;
     }
@@ -42,6 +42,7 @@ class Question extends Component {
   }
 
   remoteTimer() {
+    if (this.props.quizComplete) return;
     if (this.props.countDown < 1) {
       this.handleExpiration();
       return;
@@ -70,8 +71,10 @@ class Question extends Component {
   }
 
   _getQuestion() {
+/*
     if (this.props.gameMode && this.props.quizComplete)
       this.props.done();
+*/
     return {__html:  this.props.quest[this.props.index].question};
   }
   _getExplanation() {
