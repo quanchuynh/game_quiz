@@ -19,6 +19,7 @@ class Categories extends Component {
     this.handleSelect = this.handleSelect.bind(this);
     this.handleImageClick = this.handleImageClick.bind(this);
     this.scoreSummary = {__html:  ''};
+    this.winner = '';
   }
 
   detailResult() {
@@ -28,6 +29,7 @@ class Categories extends Component {
                 + player.score + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
                 '<span style="float: left">' + ret.winner + ' will select next category</span></br>';
       this.scoreSummary = {__html:  content};
+      this.winner = ret.winner;
     });
   }
 
@@ -100,7 +102,8 @@ class Categories extends Component {
       :
         <div className="columns small-8 float-center"> {this.detailResult()}
            <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/>
-           <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}/>
+           <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}
+              winner={this.winner}/>
         </div>
     );
   }

@@ -70,7 +70,7 @@ export default withTracker( ({currentUser}) => {
   /* Make the game name reactive. So new names are available w/o refresh. */
   var gameNames = [];
   let userName = currentUser.username;
-  match = CreatedGame.find({active: true});
+  match = CreatedGame.find();
   if (match) {
     var matches = match.fetch();
     for (ii = 0; ii < matches.length; ii++) {

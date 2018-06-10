@@ -8,11 +8,18 @@ var testQuizId = 4856;
 
 Meteor.methods({
   getResultDetail : function(gameName, quizId) {
-    let title = quizList.getQuiz(quizId).title;
-    let userScore = getResultDetail(gameName, quizId);
-    const maxScore = Math.max(...userScore.map(o => o.score));
-    let pl = userScore.find((usc) => { return usc.score == maxScore });
-    return {gameName: gameName, quizId: title, players: userScore, winner: pl.player};
+    let res = getQuizResultDetail(gameName, quizId);
+    return {gameName: gameName, quizId: res.title, players: res.players, winner: res.winner};
+  },
+
+  getFinalResult: function(gameName) {
+    let gql = GameQuizList.findOne({gameName: gameName});
+    if (gql) {
+      let qList = gql.quizList;
+      let results = qList.map( (quizId) => (getQuizResultDetail(gameName,quizId)) );
+      return {gameName: gameName, results: results, ok: true};
+    }
+    return {ok: false, errorMessage: "Could not find " + gameName + " in game quiz list."};
   },
 
   submitAnswer: function(user) {
@@ -52,7 +59,6 @@ Meteor.methods({
     game.quizComplete = false;
     if (testMode) game.currentQuizId = testQuizId;    /* quiz ID for easy testing. */
     CreatedGame.insert(game);
-    GameQuizNumber.insert({gameName: game.name, quizId: game.currentQuizId, quizNumber: game.currentQuizNumber});
     createQuizQuestionTracker(game);
     return true;
   },
@@ -155,6 +161,15 @@ Meteor.methods({
   }
 });
 
+getQuizResultDetail = function(gameName, quizId) {
+  let quiz = quizList.getQuiz(quizId);
+  let title = quiz.title + " (" + quiz.mainCategory.replace(/_/g, ' ') + ")";
+  let userScore = getResultDetail(gameName, quizId);
+  const maxScore = Math.max(...userScore.map(o => o.score));
+  let pl = userScore.find((usc) => { return usc.score == maxScore });
+  return {title: title, players: userScore, winner: pl.player};
+}
+
 getQuizWinner = function(gameName, quizId) {
   var userScore = getResultDetail(gameName, quizId);
   const maxScore = Math.max(...userScore.map(o => o.score));
@@ -191,6 +206,16 @@ createQuizQuestionTracker = function(game) {
   TrackQuizQuestion.insert({gameName: game.name, quizId: quizId, quizNumber: game.currentQuizNumber, 
                             currentQuestion: 0, lastQuestion: questCount - 1,
                             countDown: 10, quizComplete: false, quizStartTime: 5});
+  var gql = GameQuizList.findOne({gameName: game.name});
+  if (gql) {
+    gql.quizList = [...gql.quizList, quizId];
+    GameQuizList.update({gameName: game.name}, {$set: {quizList: gql.quizList}});
+  }
+  else {
+    let qList = [];
+    qList.push(quizId);
+    GameQuizList.insert({gameName: game.name, quizList: qList}); 
+  }
 }
 
 trackQuizQuestion = function(game) {
@@ -212,6 +237,7 @@ nextCategoryCountDown = function(gameName, quizId) {
     categoryStartTime--;
     TrackQuizQuestion.update({gameName: gameName, quizId: quizId}, {$set: {categoryStartTime: categoryStartTime}});
     if (categoryStartTime <= 0) {
+        categoryStartTime = 0;
         Meteor.clearInterval(tInterval);
         let winner = getQuizWinner(gameName, quizId);
         CreatedGame.update({name: gameName, currentQuizId: quizId}, {$set: {categorySelector: winner}}); 

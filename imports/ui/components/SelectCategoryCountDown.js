@@ -10,9 +10,14 @@ class SelectCategoryCountDown extends Component {
   }
 
   render() {
-    let timer = this.props.trackQuiz.categoryStartTime;
+    let timer = this.props.trackQuiz.categoryStartTime,
+        winner = this.props.winner,
+        selecting = timer <= 0;
     return (
-       <div>Category will be selected by winner in {timer} seconds</div>
+       selecting?
+         <div>{winner} is selecting a category</div>
+       :
+         <div>Category will be selected by {winner} in {timer} seconds</div>
     );
   }
 }

@@ -37,7 +37,6 @@ class Quiz extends Component {
     this.finishQuiz = this.finishQuiz.bind(this);
     this.renderQuiz = this.renderQuiz.bind(this);
     this.updateScore = this.updateScore.bind(this); 
-    this.detailResult = this.detailResult.bind(this);
     this.renderQuestion = this.renderQuestion.bind(this) ;
   }
 
@@ -53,29 +52,6 @@ class Quiz extends Component {
       return {quizId: nextProps.quizId, newQuiz: true};
     }
     return null;
-  }
-
-  detailResult() {
-    Meteor.call('getResultDetail', this.props.gameName, this.props.quizId, (err, ret) => {
-      if (err) Session.set("quizDetailResul", err);
-      else Session.set("quizDetailResult", ret);
-    });
-
-    /* return {__html:  '<span>Quiz details</span><br/>next line'}; */
-    /* Will build a simple table. For now return blank */
-    var retVal = Session.get("quizDetailResult");
-    var content = '';
-    if (retVal) {
-      content = '<span style="float: left">' + retVal.gameName + ', ' + retVal.quizId + '</span><br/>' +
-                retVal.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' + player.score
-                      + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
-                '<span style="float: left">' + retVal.winner + ' will select next category</span></br>';
-/*
-                '<span style="float: left">in ' + this.props.categoryStartTime + ' minutes</span>';
- */
-      console.log("quizDetailResult: " + content);
-    }
-    return {__html:  content};
   }
 
   componentDidUpdate() {

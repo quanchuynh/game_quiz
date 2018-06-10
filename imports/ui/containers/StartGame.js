@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import { QuestionState } from '../../../lib/gCollection';
 import CountDown from '../components/CountDown';
+import BeforeAfterGame from '../containers/BeforeAfterGame';
 import Practice from '../pages/Practice';
 import './StartGame.css';
 
@@ -36,18 +37,19 @@ class StartGame extends Component {
       <div style={tempStyle}>
       {
         waitList.length ?
-            <div><p>Wait for {waitList.length} players to join game <em>{gameName}</em></p>
-            <ul className="wait-list">
-              { 
-                waitList.map((user, i) => <li key={i}>{user}</li>)
-              }
-            </ul>
-            </div>
+          <div style={{textAlign: "center"}}>
+              <h5>Wait for {waitList.length} players to join game <em>{gameName}</em></h5>
+              <ul className="wait-list" style={{textAlign: "center"}}>
+                { 
+                  waitList.map((user, i) => <li key={i}>{user}</li>)
+                }
+              </ul>
+          </div>
         :
           <span>
           {
-            countDown > 0 ?
-              <div className="container"> {countDownMessage} </div>
+            countDown > 0 || this.props.game.gameComplete ?
+              <BeforeAfterGame game={this.props.game}/>
             :
               <Practice gameMode={yes} gameName={gameName} 
                         categorySelector={this.props.game.categorySelector} 
