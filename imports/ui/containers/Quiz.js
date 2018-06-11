@@ -7,6 +7,7 @@ import CountDown from '../components/CountDown';
 import ScoreBoard from '../components/ScoreBoard';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
+import CountDownCircle from '../components/CountDownCircle';
 import _ from 'lodash';
 
 /* props: quizId, mode, action */
@@ -179,7 +180,7 @@ class Quiz extends Component {
         alt = this.state.image.altText,
         credit = this.state.image.credit,
         question = this.state.questions,
-        startQuizMessage = "Quiz will start in " + this.props.quizStartTime + " seconds",
+        startQuizMessage = "Quiz will start in "; // + this.props.quizStartTime + " seconds",
         gameMode = this.props.mode,
         currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
 
@@ -208,7 +209,13 @@ class Quiz extends Component {
             :
                 <span>
                   {
-                    this.props.mode ? <div style={questionText}>{startQuizMessage}</div> : <span/>
+                    this.props.mode ? 
+                       <div style={questionText}>{startQuizMessage}
+                          <CountDownCircle fromSeconds={5} countDown={this.props.quizStartTime}
+                            color="white"/>
+                       </div> 
+                       : 
+                       <span/>
                   }
                 </span>
           }

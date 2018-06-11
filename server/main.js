@@ -51,9 +51,12 @@ Meteor.startup(() => {
   match = checkGame('Demo game', 'qhuynh');
   // console.debug("checkGame: " + JSON.stringify(match));
 
-  match = checkGame('Demo game 1', 'qhuynh');
-  // console.debug("checkGame: " + JSON.stringify(match));
+/*
+  let user = {gameName:"demo",quizId:4689,player:"quanchuynh",question:8,isCorrect:false};
+  console.log("All answer question 8: " + allPlayerAnswered(user));
+  user.question = 9;
+  console.log("All answer question 9: " + allPlayerAnswered(user));
+*/
 
-  // console.error("Random category: " + getRandomCategory());
 });
 

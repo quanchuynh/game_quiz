@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import CountDownCircle from '../components/CountDownCircle';
 
 class BeforeAfterGame extends Component {
   /* Render info before game start and after game completed. */
@@ -39,13 +40,17 @@ class BeforeAfterGame extends Component {
   }
 
   render() {
-    let before = this.props.game.gameComplete ? false : true;
+    let before = this.props.game.gameComplete ? false : true,
+        circlePosition = {color: "#005780", backgroundColor: "tranparent",
+                        position: "absolute", top: "20px", left: "80px", textAlign: "center"};
     console.log("BeforeAfter: " + this.props.game.gameComplete);
     return (
       <div> 
       {
         before ?
-          <div> Game will start in {this.props.game.countDown} seconds</div>
+          <div style={circlePosition}>Game will start in
+            <CountDownCircle fromSeconds={5} countDown={this.props.game.countDown} color="#005780"/>
+          </div>
         :
           <div className="finalResult">
             <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.state.finalResult}/>

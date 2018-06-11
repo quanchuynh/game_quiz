@@ -33,6 +33,10 @@ Meteor.methods({
       TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
     }
     TrackCorrectPlayer.insert(user);
+    if (allPlayerAnswered(user)) {
+      /* All are wrong, switch to new question. */
+      TrackQuizQuestion.update({gameName: user.gameName, quizId: user.quizId}, {$set: {countDown: 0}});
+    }
   },
 
   getActiveGames: function() {
@@ -160,6 +164,19 @@ Meteor.methods({
     sendMail(email, "User account " + userName + " information", "Your password is: " + password);
   }
 });
+
+allPlayerAnswered = function(user) {
+  /* Use case: if all players already answered this question. Switch to next. */
+  let ret = false,
+      game = CreatedGame.findOne({name: user.gameName}); 
+  if (game) {
+    let answers = TrackCorrectPlayer.find({gameName: user.gameName, quizId: user.quizId, question: user.question});
+    if (answers) {
+      return answers.fetch().length == game.playerCount;
+    }
+  }
+  return ret;
+}
 
 getQuizResultDetail = function(gameName, quizId) {
   let quiz = quizList.getQuiz(quizId);
