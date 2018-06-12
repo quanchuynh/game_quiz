@@ -23,11 +23,11 @@ class ScoreBoard extends Component {
   render() {
     let userScore = this.props.userScore;
     console.log("userScore: " + userScore.length);
-    let scoreLabel = {padding: "5px 10px 10px 10px", /* t, r, b, l */
+    let scoreLabel = {padding: "5px 10px 0px 10px", /* t, r, b, l */
                       whiteSpace: "pre", 
                       backgroundColor: "#e6f7ff",
                       color: "#005780", borderWidth: "2px", borderStyle: "groove"},
-        noPadding = {padding: "0px"},
+        noPadding = {padding: "0px", marginTop: "4px", width: "25%", float: "left"},
         colors = ["green", "blue"];
     return (
           <div style={scoreLabel}>
@@ -37,7 +37,7 @@ class ScoreBoard extends Component {
             {
               userScore.length ?
                 userScore.map((u,i) => (
-                    <td key={i}>{u.player} <FlipCounter initValue={0} curVal={u.score}/> </td>)
+                    <td style={noPadding} key={i}>{u.player} <FlipCounter initValue={0} curVal={u.score}/> </td>)
                 )
             :
               <span></span>

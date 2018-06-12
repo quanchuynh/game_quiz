@@ -187,7 +187,8 @@ class Quiz extends Component {
         /* <FlipCounter initValue={0} curVal={this.state.correct}/> */
 
     let scoreLabel = {paddingRight: "10px", backgroundColor: "#e6f7ff", 
-                      color: "#005780", borderWidth: "2px", borderStyle: "groove"};
+                      color: "#005780", borderWidth: "2px", borderStyle: "groove"},
+        noPadding = {padding: "0px", margin: "0px", width: "25%", float: "left"};
     return (
       <div className="Quiz">
         <div className="title-bar small-6 float-center">
@@ -202,9 +203,9 @@ class Quiz extends Component {
                               questionCount={question.length} currentQuestion={currentQuestion + 1}/>
                   :
                   <div>
-                  <span style={scoreLabel}>Question {currentQuestion + 1} of {this.state.questions.length}
+                    <span style={scoreLabel}>Question {currentQuestion + 1} of {this.state.questions.length}
                         </span>
-                  <span style={scoreLabel}>{this.state.correct} Correct</span>
+                    <span style={scoreLabel}>{this.state.correct} Correct</span>
                   </div>
                   }
                 </div> 
