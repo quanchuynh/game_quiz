@@ -24,10 +24,11 @@ class Categories extends Component {
 
   detailResult() {
     Meteor.call('getResultDetail', this.props.gameId, this.props.quizId, (err, ret) => {
-      var content = '<span style="float: left">' + ret.gameName + ', ' + ret.quizId + '</span><br/>' +
-                ret.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' 
+      let res = ret.results[0];
+      var content = '<span style="float: left">' + ret.gameName + ', ' + res.title + '</span><br/>' +
+                res.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' 
                 + player.score + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
-                '<span style="float: left">' + ret.winner + ' will select next category</span></br>';
+                '<span style="float: left">' + res.winner + ' will select next category</span></br>';
       this.scoreSummary = {__html:  content};
       this.winner = ret.winner;
     });

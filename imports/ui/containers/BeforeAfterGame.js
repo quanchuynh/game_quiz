@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import CountDownCircle from '../components/CountDownCircle';
+import GameResultTable from '../components/GameResultTable';
 
 class BeforeAfterGame extends Component {
   /* Render info before game start and after game completed. */
@@ -7,7 +8,8 @@ class BeforeAfterGame extends Component {
     super(props);
     this.state = {
       active: false,
-      finalResult: {__html:  ''} 
+      finalResult: {__html:  ''},
+      rawFinalResult: {}
     };
     this.finalResult = {__html:  '<div>Init final result</div>'};
     this.getFinalResult = this.getFinalResult.bind(this); 
@@ -27,7 +29,7 @@ class BeforeAfterGame extends Component {
                     ret.results.map((res) => this.formatQuizResult(res));
       console.log("BeforeAfter, set final reulst " + content);
       let finalResult = {__html:  content};
-      this.setState({finalResult: finalResult});
+      this.setState({finalResult: finalResult, rawFinalResult: ret});
     });
   }
 
@@ -54,6 +56,9 @@ class BeforeAfterGame extends Component {
         :
           <div className="finalResult">
             <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.state.finalResult}/>
+{/*
+            <GameResultTable result={this.state.rawFinalResult}/>
+*/}
           </div>
       }
       </div>
