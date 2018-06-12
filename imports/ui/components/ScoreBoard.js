@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
+import FlipCounter from '../components/FlipCounter';
 
 class ScoreBoard extends Component {
   constructor(props) {
@@ -34,7 +35,9 @@ class ScoreBoard extends Component {
             <span>Score:   </span>
             {
               userScore.length ?
-                userScore.map((u,i) => (<span key={i}>{u.player} {u.score}   </span>))
+                userScore.map((u,i) => (
+                    <span key={i}>{u.player} {u.score}  </span>)
+                )
             :
               <span></span>
             }
@@ -45,6 +48,13 @@ class ScoreBoard extends Component {
 
 export default withTracker(({gameName, quizId, questionCount, currentQuestion}) => {
   var userScore = [];
+  var game = CreatedGame.findOne({name: gameName});
+  if (game) {
+    userScore.push({player: game.player1, score: 0});
+    userScore.push({player: game.player2, score: 0});
+    if (game.playerCount == 3) 
+      userScore.push({player: game.player3, score: 0});
+  }
   var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId});
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();

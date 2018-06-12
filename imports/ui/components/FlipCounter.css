@@ -1,0 +1,48 @@
+/* CSS */
+.time {
+  position: relative; height: 30px; width: 25px;
+  perspective: 150px; backface-visibility: hidden;
+  transform: translateZ(0); transform: translate3d(0,0,0);
+}
+.count {
+  background: #202020; color: #f8f8f8; display: block;
+  font-size: 2em; line-height: 2.4em; overflow: hidden;
+  position: absolute; text-align: center;
+  top: 0; width: 100%;
+  margin-left: 5px;
+}
+.top {height: 50%; line-height:30px; transform-origin: 50% 100%; }
+.bottom {line-height: 0; height: 50%; top: 50%; transform-origin: 50% 0; }
+
+@keyframes flipTop {
+  from {
+      transform: rotateX(0deg);
+  }
+  to {
+      transform: rotateX(-90deg);
+  }
+}
+@keyframes flipBottom {
+    from {
+        transform: rotateX(90deg);
+    }
+    to {
+        transform: rotateX(0deg);
+    }
+}
+
+.flipTop {
+    animation-name: flipTop;
+    animation-duration: 0.5s;
+    animation-fill-mode: both;
+    z-index: 1;
+}
+
+.flipBottom {
+    animation-name: flipBottom;
+    animation-duration: 0.5s;
+    animation-delay: 0.5s;
+    animation-fill-mode: both;
+    z-index: 1;
+}
+

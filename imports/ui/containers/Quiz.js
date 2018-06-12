@@ -8,6 +8,7 @@ import ScoreBoard from '../components/ScoreBoard';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import CountDownCircle from '../components/CountDownCircle';
+import FlipCounter from '../components/FlipCounter';
 import _ from 'lodash';
 
 /* props: quizId, mode, action */
@@ -183,6 +184,7 @@ class Quiz extends Component {
         startQuizMessage = "Quiz will start in "; // + this.props.quizStartTime + " seconds",
         gameMode = this.props.mode,
         currentQuestion = this.props.mode ? this.props.currentQuestion : this.state.currentQuestion;
+        /* <FlipCounter initValue={0} curVal={this.state.correct}/> */
 
     let scoreLabel = {paddingRight: "10px", backgroundColor: "#e6f7ff", 
                       color: "#005780", borderWidth: "2px", borderStyle: "groove"};
