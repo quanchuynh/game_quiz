@@ -26,14 +26,13 @@ class GameResultTable extends Component {
     return (
       this.state.rawFinalResult ? 
       <div>
-        <h5>{ret.gameName}</h5>
-        <table className="gameResult">
+        <h5 style={{color: "#005780", textAlign: "center"}}>Game: {ret.gameName}</h5>
+        <table className="gameResult" style={{color: "#005780", lineHeight: "1.2"}}>
           <thead>
-          <tr className="gameResultHeader">
+          <tr className="gameResultHeader" style={{color: "#005780", lineHeight: "1.2"}}>
              <th>Quiz</th>
-             {
-               players.map((player, i) => (<th key={i}>{player.player}'s correct question</th>))
-             }
+             { players.map((player, i) => (<th key={i}>{player.player}'s correct questions</th>)) }
+             { players.map((player, i) => (<th key={i}>{player.player}'s Score</th>)) }
           </tr>
           </thead>
           <tbody>
@@ -41,10 +40,8 @@ class GameResultTable extends Component {
             results.map((result, i) => (
               <tr className="gameResultBody" key={i}>
                  <th>{result.title}</th>
-              {
-                result.players.map((player, ii) => (<td key={ii}>{JSON.stringify(player.questions)}</td>))
-                  /* <td>{player.score}</td> */
-              }
+              { result.players.map((player, ii) => (<td key={ii}>{JSON.stringify(player.questions)}</td>)) }
+              { result.players.map((player, ii) => (<td key={ii}>{player.score}</td>)) }
               </tr>
             ))
           }
