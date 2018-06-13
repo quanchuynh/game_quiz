@@ -33,6 +33,7 @@ class ScoreBoard extends Component {
           <div style={scoreLabel}>
             <span>Question {this.props.currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
             <table>
+            <tbody>
             <tr>
             {
               userScore.length ?
@@ -43,6 +44,7 @@ class ScoreBoard extends Component {
               <span></span>
             }
             </tr>
+            </tbody>
             </table>
           </div>
     );

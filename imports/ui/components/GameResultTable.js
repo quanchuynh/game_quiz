@@ -9,10 +9,12 @@ class GameResultTable extends Component {
   }
 
   componentDidMount() {
+   console.log("GameResult mounted");
     this.remoteCall();  /* after render() had been called */
   }
 
   remoteCall( ) {
+    console.log("GameResult, call: " + this.props.remoteCall + ', parameter: ' + this.props.gameName);
     Meteor.call(this.props.remoteCall, this.props.gameName, (err, ret) => {
       console.log("GameResult: " + JSON.stringify(ret));
       this.setState({rawFinalResult: ret});

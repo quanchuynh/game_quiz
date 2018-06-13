@@ -7,7 +7,8 @@ var testMode = true;
 var testQuizId = 4856;
 
 Meteor.methods({
-  getResultDetail : function(gameName, quizId) {
+  getResultDetail : function(param) {
+    let gameName = param.gameName, quizId = param.quizId;
     let res = getQuizResultDetail(gameName, quizId);
     // return {gameName: gameName, quizId: res.title, players: res.players, winner: res.winner};
     console.log("getResultDetail: " + JSON.stringify(res));

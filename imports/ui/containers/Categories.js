@@ -25,14 +25,15 @@ class Categories extends Component {
   }
 
   detailResult() {
-    Meteor.call('getResultDetail', this.props.gameId, this.props.quizId, (err, ret) => {
+    let param = {gameName: this.props.gameId, quizId: this.props.quizId};
+    Meteor.call('getResultDetail', param, (err, ret) => {
       let res = ret.results[0];
       var content = '<span style="float: left">' + ret.gameName + ', ' + res.title + '</span><br/>' +
                 res.players.map((player) => ('<span style="float: left"><em>' + player.player + '</em> got ' 
                 + player.score + ' questions: ' + JSON.stringify(player.questions) + '</span><br/>')) +
                 '<span style="float: left">' + res.winner + ' will select next category</span></br>';
       this.scoreSummary = {__html:  content};
-      this.winner = ret.winner;
+      this.winner = res.winner;
     });
   }
 
@@ -79,6 +80,7 @@ class Categories extends Component {
     let categorySelector = this.props.categorySelector;
     let categoryVisible = this.props.mode && !(categorySelector === this.props.player) ? false : true;
     let quizList = this.state.quizList;
+    let param = {gameName: this.props.gameId, quizId: this.props.quizId};
     console.log("Cateogries props: " + JSON.stringify(this.props));
     console.log("Categories state.gameMode: " + this.state.gameMode);
 
@@ -104,9 +106,9 @@ class Categories extends Component {
         </div>
       :
         <div className="columns small-8 float-center"> 
-           { this.detailResult() }
-           <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/>
-           {/* <GameResultTable remoteCall={'getResultDetail'} gameName={this.props.gameId}/> */}
+           {this.detailResult() /* Get winner name below */}
+           {/* <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/> */}
+           <GameResultTable remoteCall={'getResultDetail'} gameName={param}/>
            <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}
               winner={this.winner}/>
         </div>
