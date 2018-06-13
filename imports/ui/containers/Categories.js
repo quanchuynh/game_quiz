@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Button from '../components/Button';
 import SelectCategoryCountDown from '../components/SelectCategoryCountDown';
 import ImageGallery from '../containers/ImageGallery';
+import GameResultTable from '../components/GameResultTable';
+
 import '../index.css';
 
 /* props: mode, action, gameId, quizId, categorySelector, player */
@@ -101,8 +103,10 @@ class Categories extends Component {
           </div>
         </div>
       :
-        <div className="columns small-8 float-center"> {this.detailResult()}
+        <div className="columns small-8 float-center"> 
+           { this.detailResult() }
            <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/>
+           {/* <GameResultTable remoteCall={'getResultDetail'} gameName={this.props.gameId}/> */}
            <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}
               winner={this.winner}/>
         </div>

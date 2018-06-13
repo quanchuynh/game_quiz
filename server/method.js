@@ -10,6 +10,7 @@ Meteor.methods({
   getResultDetail : function(gameName, quizId) {
     let res = getQuizResultDetail(gameName, quizId);
     // return {gameName: gameName, quizId: res.title, players: res.players, winner: res.winner};
+    console.log("getResultDetail: " + JSON.stringify(res));
     return {gameName: gameName, results: [res], ok: true};
   },
 
