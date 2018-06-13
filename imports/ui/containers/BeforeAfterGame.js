@@ -57,8 +57,8 @@ class BeforeAfterGame extends Component {
           <div className="finalResult">
             <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.state.finalResult}/>
 {/*
-            <GameResultTable result={this.state.rawFinalResult}/>
 */}
+            <GameResultTable remoteCall={'getFinalResult'} gameName={this.props.game.name}/>
           </div>
       }
       </div>
