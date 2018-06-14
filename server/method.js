@@ -367,6 +367,27 @@ checkGame = function(gameName, userName) {
   return {ok: true, errorMessage: 'No Error'};
 }
 
+sumQuestionQuizList = function(accumulator, quizId) {
+  return accumulator + quizList.getQuestion(quizId).length;
+}
+
+updatePlayerActivities = function(gameName) {
+  /* When a game complete, update activities so we can calculate award and ranking. */
+  let match = CreatedGame.findOne(gameName);
+  if (match) {
+    var players = [];
+    players.push(match.player1); 
+    players.push(match.player2); 
+    if (match.playerCount == 3) players.push(match.player3);
+    let gql = GameQuizList.findOne({gameName: gameName});
+    if (gql) {
+      let qList = gql.quizList;
+      let questionCount = qList.reduce(sumQuestionQuizList);
+      let results = qList.map( (quizId) => (getQuizResultDetail(gameName,quizId)) );
+    }
+  }
+}
+
 getActiveGames = function() {
   /* list. */
   var names = [];
