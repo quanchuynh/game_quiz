@@ -37,8 +37,8 @@ class StartGame extends Component {
       {
         waitList.length ?
           <div style={{textAlign: "center", position: "relative", top: "50px", color: "#005780"}}>
-              <ul className="wait-list" style={{textAlign: "center"}}>
-              <lh>Wait for {waitList.length} players to join game <em>{gameName}</em></lh>
+              <h5>Wait for {waitList.length} players to join game <em>{gameName}</em></h5>
+              <ul className="wait-list" style={{listStyleType: "none", margin: "0", padding: "0"}}>
                 { 
                   waitList.map((user, i) => <li key={i}>{user}</li>)
                 }

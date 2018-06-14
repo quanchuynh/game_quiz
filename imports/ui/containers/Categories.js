@@ -87,7 +87,12 @@ class Categories extends Component {
     return (
       categoryVisible ? 
         <div className="categories" style={selectText}>
-          <p style={{fontSize: "1.5em", textAlign: "center"}}>Select a Category</p>
+          {
+            this.props.mode?
+            <p style={{fontSize: "1.5em", textAlign: "center"}}>Select a Category</p>
+            :
+            <p style={{fontSize: "1.5em", textAlign: "center"}}>Select a Category and Quiz</p>
+          }
           {
             allCategories.map((cat, i) => {
                if (cat === ".") 
