@@ -14,19 +14,13 @@ class SelectCategoryCountDown extends Component {
     let timer = this.props.trackQuiz.categoryStartTime,
         winner = this.props.winner,
         selecting = timer <= 0,
-        questionText = {color: "#005780", backgroundColor: "tranparent",
-                        position: "absolute", top: "30px", textAlign: "center"};
-/*
-         <div style={questionText}> Game starts in
-         <CountDownCircle fromSeconds={10} countDown={5} />
-         </div>
-*/
-
+        messageStyle = {color: "#005780", backgroundColor: "tranparent",
+                        position: "relative", top: "20px", textAlign: "center", fontSize: "24px"};
     return (
        selecting?
-         <div>{winner} is selecting a category</div>
+         <div style={messageStyle}>{winner} is selecting a category</div>
        :
-         <div>Category will be selected by {winner} in {timer} seconds</div>
+         <div style={messageStyle}>Category will be selected by {winner} in {timer} seconds</div>
     );
   }
 }

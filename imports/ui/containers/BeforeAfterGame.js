@@ -12,25 +12,7 @@ class BeforeAfterGame extends Component {
       rawFinalResult: {}
     };
     this.finalResult = {__html:  '<div>Init final result</div>'};
-    this.getFinalResult = this.getFinalResult.bind(this); 
     this.formatQuizResult = this.formatQuizResult.bind(this); 
-  }
-
-  componentDidMount( ) {
-    if (this.props.game.gameComplete) {
-      this.getFinalResult( );
-    }
-  }
-
-  getFinalResult( ) {
-    Meteor.call('getFinalResult', this.props.game.name, (err, ret) => {
-      console.log("BeforeAfter, getFinalResult: " + JSON.stringify(ret));
-      var content = '<span style="float: left"> Game: ' + ret.gameName  + '</span><br/>' +
-                    ret.results.map((res) => this.formatQuizResult(res));
-      console.log("BeforeAfter, set final reulst " + content);
-      let finalResult = {__html:  content};
-      this.setState({finalResult: finalResult, rawFinalResult: ret});
-    });
   }
 
   formatQuizResult(ret) {
@@ -42,22 +24,19 @@ class BeforeAfterGame extends Component {
   }
 
   render() {
-    let before = this.props.game.gameComplete ? false : true,
-        circlePosition = {color: "#005780", backgroundColor: "tranparent",
-                        position: "absolute", top: "20px", left: "80px", textAlign: "center"};
+    let before = this.props.game.gameComplete ? false : true;
+        circleStyle = {color: "#005780", backgroundColor: "tranparent",
+                        position: "relative", top: "40px", textAlign: "center"};
     console.log("BeforeAfter: " + this.props.game.gameComplete);
     return (
       <div> 
       {
         before ?
-          <div style={circlePosition}>Game will start in
+          <div className="float-center" style={circleStyle}>Game will start in
             <CountDownCircle fromSeconds={5} countDown={this.props.game.countDown} color="#005780"/>
           </div>
         :
-          <div className="finalResult">
-{/*
-            <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.state.finalResult}/>
-*/}
+          <div className="float-center" style={{position: "relative", top: "70px", width: "70%"}}>
             <GameResultTable remoteCall={'getFinalResult'} gameName={this.props.game.name}/>
           </div>
       }

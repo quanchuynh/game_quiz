@@ -235,8 +235,7 @@ class Quiz extends Component {
                    <Image filePath={path} height={height} width={width} alt={alt} credit={credit} />
                 </div>
                 <div className="small-6 small-push-3">
-                  <p className="float-center" 
-                     dangerouslySetInnerHTML={this._getIntroduction()} />
+                  <h5 className="float-center" dangerouslySetInnerHTML={this._getIntroduction()} />
                   {
                     this.props.mode ? <span/>
                     :

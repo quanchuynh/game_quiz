@@ -199,13 +199,19 @@ getQuizWinner = function(gameName, quizId) {
 
 getResultDetail = function(gameName, quizId) {
   var userScore = [];
+  var game = CreatedGame.findOne({name: gameName});
+  if (game) {
+    userScore.push({player: game.player1, score: 0, questions: []});
+    userScore.push({player: game.player2, score: 0, questions: []});
+    if (game.playerCount == 3)
+      userScore.push({player: game.player3, score: 0, questions: []});
+  }
   var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId});
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();
     for (ii = 0; ii < correctPlayer.length; ii++) {
       if (!correctPlayer[ii].isCorrect) continue;
-      let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player }
-      );
+      let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player });
       if (pl) {
         pl.score++;
         pl.questions.push(correctPlayer[ii].question + 1);

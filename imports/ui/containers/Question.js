@@ -151,7 +151,7 @@ class Question extends Component {
     let visibility = visibleTest ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 
                                                    'columns small-6 is-visible float-center';
-    let backgroundImage = {opacity: 0.2, width: "100%"};
+    let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
                         position: "absolute", top: "180px", textAlign: "center"};
     let timeText = {color: "#005780", backgroundColor: "tranparent", textAlign: "center"};
@@ -181,7 +181,7 @@ class Question extends Component {
                       <p> Correct answer: {this.state.correctAnswer}, your answer: {this.state.userAnswer}</p>
                    </div>
               }
-              <h4 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
+              <h5 className="float-center" dangerouslySetInnerHTML={this._getExplanation()}/>
               {
                 lastQuestion ?
                   <Button clName='button-2' copy='Select Another Quiz' action={this.handleNextQuestion}/>

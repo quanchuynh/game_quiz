@@ -9,7 +9,7 @@ class ClickableImage extends Component {
       return (
         <div className={clName} onClick={() => this.props.action(this.props.copy)}>
            <img src={quizProfile.imagePath}/>
-           <div className="desc"><p dangerouslySetInnerHTML={title}></p> </div>
+           <div className="desc"><span style={{lineHeight: "1.2"}} dangerouslySetInnerHTML={title}></span> </div>
            <div className="desc"><p className="cap">{quizProfile.quizType.replace(/_/g, ' ').toLowerCase()}</p></div>
         </div> 
       );

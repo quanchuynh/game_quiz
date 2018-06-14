@@ -24,11 +24,10 @@ class StartGame extends Component {
         others = this.props.others,
         countDown = this.props.game.countDown,
         gameName = this.props.game.name,
-        quizComplete = this.props.game.quizComplete,
-        countDownMessage = "Game will start in " + this.props.game.countDown + " seconds";
+        quizComplete = this.props.game.quizComplete;
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
     const yes = true, no = false;
-    const tempStyle = {position: "relative", top: "70px", 
+    const tempStyle = {position: "relative", top: "10px", 
                        align: "center", textAlign: "left", marginLeft: "auto", marginRight: "auto",
                        width: "auto", fontSize: "18px"
                       };
@@ -37,16 +36,16 @@ class StartGame extends Component {
       <div style={tempStyle}>
       {
         waitList.length ?
-          <div style={{textAlign: "center"}}>
-              <h5>Wait for {waitList.length} players to join game <em>{gameName}</em></h5>
+          <div style={{textAlign: "center", position: "relative", top: "50px", color: "#005780"}}>
               <ul className="wait-list" style={{textAlign: "center"}}>
+              <lh>Wait for {waitList.length} players to join game <em>{gameName}</em></lh>
                 { 
                   waitList.map((user, i) => <li key={i}>{user}</li>)
                 }
               </ul>
           </div>
         :
-          <span>
+          <span> 
           {
             countDown > 0 || this.props.game.gameComplete ?
               <BeforeAfterGame game={this.props.game}/>

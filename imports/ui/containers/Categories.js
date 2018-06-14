@@ -74,7 +74,7 @@ class Categories extends Component {
     let colors = ["category-color1","category-color2","category-color3","category-color4"];
     needAdd = needAdd == 4 ? 0 : needAdd;
     for (i = 0; i < needAdd; i++) allCategories = [...allCategories, "."];
-    let selectText = {color: "#005780", fontSize: "1.5em"};
+    let selectText = {color: "#005780", position: "relative", top: "40px"};
     let activeCategory = {backgroundColor: "white"};
     let galleryVisibility = this.props.mode ? 'is-hidden' : 'is-visible';
     let categorySelector = this.props.categorySelector;
@@ -86,7 +86,8 @@ class Categories extends Component {
 
     return (
       categoryVisible ? 
-        <div className="categories "><p style={selectText}>Select a Category</p>
+        <div className="categories" style={selectText}>
+          <p style={{fontSize: "1.5em", textAlign: "center"}}>Select a Category</p>
           {
             allCategories.map((cat, i) => {
                if (cat === ".") 
@@ -105,9 +106,8 @@ class Categories extends Component {
           </div>
         </div>
       :
-        <div className="columns small-8 float-center"> 
+        <div className="columns small-8 float-center" style={{position: "relative", top: "40px"}}> 
            {this.detailResult() /* Get winner name below */}
-           {/* <h5 className="small-8" style={{color: "#005780"}} dangerouslySetInnerHTML={this.scoreSummary}/> */}
            <GameResultTable remoteCall={'getResultDetail'} gameName={param}/>
            <SelectCategoryCountDown gameName={this.props.gameId} quizId={this.props.quizId}
               winner={this.winner}/>

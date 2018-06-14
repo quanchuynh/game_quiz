@@ -32,18 +32,15 @@ class ScoreBoard extends Component {
     return (
           <div style={scoreLabel}>
             <span>Question {this.props.currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
-            <table>
+            <table style={{color: "#005780"}}>
             <tbody>
-            <tr>
-            {
-              userScore.length ?
+              <tr>
+              {
                 userScore.map((u,i) => (
-                    <td style={noPadding} key={i}>{u.player} <FlipCounter initValue={0} curVal={u.score}/> </td>)
+                  <td style={noPadding} key={i}>{u.player}<FlipCounter initValue={0} curVal={u.score}/> </td>)
                 )
-            :
-              <span></span>
-            }
-            </tr>
+              }
+              </tr>
             </tbody>
             </table>
           </div>
