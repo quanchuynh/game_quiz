@@ -5,6 +5,7 @@ var categories = [];
 var categoriesIdMap = [];
 var testMode = true;
 var testQuizId = 4856;
+var joinGameUrl = "http://aws-gateway.ad.eb.com:8081/join-game";
 
 Meteor.methods({
   getResultDetail : function(param) {
@@ -67,6 +68,7 @@ Meteor.methods({
     if (testMode) game.currentQuizId = testQuizId;    /* quiz ID for easy testing. */
     CreatedGame.insert(game);
     createQuizQuestionTracker(game);
+    notifyPlayers(game);
     return true;
   },
 
@@ -425,6 +427,22 @@ getRandomCategory = function()
 {
   var categories = getAllCategories();
   return categories[Math.floor(Math.random() * categories.length)];
+}
+
+notifyPlayers = function(game) {
+  var receivers = '';
+  for (ii = 0; ii < game.waitList.length; ii++) {
+    if (game.waitList[ii] != game.owner) {
+      let player = Meteor.users.findOne({username: game.waitList[ii]});
+      if (player) {
+        console.log("Player: " + JSON.stringify(player));
+        receivers = receivers + ' ' + player.emails[0].address;
+      }
+    }
+  }
+  let subject = "Encyclopedic Brain, Join Game Inviation",
+      body = game.owner + " invites you to join game " + game.name + " on " + joinGameUrl;
+  sendMail(receivers, subject, body); 
 }
 
 function sendMail(receivers, subject, body) {

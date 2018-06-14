@@ -57,6 +57,14 @@ Meteor.startup(() => {
   user.question = 9;
   console.log("All answer question 9: " + allPlayerAnswered(user));
 */
+  let found = Meteor.users.find();
+  if (found) {
+    let users = found.fetch();  
+    users.map((u) => {
+      if (u.services.resume.loginTokens.length)
+        console.log("User: " + u.username + " is in");
+     });
+  }
 
 });
 

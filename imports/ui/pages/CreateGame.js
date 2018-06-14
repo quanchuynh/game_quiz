@@ -173,6 +173,7 @@ class CreateGame extends Component {
   insertNewGame() {
     this.game.playerCount = this.playerCount();
     this.game.joinCount = 0;
+    this.game.owner = this.props.currentUser.username;
     this.game.active = true;
     Meteor.call('insertNewGame', this.game, (err, ret) => {
       if (err) {
@@ -221,7 +222,7 @@ class CreateGame extends Component {
                 keyUp={this.handleQuizPlayer3_Keyup} select={this.handleQuizPlayer3_Select}
              />
           </form>
-          <button id="submit_game" onClick={this.handleSubmit}>Creae Game</button>
+          <button id="submit_game" onClick={this.handleSubmit}>Create Game</button>
        </div>
      );
   }
