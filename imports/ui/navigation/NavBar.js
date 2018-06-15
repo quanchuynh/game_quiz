@@ -1,7 +1,9 @@
 import React, { Component } from           'react';
 import NavItem from         './NavItem';
 import DropdownNavItem from './DropdownNavItem';
+import { Meteor } from 'meteor/meteor';
 import './Nav.css';
+import { withTracker } from 'meteor/react-meteor-data';
 
 class NavBar extends Component {
   constructor(props) {
@@ -25,7 +27,7 @@ class NavBar extends Component {
     let dropdown = [
                       {title: 'Create New Game', link: 'create-game'},
                       {title: 'Join Game', link: 'join-game'},
-                      {title: 'Add Player(s)', link: 'add-player'},
+                      /* {title: 'Add Player(s)', link: 'add-player'}, */
                       {title: 'Watch a Game',  link: 'watch-game'}
                    ];
     let home = getSelectedNav() == HomePath ? "active" : "inactive";  
@@ -33,9 +35,7 @@ class NavBar extends Component {
     let game = getSelectedNav() == GamePath ? "active" : "inactive";  
     let signIn = getSelectedNav() == SignInPath ? "active" : "inactive";  
     let signUp = getSelectedNav() == SignUpPath ? "active" : "inactive";  
-    let signInTitle = SignInTitle;
-
-    console.debug("Selected Nav: " + getSelectedNav());
+    let signInTitle = this.props.currentUser ? this.props.currentUser : SignInTitle;
 
     return (
       <div className="navbar">
@@ -47,8 +47,16 @@ class NavBar extends Component {
       </div>
     );
   }
-
 };
 
-export default NavBar;
-
+export default withTracker( ( ) => {
+  /* Make current user reactive to switch SignIn label. */
+  let user = Meteor.user();
+  let currentUser = null;
+  if (user) {
+    currentUser = user.username;
+  }
+  return {
+    currentUser: currentUser
+  }
+})(NavBar);
