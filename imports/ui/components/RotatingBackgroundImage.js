@@ -7,7 +7,9 @@ class RotatingBackgroundImage extends Component {
     this.state = {
       imageIndex: 0
     }
-    this.images = ['111_1499738-W.jpg',  '132_1305218-W.jpg',  '132_1310835-W.jpg',  '139_1964909-W.jpg'];
+    this.images = ['111_1499738-W.jpg',  '132_1305218-W.jpg',  '132_1310835-W.jpg',  
+                   '139_1964909-W.jpg', '132_1227154-W.jpg',
+                   '111_1499738-W.jpg', '132_1305218-W.jpg'];
   }
 
   componentDidMount() {
@@ -20,11 +22,11 @@ class RotatingBackgroundImage extends Component {
     console.log("Rotate: render");
     return (
       <div className="imageContainer">
-        <div className="wrapper">
+        <div className="wrapper sliding-background">
           {
             images.map((im, i) => {
                 return (
-                  <img key={i} className="sliding-background" src={'images/' + im} style={backgroundImage}/>
+                  <img key={i} src={'images/' + im} style={backgroundImage}/>
                 )
               })
           }
