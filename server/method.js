@@ -170,6 +170,28 @@ Meteor.methods({
   }
 });
 
+totalQuestionCount = function(accumulator, quizId) {
+  return accumulator + quizList.getQuestion(quizId).length;
+}
+
+recordPlayerActivities = function(gameName) {
+  /* Use case: once a game complete, update players' activities. */
+  game = CreatedGame.findOne({name: gameName}); 
+  if (game && game.gameComplete) {
+    let players = [];
+    players.push(game.player1);
+    players.push(game.player2);
+    if (game.playerCount == 3) players.push(game.player3);
+    let gql = GameQuizList.findOne({gameName: gameName});
+    if (gql) {
+      let qList = gql.quizList, totalQuestionCount = qList.reduce(recordPlayerActivities);
+      let results = qList.map( (quizId) => (getQuizResultDetail(gameName,quizId)) );
+      // return {gameName: gameName, results: results, ok: true};
+      // username: correct_answers: total_question_views: quizIds: total_games
+    }
+  }
+}
+
 allPlayerAnswered = function(user) {
   /* Use case: if all players already answered this question. Switch to next. */
   let ret = false,

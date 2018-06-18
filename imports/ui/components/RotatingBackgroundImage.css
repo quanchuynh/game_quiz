@@ -1,0 +1,22 @@
+
+.imageContainer {
+  overflow: hidden;
+}
+
+.wrapper {
+ width: 9000px;
+}
+
+.sliding-background {
+  animation: slide 60s linear infinite;
+}
+
+@keyframes slide{
+  0%{
+    transform: translate3d(0, 0, 0);
+  }
+  100%{
+    /* transform: translate3d(-1692px, 0, 0); */
+    transform: translate3d(-3850px, 0, 0);
+  }
+}

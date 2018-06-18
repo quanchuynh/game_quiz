@@ -39,7 +39,7 @@ class Categories extends Component {
 
   componentDidMount() {
     this.setState({gameMode: this.props.mode});
-    console.log("Categories, componentDidMount, gameMode: " + this.state.gameMode);
+    console.debug("Categories, componentDidMount, gameMode: " + this.state.gameMode);
     Meteor.call('getCategories', (err, ret) => {
       this.setState({allCategories: ret, currentActiveCategory: ret[0]});
       Meteor.call('getAllQuizIn', ret[0], (err, ret2) => {
@@ -63,6 +63,7 @@ class Categories extends Component {
     else {
       Meteor.call('getAllQuizIn', category, (err, ret) => {
         this.setState({quizList: ret, currentActiveCategory: category});
+        console.debug("quizList: " + JSON.stringify(ret));
       });
     }
   }
@@ -81,8 +82,8 @@ class Categories extends Component {
     let categoryVisible = this.props.mode && !(categorySelector === this.props.player) ? false : true;
     let quizList = this.state.quizList;
     let param = {gameName: this.props.gameId, quizId: this.props.quizId};
-    console.log("Cateogries props: " + JSON.stringify(this.props));
-    console.log("Categories state.gameMode: " + this.state.gameMode);
+    console.debug("Cateogries props: " + JSON.stringify(this.props));
+    console.debug("Categories state.gameMode: " + this.state.gameMode);
 
     return (
       categoryVisible ? 
