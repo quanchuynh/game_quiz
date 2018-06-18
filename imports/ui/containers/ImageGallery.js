@@ -25,6 +25,7 @@ class ImageGallery extends Component {
 
   static getDerivedStateFromProps(nextProps, prevState) {
     if (prevState.quizList !== nextProps.quizList)
+      console.debug("Quiz count: " + nextProps.quizList.length);
       return {quizList: nextProps.quizList,
               pageCount: nextProps.quizList.length / (4 * 3),
               currentPage: 1
