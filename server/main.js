@@ -18,15 +18,6 @@ Meteor.startup(() => {
   var quizType = getDistinct('quizType', QuizCollection);
   console.log("All Quiz Types: " + quizType);
 
-/*
-  var categoryQuiz = quizList.getQuizFromCategory("HEALTH_AND_MEDICINE");
-  if (categoryQuiz) {
-    var testArr = [6322,6286,4549,4560,5531,4573,5355,4506,4515, 100000];
-    console.log("HEALTH_AND_MEDICINE, quizIDs: " + JSON.stringify(categoryQuiz));
-    console.log("Diff array: " + JSON.stringify(categoryQuiz.diff((testArr))) );
-  }
-*/
-
   var gameId = getNewGameId();
   console.debug("Game ID: " + getNewGameId());
   var quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
@@ -39,24 +30,13 @@ Meteor.startup(() => {
   for (ii = 0; ii < allQuiz.length; ii++)
     console.debug("Quiz: " + JSON.stringify(allQuiz[ii]));
 
-  // console.debug("HEALTH_AND_MEDICINE number of quizzes" + allQuiz.length);
-  getGames('qhuynh');
+  recordPlayerActivities('d1');
+  recordPlayerActivities('d2');
+  var uActs = UserActivities.find();
+  if (uActs) {
+    console.log("User Activities: " + JSON.stringify(uActs.fetch()));
+  }
 
-  var noMatch = checkGame('game name', 'user name');
-  // if (noMatch) console.log('checkGame, noMatch is ok');
-
-  var match = checkGame('Demo game', 'user name');
-  console.debug("checkGame: " + JSON.stringify(match));
-
-  match = checkGame('Demo game', 'qhuynh');
-  // console.debug("checkGame: " + JSON.stringify(match));
-
-/*
-  let user = {gameName:"demo",quizId:4689,player:"quanchuynh",question:8,isCorrect:false};
-  console.log("All answer question 8: " + allPlayerAnswered(user));
-  user.question = 9;
-  console.log("All answer question 9: " + allPlayerAnswered(user));
-*/
   let found = Meteor.users.find();
   if (found) {
     let users = found.fetch();  
