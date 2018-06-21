@@ -6,8 +6,17 @@ var categoriesIdMap = [];
 var testMode = true;
 var testQuizId = 4856;
 var joinGameUrl = "http://aws-gateway.ad.eb.com:8081/join-game";
+const maxEarningPerPlayer = 1000;  /* $1000 */
+const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will earn 30% */
+const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
+const totalQuizCount = 900;
 
 Meteor.methods({
+  getTopPlayers: function() {
+    /* Top 5 earners in descending order. */
+    return UserActivities.sort({earning: -1}).limit(5);
+  },
+
   getResultDetail : function(param) {
     let gameName = param.gameName, quizId = param.quizId;
     let res = getQuizResultDetail(gameName, quizId);
@@ -174,6 +183,28 @@ sumQuestionCount = function(accu, val) {
   return accu + val;
 }
 
+updateOnePlayerEarning = function(player) {
+  let match = UserActivities.findOne({username: player});
+  if (match) {
+    let completeQuizRatio = match.quizIds.length / totalQuizCount,
+        correctAnswerRatio = match.correctAnswers / match.questionViews;
+    completeQuizRatio = completeQuizRatio > 1 ? 0.5 : completeQuizRatio;  /* protection from error */
+    correctAnswerRatio = correctAnswerRatio > 1 ? 0.5 : correctAnswerRatio;
+    let quizCompleteEarning = completeQuizRatio * maxEarningPerPlayer * percentEarnCompleteQuiz,
+        correctAnswerEarning = correctAnswerRatio * completeQuizRatio * maxEarningPerPlayer * percentEarnCorrectAnswerRatio,
+        earning = quizCompleteEarning + correctAnswerEarning;
+        earning = Math.round(earning * 100) / 100;
+    UserActivities.update({username: player}, {$set: {earning: earning}});
+  }
+}
+
+updateEarning = function(game) {
+  updateOnePlayerEarning(game.player1);
+  updateOnePlayerEarning(game.player2);
+  if (game.playerCount == 3)
+    updateOnePlayerEarning(game.player3);
+}
+
 recordPlayerActivities = function(gameName) {
   /* Use case: once a game complete, update players' activities. */
   game = CreatedGame.findOne({name: gameName}); 
@@ -182,12 +213,12 @@ recordPlayerActivities = function(gameName) {
   if (game.computed) return;
 
   CreatedGame.update({name: gameName}, {$set: {computed: true}}); 
-  if (game.playerCount == 3) players.push(game.player3);
   let gql = GameQuizList.findOne({gameName: gameName});
   if (gql) {
     let qList = gql.quizList, 
         questions = qList.map((quizId) => (quizList.getQuestion(quizId).length));
     var totalQuestionCount = questions.reduce(sumQuestionCount);
+    console.log("recordPlayerActivities: " + totalQuestionCount);
     qList.map( (quizId) => {
       let userScore = getResultDetail(gameName, quizId);
       userScore.map((usc) => {
@@ -195,7 +226,7 @@ recordPlayerActivities = function(gameName) {
         var match = UserActivities.findOne({username: usc.player});
         if (match) userAct = match;
         userAct.correctAnswers += usc.score;
-        userAct.questionViews += totalQuestionCount;
+        userAct.questionViews += quizList.getQuestion(quizId).length;
         if (! userAct.quizIds.find((id) => { return id == quizId }) ) {
           userAct.quizIds.push(quizId);  /* new quiz for this user. */
         }
@@ -208,6 +239,7 @@ recordPlayerActivities = function(gameName) {
           UserActivities.insert(userAct)
       }) 
     });
+    updateEarning(game);
   }
 }
 
@@ -226,11 +258,12 @@ allPlayerAnswered = function(user) {
 
 getQuizResultDetail = function(gameName, quizId) {
   let quiz = quizList.getQuiz(quizId);
+  let questionData = quizList.getQuestion(quizId);
   let title = quiz.title + " (" + quiz.mainCategory.replace(/_/g, ' ') + ")";
   let userScore = getResultDetail(gameName, quizId);
   const maxScore = Math.max(...userScore.map(o => o.score));
   let pl = userScore.find((usc) => { return usc.score == maxScore });
-  return {title: title, players: userScore, winner: pl.player};
+  return {title: title, players: userScore, winner: pl.player, numOfQuestions: quiz.numOfQuestions};
 }
 
 getQuizWinner = function(gameName, quizId) {
@@ -346,6 +379,7 @@ startQuestionTracker = function(game) {
           CreatedGame.update({name: game.name}, {$set: {quizComplete: true}});
           if (game.currentQuizNumber == game.count) {
             CreatedGame.update({name: game.name}, {$set: {gameComplete: true, active: false}});
+            recordPlayerActivities(game.name);
           }
         }
         nextCategoryCountDown(game.name, game.currentQuizId);
