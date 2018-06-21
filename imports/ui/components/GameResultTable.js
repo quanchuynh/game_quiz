@@ -34,8 +34,9 @@ class GameResultTable extends Component {
           <thead>
           <tr className="gameResultHeader" style={tableStyle}>
              <th>Quiz</th>
-             { players.map((player, i) => (<th key={i}>{player.player} got questions</th>)) }
+             <th>#Questions</th>
              { players.map((player, i) => (<th key={i}>{player.player}'s Score</th>)) }
+             { players.map((player, i) => (<th key={i}>{player.player} got questions</th>)) }
           </tr>
           </thead>
           <tbody>
@@ -43,9 +44,10 @@ class GameResultTable extends Component {
             results.map((result, i) => (
               <tr className="gameResultBody" key={i}>
                  <th>{result.title}</th>
+              <td>{result.numOfQuestions}</td>
+              { result.players.map((player, ii) => (<td key={ii}>{player.score}</td>)) }
               { result.players.map((player, ii) => (<td key={ii}>
                    {JSON.stringify(player.questions).replace(/\[/g, '').replace(/\]/g, '')}</td>)) }
-              { result.players.map((player, ii) => (<td key={ii}>{player.score}</td>)) }
               </tr>
             ))
           }
