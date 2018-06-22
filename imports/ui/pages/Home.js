@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Home.css';
 import RotatingBackgroundImage from '../components/RotatingBackgroundImage';
+import PlayerActivityTable from '../components/PlayerActivityTable';
 
 class Home extends Component {
   render() {
@@ -16,7 +17,10 @@ class Home extends Component {
           <h4> Gain Intellectual Satisfaction, Play</h4>
           <h4> Earn Money, Play</h4>
         </div>
+        <PlayerActivityTable remoteCall={'getTopPlayers'} gameName={'ignore'}
+                tableTitle={'This Quarter Top Encyclopedic Brains'}/>
       </div>
+
     );
   }
 }

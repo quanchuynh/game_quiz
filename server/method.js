@@ -14,7 +14,17 @@ const totalQuizCount = 900;
 Meteor.methods({
   getTopPlayers: function() {
     /* Top 5 earners in descending order. */
-    return UserActivities.sort({earning: -1}).limit(5);
+    return UserActivities.find({}, {sort: {earning: -1}, limit: 5}).fetch();
+  },
+
+  getPlayerActivities: function(gameName) {
+    let match = CreatedGame.find({name: gameName});
+    if (match) {
+      console.log("getPlayerActivities: " + gameName); 
+      var orCondintion = {$or: [{username: match.player1}, {username: match.player2}, {username: match.player3}]};
+      return UserActivities.find(orCondintion, {sort: {earning: -1}, limit: 3}).fetch();
+    }
+
   },
 
   getResultDetail : function(param) {
