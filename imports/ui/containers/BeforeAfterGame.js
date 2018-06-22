@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import CountDownCircle from '../components/CountDownCircle';
 import GameResultTable from '../components/GameResultTable';
+import PlayerActivityTable from '../components/PlayerActivityTable';
 
 class BeforeAfterGame extends Component {
   /* Render info before game start and after game completed. */
@@ -38,6 +39,8 @@ class BeforeAfterGame extends Component {
         :
           <div className="float-center" style={{position: "relative", top: "70px", width: "70%"}}>
             <GameResultTable remoteCall={'getFinalResult'} gameName={this.props.game.name}/>
+            <PlayerActivityTable remoteCall={'getPlayerActivities'} gameName={this.props.game.name}
+                tableTitle={'Activities This Quarter'}/>
           </div>
       }
       </div>
