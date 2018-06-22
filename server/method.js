@@ -170,7 +170,7 @@ Meteor.methods({
     }
     else {
       console.log('No matching email found');
-      throw (new Meteor.Error(1, 'Email is not in signed up list. Sign up (above) to create a user first.'));
+      throw (new Meteor.Error(1, 'Email is not in signed-up list. Signuup (above) to create a user first.'));
     }
   },
 

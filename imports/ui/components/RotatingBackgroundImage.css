@@ -8,7 +8,7 @@
 }
 
 .sliding-background {
-  animation: slide 60s linear infinite;
+  animation: slide 120s linear infinite;
 }
 
 @keyframes slide{
