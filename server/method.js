@@ -154,7 +154,13 @@ Meteor.methods({
     throw (new Meteor.Error(1, "Could not find quiz in category: "  + category));
   },
 
-  resetPasswordByEmail: function(email) {
+  resetPasswordByEmail: function(userName) {
+    let email = userName;
+    let user = Meteor.users.findOne({username: userName});
+    if (user) {
+      /* This is a user name */
+      email = user.emails[0].address;
+    }
     console.log("Email: " + email + " resets password");
     var id = Accounts.findUserByEmail(email);
     if (id) {
@@ -166,11 +172,12 @@ Meteor.methods({
         console.log("Email address in system: " + id.emails[0].address);
         sendMail(email, "User account " + username + " information", 
                  "username: " + username + ", password is: " + password);
+        return email;
       }
     }
     else {
-      console.log('No matching email found');
-      throw (new Meteor.Error(1, 'Email is not in signed-up list. Signuup (above) to create a user first.'));
+      console.log('No matching email found or user name found: ' + email);
+      throw (new Meteor.Error(1, 'Email or user is not in signed-up list. Sign up (above) to create a user first.'));
     }
   },
 

@@ -11,12 +11,6 @@ Template.signup.events({
         var email = template.find('#su-email').value;
         var username = template.find('#su-username').value;
         evt.preventDefault();
-/*
-        if (!Emails.findOne({"email": email})) {
-          alert("Email: " + email + " not authorized to create account");
-          return;
-        }
-*/
         console.log("Call remote createUserAccount: " + username);
         Meteor.call('createUserAccount', email, username, function(err, result) {
           if (err) { 
@@ -42,6 +36,7 @@ Template.login.events({
                   return
                 }
                 SignInTitle = 'Log Out';
+                window.location.href = watchGamePath;
               }
         );
         
@@ -56,6 +51,7 @@ Template.login.events({
         }
         Meteor.call('resetPasswordByEmail', email, function(err, result) {
           if (err) { alert(err); }
+          else { alert("New password was sent to email: " + result) }
           return;
         });
     }, 
@@ -78,6 +74,7 @@ Template.change_password.events({
         }
         Meteor.call('changeUserPassword', userName, newPassword, function(err, result) {
           if (err) { alert("Server side error: " + err); }
+          window.location.href = SignInPath;
           return;
         });
     }  

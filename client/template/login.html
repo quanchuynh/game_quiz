@@ -22,8 +22,7 @@
 <template name='logout'>
   <div class="sign-container">
     <form id="logout-form">
-        ({{ currentUser.username }})
-        <a id="logout" href="#"><h3>Log Out</h3></a>
+        {{> login }}
     </form>
   </div>
 </template>
@@ -89,7 +88,6 @@
     {{else}}
         {{#if currentUser}}
             {{> logout}}
-            {{> change_password }}
             <hr>
         {{else}}
             {{> login }}

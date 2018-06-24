@@ -7,6 +7,8 @@ import Home from './pages/Home';
 import Game from './pages/Game';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import ChangePassword from './pages/ChangePassword';
+import LogOut from './pages/LogOut';
 
 class App extends Component {
   constructor(props) {
@@ -15,7 +17,11 @@ class App extends Component {
     this.joinGamePath = joinGamePath;
     this.addPlayerPath = addPlayerPath
     this.watchGamePath = watchGamePath;
+    this.changePasswordPath = changePasswordPath;
+    this.logOutPath = logOutPath;
     this.handleSelect = this.handleSelect.bind(this);
+    this.SignInPath = SignInPath;
+    this.SignUpPath = SignUpPath;
   }
 
   handleSelect(link) {
@@ -32,8 +38,10 @@ class App extends Component {
            <Route path={this.addPlayerPath} component={Game}/>
            <Route path={this.joinGamePath} component={Game}/>
            <Route path={this.watchGamePath} component={Game}/>
-           <Route path='/SignIn' component={SignIn}/>
-           <Route path='/SignUp' component={SignUp}/>
+           <Route path={this.SignInPath} component={SignIn}/>
+           <Route path={this.SignUpPath} component={SignUp}/>
+           <Route path={this.changePasswordPath} component={ChangePassword}/>
+           <Route path={this.logOutPath} component={LogOut}/>
            <Route path='/'         component={Home}/>
         </Switch>
       </BrowserRouter>

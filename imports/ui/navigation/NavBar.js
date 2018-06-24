@@ -29,7 +29,12 @@ class NavBar extends Component {
                       {title: 'Join Game', link: 'join-game'},
                       /* {title: 'Add Player(s)', link: 'add-player'}, */
                       {title: 'Watch a Game',  link: 'watch-game'}
-                   ];
+                   ],
+        userSignInMenu = [ {title: 'Log Out', link: 'log-out'}, 
+                           {title: 'Change Password', link: 'change-password'} 
+                         ];
+    let selectedNav = getSelectedNav();
+    console.log("selectedNav: " + selectedNav);
     let home = getSelectedNav() == HomePath ? "active" : "inactive";  
     let practice = getSelectedNav() == PracticePath ? "active" : "inactive";  
     let game = getSelectedNav() == GamePath ? "active" : "inactive";  
@@ -42,7 +47,12 @@ class NavBar extends Component {
            <NavItem clName={home} link={HomePath} title="Home" exact action={this.handleSelect}></NavItem>
            <NavItem clName={practice} link={PracticePath} title="Practice" exact action={this.handleSelect}></NavItem>
            <DropdownNavItem clName={game} label="Game" opts={dropdown} exact action={this.handleSelect}></DropdownNavItem>
-           <NavItem clName={signIn} link={SignInPath} title={signInTitle} action={this.handleSelect}></NavItem>
+           {
+             this.props.currentUser ?
+               <DropdownNavItem clName={signIn} label={signInTitle} opts={userSignInMenu} exact action={this.handleSelect}></DropdownNavItem>
+             :
+               <NavItem clName={signIn} link={SignInPath} title={signInTitle} action={this.handleSelect}></NavItem>
+           }
            <NavItem clName={signUp} link={SignUpPath} title="Sign Up" action={this.handleSelect}></NavItem>
       </div>
     );

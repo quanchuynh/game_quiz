@@ -4,6 +4,8 @@ createGamePath = '/create-game';
 addPlayerPath = '/add-player';
 joinGamePath = '/join-game';
 watchGamePath = '/watch-game'; 
+changePasswordPath = '/change-password'; 
+logOutPath = '/log-out';
 
 SignInPath = '/SignIn';
 SignUpPath = '/SignUp';
@@ -17,6 +19,8 @@ createGame = 'create';
 addPlayer = 'add';
 joinGame = 'join';
 watchGame = 'watch';
+/* */
+changePassword = 'change-password';
 
 getComponentAfterLogin = function() {
     if (window.location.href.includes(createGamePath)) return createGame;
@@ -28,6 +32,9 @@ getComponentAfterLogin = function() {
 
 getSelectedNav = function() {
     if (window.location.href.includes(SignInPath)) return SignInPath;
+    if (window.location.href.includes(changePasswordPath)) return SignInPath;
+    if (window.location.href.includes(logOutPath)) return SignInPath;
+
     if (window.location.href.includes(SignUpPath)) return SignUpPath;
     if (window.location.href.includes(PracticePath)) return PracticePath;
 

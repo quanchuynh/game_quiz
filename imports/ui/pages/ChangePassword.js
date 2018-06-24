@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Blaze from 'meteor/gadicc:blaze-react-component';
 import { Meteor } from 'meteor/meteor';
 
-class SignIn extends Component {
+class ChangePassword extends Component {
   constructor(props) {
      super(props);
      this.state = {
@@ -26,15 +26,14 @@ class SignIn extends Component {
      let currentUser = Meteor.user();
      let componentName = getComponentAfterLogin();
      console.log("currentUser: " + Meteor.user());
-  
      return (
        <div>
           <div>
-             <Blaze template="signIn" />
+             <Blaze template="change_password" />
           </div>
        </div>
      );
   }
 }
 
-export default SignIn;
+export default ChangePassword;
