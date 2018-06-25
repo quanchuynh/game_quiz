@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './Home.css';
 import RotatingBackgroundImage from '../components/RotatingBackgroundImage';
 import PlayerActivityTable from '../components/PlayerActivityTable';
+import CountDownCircle from '../components/CountDownCircle';
 
 class Home extends Component {
   render() {
@@ -18,7 +19,7 @@ class Home extends Component {
           <h4> Earn Money, Play</h4>
         </div>
         <PlayerActivityTable remoteCall={'getTopPlayers'} gameName={'ignore'}
-                tableTitle={'This Quarter Top Encyclopedic Brains'}/>
+          tableTitle={'This Quarter Top Encyclopedic Brains'}/>
       </div>
 
     );

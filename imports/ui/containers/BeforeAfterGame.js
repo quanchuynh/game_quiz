@@ -27,13 +27,13 @@ class BeforeAfterGame extends Component {
   render() {
     let before = this.props.game.gameComplete ? false : true;
         circleStyle = {color: "#005780", backgroundColor: "tranparent",
-                        position: "relative", top: "40px", textAlign: "center"};
+                        position: "relative", top: "80px", textAlign: "center"};
     console.log("BeforeAfter: " + this.props.game.gameComplete);
     return (
       <div> 
       {
         before ?
-          <div className="float-center" style={circleStyle}>Game will start in
+          <div className="float-center" style={circleStyle}><h2>Game will start in</h2>
             <CountDownCircle fromSeconds={5} countDown={this.props.game.countDown} color="#005780"/>
           </div>
         :
