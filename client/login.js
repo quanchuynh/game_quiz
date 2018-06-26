@@ -36,7 +36,7 @@ Template.login.events({
                   return
                 }
                 SignInTitle = 'Log Out';
-                window.location.href = watchGamePath;
+                window.location.href = joinGamePath;
               }
         );
         

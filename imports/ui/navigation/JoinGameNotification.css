@@ -1,0 +1,40 @@
+/* Notifications */
+.notification, .nojoin {
+    display: inline-block;
+    position: relative;
+    padding: 0.6em;
+    float: left;
+    margin-top: 4px;
+    background: #3498db;
+    border-radius: 0.2em;
+    font-size: 1.3em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.notification::before, 
+.notification::after, .nojoin::before, .nojoin::after {
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.notification::before, .nojoin::before {
+    display: block;
+    content: "\f0f3"; /* Font Awesome: this is the bell */
+    font-family: "FontAwesome";
+    transform-origin: top center;
+}
+
+.notification::after {  /* show only when notify invited to join game. */
+    font-family: Arial;
+    font-size: 0.7em;
+    font-weight: 700;
+    content: attr(data-count);
+    line-height: 100%;
+    border: 2px #fff solid;
+    border-radius: 60px;
+    background: #3498db;
+    padding: 5px 8px;
+    position: absolute;
+    margin-top: -25px;
+    margin-left: 10px;
+}

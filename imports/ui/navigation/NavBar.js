@@ -1,6 +1,7 @@
 import React, { Component } from           'react';
 import NavItem from         './NavItem';
 import DropdownNavItem from './DropdownNavItem';
+import JoinGameNotification from './JoinGameNotification';
 import { Meteor } from 'meteor/meteor';
 import './Nav.css';
 import { withTracker } from 'meteor/react-meteor-data';
@@ -54,6 +55,12 @@ class NavBar extends Component {
                <NavItem clName={signIn} link={SignInPath} title={signInTitle} action={this.handleSelect}></NavItem>
            }
            <NavItem clName={signUp} link={SignUpPath} title="Sign Up" action={this.handleSelect}></NavItem>
+           {
+             this.props.currentUser ?
+               <JoinGameNotification currentUser={this.props.currentUser} />
+             :
+               <span/>
+           }
       </div>
     );
   }
