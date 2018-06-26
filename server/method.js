@@ -10,6 +10,7 @@ const maxEarningPerPlayer = 1000;  /* $1000 */
 const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will earn 30% */
 const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
 const totalQuizCount = 900;
+const questionTime = 30;     /* 30 seconds per question */
 
 Meteor.methods({
   getTopPlayers: function() {
@@ -404,7 +405,7 @@ startQuestionTracker = function(game) {
       }
       currentQuestion++;
       TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
-                               {$set: {currentQuestion: currentQuestion, countDown: 10}}); 
+                               {$set: {currentQuestion: currentQuestion, countDown: questionTime}}); 
     }
   }, 1000);
 }
