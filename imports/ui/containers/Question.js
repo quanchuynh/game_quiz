@@ -158,10 +158,16 @@ class Question extends Component {
     let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
                         position: "absolute", top: "180px", textAlign: "center"},
-        answerPosition = {position: "absolute", top: "280px", marginLeft: "0px", 
-                          paddingLeft: "0px", paddingRight: "0px", width: "47%"};
+        answerPosition = {position: "absolute", top: "300px", marginLeft: "0px", 
+                          paddingLeft: "0px", paddingRight: "0px", width: "47.5%"};
     let timeText = {color: "#005780", backgroundColor: "tranparent", 
                     textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
+    if (this.state.gameMode) {
+      timeText.width = "80%";
+      timeText.top = "35px"
+      timeText.margin = "0 0 auto auto"; /* top, right, bottom, left */
+    }
+
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     let incorrectText = {color: "red"}, correctText = {color: "green"}
