@@ -3,6 +3,8 @@ import Button from '../components/Button';
 import Answer from '../components/Answer';
 import { withTracker } from 'meteor/react-meteor-data';
 import { QuestionState } from '../../../lib/gCollection';
+import CountDownCircle from '../components/CountDownCircle';
+
 import '../index.css';
 
 const nextQuestionTime = 2;
@@ -111,7 +113,8 @@ class Question extends Component {
     this.setState({
       isCorrect: isCorrect,
       correctAnswer: correctAnswer,
-      userAnswer: userAnswer 
+      userAnswer: userAnswer,
+      questionTimeLeft: 0 /* New code */
     })
 
     this.props.score(isCorrect);
@@ -149,12 +152,16 @@ class Question extends Component {
             " index: " + this.props.index + ", quiz complete: " + this.props.quizComplete);
     let visibleTest = this.state.answered && this.state.gameMode == false;
     let visibility = visibleTest ? 'callout secondary is-visible' : 'callout secondary is-hidden';
-    let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 
-                                                   'columns small-6 is-visible float-center';
+    /* let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 'columns small-6 is-visible'; */
+    let buttonVisibility = visibleTest ? 'is-hidden' : 'is-visible';
+
     let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
-                        position: "absolute", top: "180px", textAlign: "center"};
-    let timeText = {color: "#005780", backgroundColor: "tranparent", textAlign: "center"};
+                        position: "absolute", top: "180px", textAlign: "center"},
+        answerPosition = {position: "absolute", top: "280px", marginLeft: "0px", 
+                          paddingLeft: "0px", paddingRight: "0px", width: "47%"};
+    let timeText = {color: "#005780", backgroundColor: "tranparent", 
+                    textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
     let questionMap = this.props.quest[this.props.index].answers;
     let colors = ["orange", "maroon", "green", "blue" ];
     let incorrectText = {color: "red"}, correctText = {color: "green"}
@@ -168,8 +175,13 @@ class Question extends Component {
             <h5 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}>
             </h5>
             {
-              timeLeft > 0 ?
-                <h4 style={timeText}>{timeLeft} seconds left</h4> : <span/>
+              (timeLeft > 0 && timeLeft < 6) ?
+                <div className="float-center" style={timeText}>
+                <CountDownCircle fromSeconds={5} countDown={timeLeft} color="#005780"/>
+                seconds left
+                </div>
+                :
+                <span/>
             }
             <div className={visibility}>
               {
@@ -189,12 +201,12 @@ class Question extends Component {
                   <Button clName='button-2' copy='Next Question' action={this.handleNextQuestion}/>
               }
             </div>
-          </div>
-          <div className={buttonVisibility}>
+            <div className={buttonVisibility} style={answerPosition}>
             {
               questionMap.map((answer, i) => (<p key={i} className="no-padding"><Answer copy={answer} 
                 action={this.handleAnswer} clName={colors[i%4] + " button-whole"} /></p>))
             }
+            </div>
           </div>
         </div>
       </div>
