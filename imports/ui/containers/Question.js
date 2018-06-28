@@ -16,6 +16,7 @@ class Question extends Component {
     super(props);
     this.state = {
       answered : false,
+      index: this.props.index,
       currentCount: nextQuestionTime,
       questionTime: this.props.timer,
       questionTimeLeft: this.props.timer,
@@ -30,6 +31,15 @@ class Question extends Component {
     this.handleExpiration = this.handleExpiration.bind(this);
     this.handleNextQuestion = this.handleNextQuestion.bind(this);
   }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.debug("Question, getDerivedStateFromProps, " + prevState.index + " " + nextProps.index);
+    if (prevState.index !== nextProps.index) {
+      return {answered : false, index: nextProps.index}
+    }
+    return null;
+  }
+
 
   timer() {
     if (this.props.quizComplete) {
@@ -169,7 +179,7 @@ class Question extends Component {
         answerPosition = {position: "absolute", top: "300px", marginLeft: "0px", 
                           paddingLeft: "0px", paddingRight: "0px", width: "47.5%"},
         negativeText = {backgroundColor: "red", color: "white", fontSize: "32px", position: "absolute", 
-                        top: "210px", width: "25%", height: "40px", margin: "0 auto", padding: "0"};
+                        top: "210px", width: "25%", height: "40px", margin: "0 50px", padding: "0"};
     let timeText = {color: "#005780", backgroundColor: "tranparent", 
                     textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
     if (this.state.gameMode) {
