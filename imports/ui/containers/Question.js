@@ -170,16 +170,18 @@ class Question extends Component {
     /* let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 'columns small-6 is-visible'; */
     let /* buttonVisibility = visibleTest ? 'is-hidden' : 'is-visible', */
         buttonVisibility = this.state.answered ? 'is-hidden': 'is-visible'; 
-        incorrectGameAnswer = this.state.gameMode && this.state.answered && !this.state.isCorrect,
-        showNegative = incorrectGameAnswer ? 'is-visible' : 'is-hidden';
+        gameAnswer = this.state.gameMode && this.state.answered,
+        showAnswerResponse = gameAnswer ? 'is-visible' : 'is-hidden',
+        answerReflectText = this.state.isCorrect ? 'Correct !' : 'Wrong Answer';
 
     let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
                         position: "absolute", top: "180px", textAlign: "center"},
         answerPosition = {position: "absolute", top: "300px", marginLeft: "0px", 
                           paddingLeft: "0px", paddingRight: "0px", width: "47.5%"},
-        negativeText = {backgroundColor: "red", color: "white", fontSize: "32px", position: "absolute", 
-                        top: "210px", width: "25%", height: "40px", margin: "0 50px", padding: "0"};
+        answerResponseText = {backgroundColor: "red", color: "white", fontSize: "32px", position: "absolute", 
+                        top: "210px", width: "25%", height: "40px", margin: "0 50px", padding: "0", textAlign: "center"};
+    if (this.state.isCorrect) answerResponseText.backgroundColor = "green";
     let timeText = {color: "#005780", backgroundColor: "tranparent", 
                     textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
     if (this.state.gameMode) {
@@ -233,7 +235,7 @@ class Question extends Component {
                 action={this.handleAnswer} clName={colors[i%4] + " button-whole"} /></p>))
             }
             </div>
-            <div className={showNegative} style={negativeText}>Incorrect</div>
+            <div className={showAnswerResponse} style={answerResponseText}>{answerReflectText}</div>
           </div>
         </div>
       </div>
