@@ -68,12 +68,16 @@ export default withTracker(({gameName, quizId, questionCount, currentQuestion}) 
       else userScore.push({player: correctPlayer[ii].player, score: 1});
     }    
   }
+  let currentCorrectAnswerPlayer = false;
+      match = TrackCorrectPlayer.findOne({gameName: gameName, quizId: quizId, question: currentQuestion, isCorrect: true});
+      if (match) currentCorrectAnswerPlayer = match.player;
   return {
     gameName: gameName,
     quizId: quizId,
     questionCount: questionCount,
     userScore: userScore,
-    currentQuestion: currentQuestion 
+    currentQuestion: currentQuestion,
+    currentCorrectAnswerPlayer: currentCorrectAnswerPlayer 
   }
 })(ScoreBoard);
 
