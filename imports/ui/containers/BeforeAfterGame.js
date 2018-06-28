@@ -28,7 +28,7 @@ class BeforeAfterGame extends Component {
     let before = this.props.game.gameComplete ? false : true;
         circleStyle = {color: "#005780", backgroundColor: "tranparent",
                         position: "relative", top: "80px", textAlign: "center"};
-    console.log("BeforeAfter: " + this.props.game.gameComplete);
+    console.debug("BeforeAfter: " + this.props.game.gameComplete);
     return (
       <div> 
       {

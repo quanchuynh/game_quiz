@@ -31,7 +31,7 @@ class StartGame extends Component {
                        align: "center", textAlign: "left", marginLeft: "auto", marginRight: "auto",
                        width: "auto", fontSize: "18px"
                       };
-    console.log("game name: " + gameName);
+    console.debug("game name: " + gameName);
     return (
       <div style={tempStyle}>
       {
@@ -65,7 +65,7 @@ class StartGame extends Component {
 }
 
 export default withTracker(({gameName, mode, player}) => {
-  console.log("withTracker Game name: " + gameName);
+  console.debug("withTracker Game name: " + gameName);
   var game = CreatedGame.findOne({name: gameName});
   var allPlayers = [game.player1, game.player2];
   allPlayers = game.player3 == null ? allPlayers : [...allPlayers, game.player3 ];

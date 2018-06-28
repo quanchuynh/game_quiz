@@ -7,7 +7,7 @@ class CountDownCircle extends Component {
     this.state = {
       startFrom: this.props.fromSeconds
     }
-    console.log("Constructor current count: " + this.props.fromSeconds);
+    console.debug("Constructor current count: " + this.props.fromSeconds);
   }
 
   render() {

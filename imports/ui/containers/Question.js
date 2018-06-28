@@ -44,11 +44,16 @@ class Question extends Component {
   }
 
   remoteTimer() {
+    console.log("remoteTimer, countDown: " + this.props.countDown + ", quiz index: " + this.props.index);
     if (this.props.quizComplete) return;
-    if (this.props.countDown < 1) {
+    if (this.props.countDown < 2) {
+      console.log("remoteTimer, handleExpiration, quiz index: " + this.props.index);
       this.handleExpiration();
+      console.log("remoteTimer: resetQuestion");
+      this._resetQuestion();
       return;
     }
+    console.log("remoteTimer, time: " + this.props.countDown + " quiz index: " + this.props.index);
     this.setState({questionTimeLeft: this.props.countDown });
   }
 
@@ -109,7 +114,9 @@ class Question extends Component {
         correctAnswer = this.props.quest[this.props.index].answers[correctAnswerIndex]
         isCorrect = (userAnswer === correctAnswer) ? true : false;
 
-    clearTimeout(this.intervalId);
+    if (!this.props.gameMode) {
+      clearTimeout(this.intervalId); /* local timer is used for check remote time in game mode. */
+    }
     this.setState({
       isCorrect: isCorrect,
       correctAnswer: correctAnswer,
@@ -119,17 +126,15 @@ class Question extends Component {
 
     this.props.score(isCorrect);
 
-    console.log("handleAnswer: " + this.props.index + ", is correct: " + isCorrect);
+    console.debug("handleAnswer: " + this.props.index + ", is correct: " + isCorrect);
 
     //set the question to answered which wil hide the buttonVisibility
     this.setState({answered: true, currentCount: nextQuestionTime}, ()=> {
       this.setState({ disableButton: true })
     });
-
-    if (this.props.gameMode && !this.lastQuiz()) this._resetQuestion();
   }
 
-  handleNextQuestion(notUse) {
+  handleNextQuestion(unusedParamter) {
     this.setState({questionTimeLeft: this.props.timer});
     this._resetQuestion();
     console.debug(JSON.stringify(userAnswer));
@@ -148,18 +153,23 @@ class Question extends Component {
   }
 
   render() {
-    console.log("Question component, questionCount: " + this.props.quest.length + 
+    console.debug("Question component, questionCount: " + this.props.quest.length + 
             " index: " + this.props.index + ", quiz complete: " + this.props.quizComplete);
     let visibleTest = this.state.answered && this.state.gameMode == false;
     let visibility = visibleTest ? 'callout secondary is-visible' : 'callout secondary is-hidden';
     /* let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 'columns small-6 is-visible'; */
-    let buttonVisibility = visibleTest ? 'is-hidden' : 'is-visible';
+    let /* buttonVisibility = visibleTest ? 'is-hidden' : 'is-visible', */
+        buttonVisibility = this.state.answered ? 'is-hidden': 'is-visible'; 
+        incorrectGameAnswer = this.state.gameMode && this.state.answered && !this.state.isCorrect,
+        showNegative = incorrectGameAnswer ? 'is-visible' : 'is-hidden';
 
     let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
                         position: "absolute", top: "180px", textAlign: "center"},
         answerPosition = {position: "absolute", top: "300px", marginLeft: "0px", 
-                          paddingLeft: "0px", paddingRight: "0px", width: "47.5%"};
+                          paddingLeft: "0px", paddingRight: "0px", width: "47.5%"},
+        negativeText = {backgroundColor: "red", color: "white", fontSize: "32px", position: "absolute", 
+                        top: "210px", width: "25%", height: "40px", margin: "0 auto", padding: "0"};
     let timeText = {color: "#005780", backgroundColor: "tranparent", 
                     textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
     if (this.state.gameMode) {
@@ -213,6 +223,7 @@ class Question extends Component {
                 action={this.handleAnswer} clName={colors[i%4] + " button-whole"} /></p>))
             }
             </div>
+            <div className={showNegative} style={negativeText}>Incorrect</div>
           </div>
         </div>
       </div>
@@ -220,11 +231,12 @@ class Question extends Component {
   }
 }
 
-// export default Question;
+export default Question;
 
+/*
 export default withTracker(() => {
   return {
     events: QuestionState.find(userAnswer).fetch()
   }
 })(Question);
-
+*/

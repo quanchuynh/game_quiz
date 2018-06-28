@@ -39,7 +39,7 @@ class Practice extends Component {
   static getDerivedStateFromProps(nextProps, prevState) {
     if (!nextProps.gameMode) return null;
     if (prevState.quizId !== nextProps.quizId) {
-      console.log("New ID: " + nextProps.quizId + ", old ID: " + prevState.quizId);
+      console.debug("New ID: " + nextProps.quizId + ", old ID: " + prevState.quizId);
       return {quizId: nextProps.quizId, gotQuiz: true };
     }
     return null;

@@ -47,10 +47,10 @@ class Quiz extends Component {
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log("Quiz, derived state, gameMode: " + prevState.mode);
+    console.debug("Quiz, derived state, gameMode: " + prevState.mode);
     if (!nextProps.mode) return null;
     if (prevState.quizId !== nextProps.quizId) {
-      console.log("Quiz component, derived state, quiz ID: " + nextProps.quizId);
+      console.debug("Quiz component, derived state, quiz ID: " + nextProps.quizId);
       return {quizId: nextProps.quizId, newQuiz: true};
     }
     return null;
@@ -58,7 +58,7 @@ class Quiz extends Component {
 
   componentDidUpdate() {
     if (this.state.newQuiz) {
-      console.log("componentDidUpdate, new quiz: " + this.state.quizId);
+      console.debug("componentDidUpdate, new quiz: " + this.state.quizId);
       this.getQuiz(this.state.quizId);
       this.setState({newQuiz: false});
     }
@@ -92,7 +92,7 @@ class Quiz extends Component {
          })
          userAnswer.questionId = 0;
          userAnswer.quizId = this.state.quizId;
-         console.log("Quiz component, getQuiz(), New quiz ID: " + this.state.quizId +
+         console.debug("Quiz component, getQuiz(), New quiz ID: " + this.state.quizId +
                      " question count: " + questionData.length);
        })
      }); 
@@ -141,7 +141,7 @@ class Quiz extends Component {
       finished: true,
     })
     this.props.action(this.state.correct, this.state.questionCount);
-    console.log("finish quiz");
+    console.debug("finish quiz");
   }
 
   startQuiz() {
@@ -172,7 +172,7 @@ class Quiz extends Component {
 
   render() {
     let questionText = {backgroundColor: "tranparent", textAlign: "center", padding: "10px"};
-    console.log("Quiz render, quizId: " + this.state.quizId);
+    console.debug("Quiz render, quizId: " + this.state.quizId);
     this.renderQuiz();
     let paddingTop = {paddingTop: "12px"},
         path = this.state.image.fullUrl,
@@ -257,10 +257,10 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
     return {mode: mode, quizId: quizId, action: action, startQuiz: false};
   }
 
-  console.log("trackQuiz, gameName: " +  gameName + ", quizId: " + quizId);
+  console.debug("trackQuiz, gameName: " +  gameName + ", quizId: " + quizId);
 
   var trackQuiz = TrackQuizQuestion.findOne({gameName: gameName, quizId: quizId});
-  console.log("trackQuiz, from TrackQuizQuestion: " + JSON.stringify(trackQuiz));
+  console.debug("trackQuiz, from TrackQuizQuestion: " + JSON.stringify(trackQuiz));
   let startQuiz = trackQuiz.quizStartTime <= 0 ? true : false;
   return {
     mode: mode, 

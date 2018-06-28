@@ -6,11 +6,11 @@ class CountDown extends Component {
     this.state = {
       currentCount: this.props.fromSeconds
     }
-    console.log("Constructor current count: " + this.props.fromSeconds);
+    console.debug("Constructor current count: " + this.props.fromSeconds);
   }
 
   componentDidMount() {
-    console.log("Current count: " + this.state.currentCount + ", props: " + this.props.fromSeconds);
+    console.debug("Current count: " + this.state.currentCount + ", props: " + this.props.fromSeconds);
     tInterval = setInterval(() => {
       this.setState({currentCount: this.state.currentCount - 1});
       if (this.state.currentCount <= 0) {
@@ -21,7 +21,7 @@ class CountDown extends Component {
   }
 
   render() {
-    console.log("Current count: " + this.state.currentCount);
+    console.debug("Current count: " + this.state.currentCount);
     return (
       <div>{this.props.message} in {this.state.currentCount} seconds </div>
     );
