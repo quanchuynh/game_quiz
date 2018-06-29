@@ -162,10 +162,6 @@ class Quiz extends Component {
                     gameMode={this.props.mode} countDown={this.props.countDown}
                     quizComplete={this.props.quizComplete} filePath={path}/>
               </div>
-              <div className={resultsClass}>
-                <h4>{this._getEndMessage()}</h4>
-                <p>You got {this.state.correct} out of {this.state.questionCount} correct.</p>
-              </div>
             </div>
     );
   } 

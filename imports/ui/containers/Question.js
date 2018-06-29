@@ -167,20 +167,20 @@ class Question extends Component {
             " index: " + this.props.index + ", quiz complete: " + this.props.quizComplete);
     let visibleTest = this.state.answered && this.state.gameMode == false;
     let visibility = visibleTest ? 'callout secondary is-visible' : 'callout secondary is-hidden';
-    /* let buttonVisibility = visibleTest ? 'columns small-6 is-hidden' : 'columns small-6 is-visible'; */
     let /* buttonVisibility = visibleTest ? 'is-hidden' : 'is-visible', */
         buttonVisibility = this.state.answered ? 'is-hidden': 'is-visible'; 
-        gameAnswer = this.state.gameMode && this.state.answered,
+	gameAnswer = this.state.gameMode && this.state.answered,
         showAnswerResponse = gameAnswer ? 'is-visible' : 'is-hidden',
-        answerReflectText = this.state.isCorrect ? 'Correct !' : 'Wrong Answer';
+        answerReflectText = this.state.isCorrect ? 'Correct !' : 'Incorrect';
 
     let backgroundImage = {opacity: 0.1, width: "100%"};
     let questionText = {color: "#005780", backgroundColor: "tranparent", 
-                        position: "absolute", top: "180px", textAlign: "center"},
+                        position: "absolute", top: "220px", textAlign: "center"},
         answerPosition = {position: "absolute", top: "300px", marginLeft: "0px", 
-                          paddingLeft: "0px", paddingRight: "0px", width: "47.5%"},
-        answerResponseText = {backgroundColor: "red", color: "white", fontSize: "32px", position: "absolute", 
-                        top: "210px", width: "25%", height: "40px", margin: "0 50px", padding: "0", textAlign: "center"};
+                          paddingLeft: "0px", paddingRight: "0px", width: "47.2%"},
+        answerResponseText = {backgroundColor: "red", color: "white", fontSize: "32px", 
+                              margin: "0 auto", width: "30%"}; 
+
     if (this.state.isCorrect) answerResponseText.backgroundColor = "green";
     let timeText = {color: "#005780", backgroundColor: "tranparent", 
                     textAlign: "center", position: "absolute", top: "60px", width: "50%", margin: "0 auto"};
@@ -199,6 +199,8 @@ class Question extends Component {
       <div className="question">
         <div className="grid">
           <div className="columns small-6 float-center">
+            <h5 className="float-center"> </h5>
+            <h5 className={showAnswerResponse} style={answerResponseText}>{answerReflectText}</h5>
             <img src={this.props.filePath} style={backgroundImage}/>
             <h5 className="small-5" dangerouslySetInnerHTML={this._getQuestion()} style={questionText}>
             </h5>
@@ -235,7 +237,6 @@ class Question extends Component {
                 action={this.handleAnswer} clName={colors[i%4] + " button-whole"} /></p>))
             }
             </div>
-            <div className={showAnswerResponse} style={answerResponseText}>{answerReflectText}</div>
           </div>
         </div>
       </div>

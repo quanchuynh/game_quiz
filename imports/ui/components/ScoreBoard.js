@@ -43,6 +43,13 @@ class ScoreBoard extends Component {
               </tr>
             </tbody>
             </table>
+            { /*
+              this.props.currentCorrectAnswerPlayer?
+                 <h5 className="float-center">{this.props.currentCorrectAnswerPlayer} got it</h5>
+              :
+                 <h5 className="float-center">None got it</h5>
+              */
+            }
           </div>
     );
   }
