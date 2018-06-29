@@ -64,6 +64,7 @@ export default withTracker(({gameName, quizId, questionCount, currentQuestion}) 
     if (game.playerCount == 3) 
       userScore.push({player: game.player3, score: 0});
   }
+  let currentCorrectAnswerPlayer = false;
   var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId});
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();
@@ -73,11 +74,11 @@ export default withTracker(({gameName, quizId, questionCount, currentQuestion}) 
       );
       if (pl) pl.score++;
       else userScore.push({player: correctPlayer[ii].player, score: 1});
+      if (correctPlayer[ii].question == currentQuestion - 1) {
+        currentCorrectAnswerPlayer = correctPlayer[ii].player;
+      }
     }    
   }
-  let currentCorrectAnswerPlayer = false;
-      match = TrackCorrectPlayer.findOne({gameName: gameName, quizId: quizId, question: currentQuestion, isCorrect: true});
-      if (match) currentCorrectAnswerPlayer = match.player;
   return {
     gameName: gameName,
     quizId: quizId,
