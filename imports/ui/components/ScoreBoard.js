@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withTracker } from 'meteor/react-meteor-data';
 import FlipCounter from '../components/FlipCounter';
+import "./ScoreBoard.css";
 
 class ScoreBoard extends Component {
   constructor(props) {
@@ -15,9 +16,11 @@ class ScoreBoard extends Component {
   componentDidMount() {
   }
 
-  renderUserScore() {
-    let userScore = this.props.userScore;
-    console.log("userScore: " + userScore.length);
+  renderExpiredNoAnswer() {
+     return (
+        this.props.countDown < 1 ? 
+          <h4 className="float-center" style={{color: "red", textAlign: "center"}}>None got question {currentQuestion}</h4> : <span/>
+     )
   }
 
   render() {
@@ -28,10 +31,12 @@ class ScoreBoard extends Component {
                       backgroundColor: "#e6f7ff",
                       color: "#005780", borderWidth: "2px", borderStyle: "groove"},
         noPadding = {padding: "0px", marginTop: "4px", width: "25%", float: "left"},
-        colors = ["green", "blue"];
+        colors = ["green", "blue"],
+        currentQuestion = this.props.currentQuestion;
     return (
+        <div>
           <div style={scoreLabel}>
-            <span>Question {this.props.currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
+            <span>Question {currentQuestion} of {this.props.questionCount}<br/><br/><br/></span>
             <table style={{color: "#005780"}}>
             <tbody>
               <tr>
@@ -43,14 +48,15 @@ class ScoreBoard extends Component {
               </tr>
             </tbody>
             </table>
-            { /*
-              this.props.currentCorrectAnswerPlayer?
-                 <h5 className="float-center">{this.props.currentCorrectAnswerPlayer} got it</h5>
-              :
-                 <h5 className="float-center">None got it</h5>
-              */
-            }
           </div>
+            {
+              this.props.currentCorrectAnswerPlayer?
+                 <h4 className="float-center attention" style={{textAlign: "center"}}>
+                    {this.props.currentCorrectAnswerPlayer} got question {currentQuestion}</h4>
+              :
+                 this.renderExpiredNoAnswer()
+            }
+        </div>
     );
   }
 }

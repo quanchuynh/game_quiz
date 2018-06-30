@@ -11,6 +11,8 @@ const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will 
 const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
 const totalQuizCount = 900;
 const questionTime = 30;     /* 30 seconds per question */
+const constQuestionDelayTime = 5;
+const questionTransitionTime = 5;
 
 Meteor.methods({
   getTopPlayers: function() {
@@ -325,7 +327,7 @@ createQuizQuestionTracker = function(game) {
   let questCount = quizList.getQuestion(quizId).length;
   TrackQuizQuestion.insert({gameName: game.name, quizId: quizId, quizNumber: game.currentQuizNumber, 
                             currentQuestion: 0, lastQuestion: questCount - 1,
-                            countDown: 10, quizComplete: false, quizStartTime: 5});
+                            countDown: 10, quizComplete: false, quizStartTime: 5, questionDelayTime: constQuestionDelayTime});
   var gql = GameQuizList.findOne({gameName: game.name});
   if (gql) {
     gql.quizList = [...gql.quizList, quizId];
@@ -346,7 +348,7 @@ trackQuizQuestion = function(game) {
     TrackQuizQuestion.update({gameName: game.name, quizId: quizId}, {$set: {quizStartTime: quizStartTime}});
     if (quizStartTime <= 0) {
       Meteor.clearInterval(tInterval);
-      startQuestionTracker(game);
+      startQuestionTracker(game, 0);
     }
   }, 1000);
 }
@@ -371,12 +373,12 @@ getCategoryQuizId = function(category, gameId) {
   return quizId;
 }
 
-startQuestionTracker = function(game) {
+startQuestionTracker = function(game, nextQuestion) {
   /* Expire each question in 10 seconds and roll to the next question
    * countDown can be update outside of this function t0 <= 0 in which case the current question
    * expires immediately. 
    */
-  let currentQuestion = 0;
+  let currentQuestion = nextQuestion;
   tInterval = Meteor.setInterval(() => {
         /* currentQuizId */
     TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId}, {$inc: {countDown: -1}});
@@ -386,9 +388,9 @@ startQuestionTracker = function(game) {
     }
     let countDown = trackQuiz.countDown, lastQuestion = trackQuiz.lastQuestion;
     currentQuestion = trackQuiz.currentQuestion;
-    if (countDown <= 0) {
+    if (countDown < 1) {
+      Meteor.clearInterval(tInterval);   /* Stop question timer */
       if (currentQuestion == lastQuestion) {
-        Meteor.clearInterval(tInterval);
         TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
                              {$set: {quizComplete: true} });
         var match = CreatedGame.findOne({name: game.name});
@@ -403,10 +405,20 @@ startQuestionTracker = function(game) {
         nextCategoryCountDown(game.name, game.currentQuizId);
         return;
       }
-      currentQuestion++;
-      TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
-                               {$set: {currentQuestion: currentQuestion, countDown: questionTime}}); 
-    }
+      TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId}, {$set: {questionDelayTime: constQuestionDelayTime}}); 
+      questionDelayInterval = Meteor.setInterval(() => {
+        TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId}, {$inc: {questionDelayTime: -1}});
+        let trackQuiz = TrackQuizQuestion.findOne({gameName: game.name, quizId: game.currentQuizId});
+        let questionDelayTime = trackQuiz.questionDelayTime;
+        console.log("questionDelayTime: " + questionDelayTime + ", current question: " + currentQuestion);
+        if (questionDelayTime < 1) { 
+          Meteor.clearInterval(questionDelayInterval);   /* Stop question timer */
+          TrackQuizQuestion.update({gameName: game.name, quizId: game.currentQuizId},
+                               {$set: {currentQuestion: currentQuestion + 1, countDown: questionTime}}); 
+          startQuestionTracker(game, currentQuestion + 1);
+        }
+      }, 1000) /* questionDelayInterval */
+    } /* countDown < 1 */
   }, 1000);
 }
 

@@ -30,6 +30,7 @@ class Question extends Component {
     this.handleAnswer = this.handleAnswer.bind(this);
     this.handleExpiration = this.handleExpiration.bind(this);
     this.handleNextQuestion = this.handleNextQuestion.bind(this);
+    this.handleRemoteExpiration = this.handleRemoteExpiration.bind(this);
   }
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -39,7 +40,6 @@ class Question extends Component {
     }
     return null;
   }
-
 
   timer() {
     if (this.props.quizComplete) {
@@ -54,13 +54,12 @@ class Question extends Component {
   }
 
   remoteTimer() {
-    console.log("remoteTimer, countDown: " + this.props.countDown + ", quiz index: " + this.props.index);
+    console.debug("remoteTimer, countDown: " + this.props.countDown + ", quiz index: " + this.props.index);
     if (this.props.quizComplete) return;
     if (this.props.countDown < 2) {
-      console.log("remoteTimer, handleExpiration, quiz index: " + this.props.index);
-      this.handleExpiration();
+      this.handleRemoteExpiration();
       console.log("remoteTimer: resetQuestion");
-      this._resetQuestion();
+      if (this.props.questionDelayTime < 1) this._resetQuestion();
       return;
     }
     console.log("remoteTimer, time: " + this.props.countDown + " quiz index: " + this.props.index);
@@ -148,6 +147,20 @@ class Question extends Component {
     this.setState({questionTimeLeft: this.props.timer});
     this._resetQuestion();
     console.debug(JSON.stringify(userAnswer));
+  }
+
+  handleRemoteExpiration() {
+    //set the question to answered which wil hide the buttonVisibility
+    let correctAnswerIndex = this.props.quest[this.props.index].correct - 1,
+        correctAnswer = this.props.quest[this.props.index].answers[correctAnswerIndex];
+    if (this.state.answered) return;
+    /* Real expiration condition */
+    this.setState({
+      answered: true, 
+      isCorrect: false,
+      correctAnswer: correctAnswer,
+      userAnswer: "no answer"
+    })
   }
 
   handleExpiration() {
@@ -245,11 +258,3 @@ class Question extends Component {
 }
 
 export default Question;
-
-/*
-export default withTracker(() => {
-  return {
-    events: QuestionState.find(userAnswer).fetch()
-  }
-})(Question);
-*/

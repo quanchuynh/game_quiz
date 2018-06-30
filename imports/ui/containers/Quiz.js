@@ -196,7 +196,8 @@ class Quiz extends Component {
                   {
                   gameMode ?
                   <ScoreBoard gameName={this.props.gameName} quizId={this.props.quizId} 
-                              questionCount={question.length} currentQuestion={currentQuestion + 1}/>
+                       questionCount={question.length} currentQuestion={currentQuestion + 1}
+                       countDown={this.props.countDown}/>
                   :
                   <div>
                     <span style={scoreLabel}>Question {currentQuestion + 1} of {this.state.questions.length}
@@ -266,6 +267,7 @@ export default withTracker(({gameName, mode, player, quizId, action}) => {
     action: action,
     currentQuestion: trackQuiz.currentQuestion,
     countDown: trackQuiz.countDown,
+    questionDelayTime: trackQuiz.questionDelayTime,
     quizStartTime: trackQuiz.quizStartTime,
     startQuiz: startQuiz,
     quizComplete: trackQuiz.quizComplete,
