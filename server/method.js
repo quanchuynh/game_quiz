@@ -11,7 +11,7 @@ const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will 
 const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
 const totalQuizCount = 900;
 const questionTime = 30;     /* 30 seconds per question */
-const constQuestionDelayTime = 5;
+const constQuestionDelayTime = 10;
 const questionTransitionTime = 5;
 
 Meteor.methods({

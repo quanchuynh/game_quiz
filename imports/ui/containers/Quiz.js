@@ -159,7 +159,7 @@ class Quiz extends Component {
                 <Question timer={this.state.timer} quest={this.state.questions} 
                     index={currentQuestion} done={this.finishQuiz} next={this.nextQuestion} 
                     score={this.updateScore} 
-                    gameMode={this.props.mode} countDown={this.props.countDown}
+                    gameMode={this.props.mode} countDown={this.props.countDown} questionDelayTime={this.props.questionDelayTime}
                     quizComplete={this.props.quizComplete} filePath={path}/>
               </div>
             </div>

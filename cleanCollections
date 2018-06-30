@@ -1,0 +1,5 @@
+db.created_game.remove({});
+db.game_quiz_list.remove({});
+db.track_correct_player.remove({});
+db.track_quiz.remove({});
+db.user_activities.remove({});

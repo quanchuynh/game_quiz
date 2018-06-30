@@ -5,7 +5,7 @@
     -webkit-animation-iteration-count: 3; /* Safari 4.0 - 8.0 */
     animation-name: example;
     animation-duration: 4s;
-    animation-iteration-count: 1;
+    animation-iteration-count: 2;
 }
 
 /* Safari 4.0 - 8.0 */
