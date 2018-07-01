@@ -48,6 +48,10 @@ Meteor.methods({
     return {ok: false, errorMessage: "Could not find " + gameName + " in game quiz list."};
   },
 
+  getGameQuizList: function(gameName) {
+    return GameQuizList.findOne({gameName: gameName});
+  },
+
   submitAnswer: function(user) {
     console.log("submitCorrectAnswer: " + JSON.stringify(user));
     match = TrackCorrectPlayer.findOne({gameName: user.gameName, quizId: user.quizId, 

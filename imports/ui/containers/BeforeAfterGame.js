@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CountDownCircle from '../components/CountDownCircle';
 import GameResultTable from '../components/GameResultTable';
 import PlayerActivityTable from '../components/PlayerActivityTable';
+import QuizResultDetail from '../components/QuizResultDetail';
 
 class BeforeAfterGame extends Component {
   /* Render info before game start and after game completed. */
@@ -10,7 +11,9 @@ class BeforeAfterGame extends Component {
     this.state = {
       active: false,
       finalResult: {__html:  ''},
-      rawFinalResult: {}
+      rawFinalResult: {},
+      quizList: []  /* didMount fillup later, valid for init render */,
+      gotList: false
     };
     this.finalResult = {__html:  '<div>Init final result</div>'};
     this.formatQuizResult = this.formatQuizResult.bind(this); 
@@ -24,11 +27,20 @@ class BeforeAfterGame extends Component {
     return content;
   }
 
+  componentDidMount() {
+    Meteor.call('getGameQuizList', this.props.game.name, (err, ret) => {
+      this.setState({quizList: ret.quizList, gotList: true});
+      console.log("gameQuizLis: " + JSON.stringify(ret));
+    });
+  }
+
   render() {
     let before = this.props.game.gameComplete ? false : true;
         circleStyle = {color: "#005780", backgroundColor: "tranparent",
-                        position: "relative", top: "80px", textAlign: "center"};
-    console.debug("BeforeAfter: " + this.props.game.gameComplete);
+                        position: "relative", top: "80px", textAlign: "center"},
+        game = this.props.game,
+        quizList = this.state.quizList;
+    console.log("BeforeAfter, quizList: " + JSON.stringify(quizList));
     return (
       <div> 
       {
@@ -38,9 +50,15 @@ class BeforeAfterGame extends Component {
           </div>
         :
           <div className="float-center" style={{position: "relative", top: "70px", width: "70%"}}>
-            <GameResultTable remoteCall={'getFinalResult'} gameName={this.props.game.name}/>
-            <PlayerActivityTable remoteCall={'getPlayerActivities'} gameName={this.props.game.name}
+            <GameResultTable remoteCall={'getFinalResult'} gameName={game.name}/>
+            <PlayerActivityTable remoteCall={'getPlayerActivities'} gameName={game.name}
                 tableTitle={'Activities This Quarter'}/>
+            { 
+              this.state.gotList ?
+                quizList.map( (quizId, ii)  => ( <QuizResultDetail quizId={quizId} gameName = {game.name} key={ii}/> ) )
+              :
+                <span/>
+            }
           </div>
       }
       </div>
