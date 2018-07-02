@@ -20,9 +20,7 @@ class QuizResultDetail extends Component {
   }
 
   getResultDetail( ) {
-    /* param = {gameName, quizId} */
-    var param = {gameName: this.props.gameName, quizId: this.props.quizId};
-    Meteor.call('getResultDetail', param, (err, ret) => {
+    Meteor.call('getQuizQuestionResult', this.props.gameName, this.props.quizId, (err, ret) => {
       this.setState({rawFinalResult: ret});
       console.log("rawFinalResult: " + JSON.stringify(this.state.rawFinalResult));
     });
@@ -49,8 +47,7 @@ class QuizResultDetail extends Component {
 
   render() {
     let raw = this.state.rawFinalResult,
-        results = raw? raw.results : '',
-        players = raw? results[0].players : [],
+        players = raw? raw : [],
         questions = this.state.questions;
 
     console.log("Raw final reulst: " + JSON.stringify(raw));
@@ -79,7 +76,7 @@ class QuizResultDetail extends Component {
               <td>{p.question}</td>
               <td>{p.answers[ p.correct - 1 ]}</td>
               <td>{p.explanation}</td>
-              {/* <td>{p.earning}</td> */}
+              {players.map( (player, jj) => (<td key={jj}>{player.questionScore[i]}</td>) )}
               </tr>
             ))
           }

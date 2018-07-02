@@ -119,11 +119,15 @@ class Quiz extends Component {
   }
 
   remoteSubmitAnswer(result) {
+    let answerCount = this.state.questions[this.props.currentQuestion].answers.length,
+        score = result ? 1 : 0;  
+    if (answerCount < 3 && !result) score = -1;
     var correctAnswer = { gameName: this.props.gameName,
                                 quizId: this.props.quizId, 
                                 player: this.props.player,
                                 question: this.props.currentQuestion,
-                                isCorrect: result
+                                isCorrect: result,
+                                score : score
                               };
     Meteor.call('submitAnswer', correctAnswer, (err, ret) => {
     });

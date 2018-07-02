@@ -15,6 +15,10 @@ const constQuestionDelayTime = 10;
 const questionTransitionTime = 5;
 
 Meteor.methods({
+  getQuizQuestionResult: function(gameName, quizId) {
+    return getQuizQuestionResult(gameName, quizId);
+  },
+
   getTopPlayers: function() {
     /* Top 5 earners in descending order. */
     return UserActivities.find({}, {sort: {earning: -1}, limit: 5}).fetch();
@@ -211,7 +215,7 @@ updateOnePlayerEarning = function(player) {
   let match = UserActivities.findOne({username: player});
   if (match) {
     let completeQuizRatio = match.quizIds.length / totalQuizCount,
-        correctAnswerRatio = match.correctAnswers / match.questionViews;
+        correctAnswerRatio = match.score / match.questionViews;
     completeQuizRatio = completeQuizRatio > 1 ? 0.5 : completeQuizRatio;  /* protection from error */
     correctAnswerRatio = correctAnswerRatio > 1 ? 0.5 : correctAnswerRatio;
     let quizCompleteEarning = completeQuizRatio * maxEarningPerPlayer * percentEarnCompleteQuiz,
@@ -250,6 +254,7 @@ recordPlayerActivities = function(gameName) {
         var match = UserActivities.findOne({username: usc.player});
         if (match) userAct = match;
         userAct.correctAnswers += usc.score;
+        userAct.score += usc.score;
         userAct.questionViews += quizList.getQuestion(quizId).length;
         if (! userAct.quizIds.find((id) => { return id == quizId }) ) {
           userAct.quizIds.push(quizId);  /* new quiz for this user. */
@@ -310,8 +315,11 @@ getResultDetail = function(gameName, quizId) {
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();
     for (ii = 0; ii < correctPlayer.length; ii++) {
-      if (!correctPlayer[ii].isCorrect) continue;
       let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player });
+      if (!correctPlayer[ii].isCorrect) {
+        if (pl) pl.score += correctPlayer[ii].score;
+        continue;
+      }
       if (pl) {
         pl.score++;
         pl.questions.push(correctPlayer[ii].question + 1);
@@ -540,6 +548,32 @@ getUsers = function(partialName) {
     return players;
   }
   return [];
+}
+
+getQuizQuestionResult = function(gameName, quizId) {
+  /* Return list of users and their scores for each question */
+  let quiz = quizList.getQuiz(quizId), results = []; 
+  var userScore = [];
+  var game = CreatedGame.findOne({name: gameName});
+  if (game) {
+    userScore.push({player: game.player1, questionScore: []});
+    userScore.push({player: game.player2, questionScore: []});
+    if (game.playerCount == 3)
+      userScore.push({player: game.player3, questionScore: []});
+  }
+  for (ii = 0; ii < quiz.numOfQuestions; ii++) {
+    console.log("User count: " + userScore.length);
+    for (uu = 0; uu < userScore.length; uu++) userScore[uu].questionScore.push(0);
+    var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId, question: ii});
+    if (match) {
+      var correctPlayer = match.fetch();
+      for (jj = 0; jj < correctPlayer.length; jj++) {
+        let pl = userScore.find((usc) => { return usc.player == correctPlayer[jj].player });
+        pl.questionScore[ii] = correctPlayer[jj].score;
+      }
+    }
+  } 
+  return userScore;
 }
 
 

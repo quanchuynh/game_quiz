@@ -45,6 +45,5 @@ Meteor.startup(() => {
         console.log("User: " + u.username + " is in");
      });
   }
-
 });
 

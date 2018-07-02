@@ -30,7 +30,7 @@ class PlayerActivityTable extends Component {
           <thead>
           <tr style={tableStyle}>
              <th>Player</th>
-             <th># Correct Answers</th>
+             <th>Scores</th>
              <th># Total Questions</th>
              <th># Unique Quizzes Played</th>
              <th>Earning This Qt</th>
@@ -41,7 +41,7 @@ class PlayerActivityTable extends Component {
             activity.map((p, i) => (
               <tr key={i}>
               <td>{p.username}</td>
-              <td>{p.correctAnswers}</td>
+              <td>{p.score}</td>
               <td>{p.questionViews}</td>
               <td>{p.quizIds.length}</td>
               <td>${p.earning}</td>

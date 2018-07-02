@@ -75,9 +75,12 @@ export default withTracker(({gameName, quizId, questionCount, currentQuestion}) 
   if (match) { /* possible that no player score yet */
     var correctPlayer = match.fetch();
     for (ii = 0; ii < correctPlayer.length; ii++) {
-      if (!correctPlayer[ii].isCorrect) continue;
       let pl = userScore.find((usc) => { return usc.player == correctPlayer[ii].player }
       );
+      if (!correctPlayer[ii].isCorrect) {
+        if (pl) pl.score += correctPlayer[ii].score;
+        continue;
+      }
       if (pl) pl.score++;
       else userScore.push({player: correctPlayer[ii].player, score: 1});
       if (correctPlayer[ii].question == currentQuestion - 1) {
