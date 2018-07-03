@@ -22,7 +22,7 @@ class QuizResultDetail extends Component {
   getResultDetail( ) {
     Meteor.call('getQuizQuestionResult', this.props.gameName, this.props.quizId, (err, ret) => {
       this.setState({rawFinalResult: ret});
-      console.log("rawFinalResult: " + JSON.stringify(this.state.rawFinalResult));
+      console.debug("rawFinalResult, quizID: " + this.props.quizId + ", results: " + JSON.stringify(this.state.rawFinalResult));
     });
   }
 

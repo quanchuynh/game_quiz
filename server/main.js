@@ -16,19 +16,19 @@ Meteor.startup(() => {
   var categories = getAllCategories();
   console.log("All uniq categories: " + categories);
   var quizType = getDistinct('quizType', QuizCollection);
-  console.log("All Quiz Types: " + quizType);
+  // console.log("All Quiz Types: " + quizType);
 
   var gameId = getNewGameId();
-  console.debug("Game ID: " + getNewGameId());
+  // console.debug("Game ID: " + getNewGameId());
   var quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
-  console.debug("HEALTH_AND_MEDICINE, quizId: " + quizId);
+  // console.debug("HEALTH_AND_MEDICINE, quizId: " + quizId);
 
   quizId = quizList.getNewQuizIdForGame(gameId, "HEALTH_AND_MEDICINE");
-  console.debug("HEALTH_AND_MEDICINE, next quizId: " + quizId);
+  // console.debug("HEALTH_AND_MEDICINE, next quizId: " + quizId);
 
   var allQuiz = QuizCollection.find({"mainCategory": "HEALTH_AND_MEDICINE"}).fetch();
   for (ii = 0; ii < allQuiz.length; ii++)
-    console.debug("Quiz: " + JSON.stringify(allQuiz[ii]));
+    // console.debug("Quiz: " + JSON.stringify(allQuiz[ii]));
 
   recordPlayerActivities('d1');
   recordPlayerActivities('d2');

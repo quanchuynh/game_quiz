@@ -11,7 +11,7 @@ const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will 
 const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
 const totalQuizCount = 900;
 const questionTime = 30;     /* 30 seconds per question */
-const constQuestionDelayTime = 10;
+const constQuestionDelayTime = 5;
 const questionTransitionTime = 5;
 
 Meteor.methods({
@@ -249,8 +249,9 @@ recordPlayerActivities = function(gameName) {
     console.log("recordPlayerActivities: " + totalQuestionCount);
     qList.map( (quizId) => {
       let userScore = getResultDetail(gameName, quizId);
+      console.log("recordPlayerActivities, userScore:" + JSON.stringify(userScore));
       userScore.map((usc) => {
-        var userAct = {username: usc.player, correctAnswers:0, questionViews: 0, quizIds:[]};
+        var userAct = {username: usc.player, correctAnswers:0, questionViews: 0, quizIds:[], score: 0};
         var match = UserActivities.findOne({username: usc.player});
         if (match) userAct = match;
         userAct.correctAnswers += usc.score;
@@ -263,7 +264,8 @@ recordPlayerActivities = function(gameName) {
           UserActivities.update({username: usc.player}, {$set: 
              {correctAnswers: userAct.correctAnswers, 
               questionViews: userAct.questionViews, 
-              quizIds: userAct.quizIds}})
+              quizIds: userAct.quizIds, 
+              score: userAct.score}})
           :
           UserActivities.insert(userAct)
       }) 
@@ -562,7 +564,7 @@ getQuizQuestionResult = function(gameName, quizId) {
       userScore.push({player: game.player3, questionScore: []});
   }
   for (ii = 0; ii < quiz.numOfQuestions; ii++) {
-    console.log("User count: " + userScore.length);
+    // console.log("User count: " + userScore.length);
     for (uu = 0; uu < userScore.length; uu++) userScore[uu].questionScore.push(0);
     var match = TrackCorrectPlayer.find({gameName: gameName, quizId: quizId, question: ii});
     if (match) {
