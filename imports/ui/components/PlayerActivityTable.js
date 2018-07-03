@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withTracker } from 'meteor/react-meteor-data';
 
 class PlayerActivityTable extends Component {
   constructor(props) {
@@ -8,22 +9,11 @@ class PlayerActivityTable extends Component {
     }
   }
 
-  componentDidMount() {
-    this.remoteCall();  /* after render() had been called */
-  }
-
-  remoteCall( ) {
-    Meteor.call(this.props.remoteCall, this.props.gameName, (err, ret) => {
-      console.log("PlayerActivityTable, remote: " + JSON.stringify(ret));
-      this.setState({playerActivities: ret});
-    });
-  }
-
   render() {
-    let activity = this.state.playerActivities;
+    let activity = this.props.playerActivities;
     let tableStyle = {color: "#005780", lineHeight: "1.2", fontStyle: "normal", fontSize: "12px"};
     return (
-      this.state.playerActivities ? 
+      this.props.playerActivities ? 
       <div>
         <h5 style={{color: "#005780", textAlign: "center"}}>{this.props.tableTitle}</h5>
         <table style={tableStyle}>
@@ -56,4 +46,22 @@ class PlayerActivityTable extends Component {
   }
 }
 
-export default PlayerActivityTable;
+/* Need to be reactive otherwise game complete but user's activities are not up-to-date */
+
+export default withTracker(({gameName, tableTitle}) => {
+  let activities = null, match = CreatedGame.findOne({name: gameName});
+  if (match) {
+    var orCondintion = {$or: [{username: match.player1}, {username: match.player2}, {username: match.player3}]};
+    activities = UserActivities.find(orCondintion, {sort: {earning: -1}, limit: 3}).fetch();
+  }
+  else if (gameName == 'topPlayers') {
+    activities = UserActivities.find({}, {sort: {earning: -1}, limit: 5}).fetch(); 
+    console.debug("PlayerActivityTable: " + JSON.stringify(activities));
+  }
+
+  return {
+    playerActivities: activities,
+    tableTitle: tableTitle 
+  };
+}) (PlayerActivityTable);
+

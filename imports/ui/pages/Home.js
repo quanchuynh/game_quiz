@@ -18,8 +18,7 @@ class Home extends Component {
           <h4> Gain Intellectual Satisfaction, Play</h4>
           <h4> Earn Money, Play</h4>
         </div>
-        <PlayerActivityTable remoteCall={'getTopPlayers'} gameName={'ignore'}
-          tableTitle={'This Quarter Top Encyclopedic Brains'}/>
+        <PlayerActivityTable gameName={'topPlayers'} tableTitle={'This Quarter Top Encyclopedic Brains'}/>
       </div>
 
     );

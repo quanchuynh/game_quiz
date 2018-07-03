@@ -51,8 +51,7 @@ class BeforeAfterGame extends Component {
         :
           <div className="float-center" style={{position: "relative", top: "70px", width: "70%"}}>
             <GameResultTable remoteCall={'getFinalResult'} gameName={game.name}/>
-            <PlayerActivityTable remoteCall={'getPlayerActivities'} gameName={game.name}
-                tableTitle={'Activities This Quarter'}/>
+            <PlayerActivityTable gameName={game.name} tableTitle={'Activities This Quarter'}/>
             { 
               this.state.gotList ?
                 quizList.map( (quizId, ii)  => ( <QuizResultDetail quizId={quizId} gameName = {game.name} key={ii}/> ) )
