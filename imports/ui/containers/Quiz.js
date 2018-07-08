@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Image from '../components/Image';
 import Button from '../components/Button';
 import Question from './Question';
-import endMessages from '../constants/end_messages.js';
 import CountDown from '../components/CountDown';
 import ScoreBoard from '../components/ScoreBoard';
 import { Meteor } from 'meteor/meteor';
@@ -103,11 +102,6 @@ class Quiz extends Component {
   }
   _getIntroduction() {
     return {__html: this.state.introduction};
-  }
-  _getEndMessage() {
-    let correctCount = this.state.correct < 7 ? this.state.correct : 6;
-    let msg = _.find(endMessages, (o) => { return o.numberCorrect === correctCount });
-      return _.sample(msg.comments);
   }
 
   updateScore(result) {

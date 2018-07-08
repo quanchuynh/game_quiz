@@ -2,7 +2,7 @@
 .notification, .nojoin {
     display: inline-block;
     position: relative;
-    padding: 0.6em;
+    padding: 12px 25px 8px 10px;
     float: left;
     margin-top: 4px;
     /* background: #3498db; */
@@ -35,8 +35,8 @@
     border-radius: 60px;
     /* background: #3498db; */
     background: #006999;
-    padding: 5px 8px;
+    padding: 5px  8px;  /* top, right, bottom, left */
     position: absolute;
     margin-top: -25px;
-    margin-left: 10px;
+    margin-left: 7px;
 }

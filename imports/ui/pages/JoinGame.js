@@ -18,7 +18,7 @@ class JoinGame extends Component {
      this.state = {
         data: '',
         games: [],
-        gameName: ''
+        gameName: this.props.gameJoined 
      }
      this.updateState = this.updateState.bind(this);
      this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,7 +31,12 @@ class JoinGame extends Component {
   }
 
   componentDidMount() {
-    console.debug("Join Game, componentDidMount ");
+    console.debug("Game Joined, componentDidMount " + this.props.gameJoined);
+    if (this.props.gameJoined) {
+      this.gameName = this.props.gameJoined;
+      this.setState({gameName: this.gameName, start: true});
+      return;
+    }
     this.setState({start: false});
   }
 
@@ -83,13 +88,6 @@ class JoinGame extends Component {
     });
   }
 
-  componentDidMount() {
-    let userName = this.props.currentUser.username;
-    Meteor.call('getMatchGames', userName, (err, ret) => {
-      this.setState({games: ret});
-    });
-  }
-
   render() {
      let gameNames = this.props.games,
          yes = true, no = false;
@@ -116,7 +114,7 @@ class JoinGame extends Component {
 export default withTracker( ({currentUser}) => {
   /* Make the game name reactive. So new names are available w/o refresh. */
   var gameNames = [];
-  let userName = currentUser.username;
+  let userName = currentUser.username, gameJoined = null;
   var orCodintion = {$or: [{player1: userName}, {player2: userName}, {player3: userName}]};
   var condition = {$and: [{active: true}, orCodintion]};
   match = CreatedGame.find(condition);
@@ -124,11 +122,16 @@ export default withTracker( ({currentUser}) => {
     var matches = match.fetch();
     for (ii = 0; ii < matches.length; ii++) {
       gameNames[ii] = matches[ii].name;
+      var waitList = matches[ii].waitList;
+      if (!waitList.includes(userName)) {
+        gameJoined = matches[ii].name;
+      }
     }
   }
 
   return {
     currentUser: currentUser,
-    games: gameNames
+    games: gameNames,
+    gameJoined: gameJoined
   }
 })(JoinGame);
