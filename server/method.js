@@ -11,7 +11,7 @@ const percentEarnCompleteQuiz = 0.30;          /* 30% complete all quizzes will 
 const percentEarnCorrectAnswerRatio = 0.70;   /* Earn 70% */
 const totalQuizCount = 900;
 const questionTime = 30;     /* 30 seconds per question */
-const constQuestionDelayTime = 5;
+const constQuestionDelayTime = 10;
 const questionTransitionTime = 5;
 
 Meteor.methods({
@@ -75,6 +75,10 @@ Meteor.methods({
 
   getActiveGames: function() {
     return getActiveGames();
+  },
+
+  disjoinGame: function(gameName, userName) {
+    return disjoinGame(gameName,userName);
   },
 
   joinGame: function(gameName, userName) {
@@ -434,6 +438,21 @@ startQuestionTracker = function(game, nextQuestion) {
       }, 1000) /* questionDelayInterval */
     } /* countDown < 1 */
   }, 1000);
+}
+
+disjoinGame = function(gameName, userName) {
+  var match = CreatedGame.findOne({name: gameName});
+  if (!match) {
+    return {ok: false, errorMessage: "Could not find " + gameName + " in game list"};
+  }
+
+  var waitList = match.waitList;
+  if (waitList.includes(userName)) {
+    return {ok: false, errorMessage: "Player " + userName + " already disjoined", errorType: 'disjoined'};
+  }
+  waitList.push(userName);
+  CreatedGame.update({_id: match._id}, {$set: {waitList: waitList}});
+  return {ok: true};
 }
 
 joinGame = function(gameName, userName) {

@@ -24,6 +24,7 @@ class JoinGame extends Component {
      this.handleSubmit = this.handleSubmit.bind(this);
      this.handleKeyup = this.handleKeyup.bind(this);
      this.handleSelect = this.handleSelect.bind(this);
+     this.handleDisjoin = this.handleDisjoin.bind(this);
      this.gameName = '';
   };
 
@@ -56,6 +57,11 @@ class JoinGame extends Component {
       }
       this.gameName = name;
     });
+  }
+
+  handleDisjoin() {
+    console.debug("JoinGame, handleDisjoin");
+    this.setState({start: false});
   }
 
   updateState(e) {
@@ -93,7 +99,7 @@ class JoinGame extends Component {
          yes = true, no = false;
      return (
        this.state.start ?
-         <StartGame gameName={this.state.gameName} mode='play' player={this.props.currentUser.username}/>
+         <StartGame gameName={this.state.gameName} mode='play' player={this.props.currentUser.username} disjoin={this.handleDisjoin}/>
        :
          <div className="gameForm">
             <div className="header">

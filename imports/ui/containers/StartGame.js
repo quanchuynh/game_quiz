@@ -4,6 +4,7 @@ import { QuestionState } from '../../../lib/gCollection';
 import CountDown from '../components/CountDown';
 import BeforeAfterGame from '../containers/BeforeAfterGame';
 import Practice from '../pages/Practice';
+import Button from '../components/Button';
 import './StartGame.css';
 
 class StartGame extends Component {
@@ -14,9 +15,25 @@ class StartGame extends Component {
     };
     console.debug("StartGame constructor: " + this.props.gameName);
     this.handleTimeExpire = this.handleTimeExpire.bind(this);
+    this.handleDisjoin = this.handleDisjoin.bind(this); 
   }
 
   handleTimeExpire() {
+  }
+
+  handleDisjoin() {
+    Meteor.call('disjoinGame', this.props.game.name, this.props.player,
+      (err, ret) => {
+        if (!ret) {
+          alert('Game "' + name + ' is not created yet. Create it first.');
+          return;
+        }
+        if (!ret.ok) {
+          alert(ret.errorMessage);
+          return;
+        }
+        this.props.disjoin();
+    });
   }
   
   render() {
@@ -24,7 +41,9 @@ class StartGame extends Component {
         others = this.props.others,
         countDown = this.props.game.countDown,
         gameName = this.props.game.name,
-        quizComplete = this.props.game.quizComplete;
+        quizComplete = this.props.game.quizComplete,
+        disjoinMessage = 'Disjoin game ' + gameName;
+
     console.debug("Start Game, waitList: " + JSON.stringify(waitList));
     const yes = true, no = false;
     const tempStyle = {position: "relative", top: "10px", 
@@ -43,6 +62,11 @@ class StartGame extends Component {
                   waitList.map((user, i) => <li key={i}><h3>{user}</h3></li>)
                 }
               </ul>
+              {
+                this.props.mode == 'play' ?
+                  <Button clName='button-1' copy={disjoinMessage} action={this.handleDisjoin}/>
+                : <span/>
+              }
           </div>
         :
           <span> 
